@@ -1,0 +1,143 @@
+openapi: 3.0.2
+
+components:
+  responses:
+    Result:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                agent:
+                  type: object
+                  properties:
+                    name:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Robot name
+                        label:
+                          type: string
+                          description: Label of the robot
+                    level:
+                      type: integer
+                      format: int32
+                      description: Robot level
+                    version:
+                      type: string
+                      description: Robot version
+                    upgrading:
+                      type: string
+                      description: Robot version upgrading
+                app_agent:
+                  type: object
+                  properties:
+                    name:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: App agent name
+                        label:
+                          type: string
+                          description: App agent name label
+                    level:
+                      type: integer
+                      format: int32
+                      description: App agent level
+                    version:
+                      type: string
+                      description: App agent version
+                    upgrading:
+                      type: string
+                      description: App agent version upgrading
+                id:
+                  type: string
+                  description: Robot id
+                algos:
+                  type: array
+                  items:
+                    type: object
+                    description: Multiple object
+                    properties:
+                      name:
+                        type: string
+                        description: Algorithm product name
+                      label:
+                        type: string
+                        description: Algorithm product label
+                cameras:
+                  type: array
+                  items:
+                    type: object
+                    description: Multiple object
+                    properties:
+                      name:
+                        type: string
+                        description: Robot camera name
+                mac_types:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        enum:
+                          - restricted
+                          - favored
+                      label:
+                        type: string
+                        enum:
+                          - Restricted
+                          - Favored
+
+  examples:
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          agent:
+            name:
+              name: Robot
+              label: Turing Robot
+            level: 1
+            version: 0.14.3
+            upgrading: null
+          app_agent:
+            name:
+              name: Rot_Nimbo
+              label: Nimbo Robot
+            level: 1
+            version: 0.14.3
+            upgrading: null
+          id: robot_dog_sr_10001
+          algos:
+            - name: person
+              label: Person
+            - name: apple
+              label: Apple
+            - name: person:513
+              label: 人群疏散
+          cameras:
+            - name: front
+            - name: rear
+          mac_types:
+            - name: favored
+              label: Favored

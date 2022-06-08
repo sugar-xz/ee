@@ -1,0 +1,163 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      required:
+        - camera_id
+        - timestamp
+        - file
+          - key
+          - Bucket
+          - meta
+            - file_size
+            - content_type
+      properties:
+        camera_id:
+          type: integer
+          description: Camera id
+          format: int32
+        type:
+          type: string
+          description: Snaps type
+          enum:
+            - view
+            - event
+        timestamp:
+          type: string
+          description: Save time
+          format: date-time
+        file:
+          type: object
+          properties:
+            key:
+              type: string
+              description: Store file name
+            Bucket:
+              type: string
+              description: Store path
+            meta:
+              type: object
+              properties:
+                file_size:
+                  type: integer
+                  description: File size
+                  format: int32
+                size:
+                  type: array
+                  items:
+                    type: string
+                    description: Data length and width
+                content_type:
+                  type: string
+                  description: Choose according to File content type
+                  enum:
+                    - video/mp4
+                    - text/json
+                    - image/jpeg
+
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: Snaps id
+                  format: int32
+                camera_id:
+                  type: integer
+                  description: Camera id
+                  format: int32
+                type:
+                  type: string
+                  description: Snaps type
+                  enum:
+                    - view
+                    - event
+                timestamp:
+                  type: string
+                  description: Save time
+                  format: date-time
+                file:
+                  type: object
+                  properties:
+                    file_size:
+                      type: integer
+                      description: File size
+                      format: int32
+                    size:
+                      type: array
+                      items:
+                        type: string
+                        description: Data length and width
+                    content_type:
+                      type: string
+                      description: Choose according to File content type
+                      enum:
+                        - video/mp4
+                        - text/json
+                        - image/jpeg
+                    url:
+                      type: string
+                      description: File url path
+
+  examples:
+    Request:
+      value:
+        camera_id: 1
+        type: event
+        timestamp: "2019-09-26T06:17:57Z"
+        file:
+          key: "users/1/cameras/1/events/logo.jpg"
+          Bucket: "develop-data-turingvideo-com"
+          meta:
+            file_size: 8888
+            size:
+              - 640
+              - 360
+            content_type: "image/jpeg"
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 88
+          camera_id: 1
+          timestamp: "2019-09-26T06:17:57Z"
+          file:
+            file_size: 8888
+            size:
+              - 640
+              - 360
+            content_type: "image/jpeg"
+            url: "https://develop-data-turingvideo-com.s3.cn-norws4_reque69501351784521bb7878f9500e26f0bb585edc98bfc46"
+          type: event

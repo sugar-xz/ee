@@ -1,0 +1,185 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: CCS
+    description: CCS related interface
+security:
+  - BasicAuth: []
+
+paths:
+  /sample/samples:
+    get:
+      tags:
+        - CCS
+      summary: View all sample info
+      description: |
+        Perms:
+        * `ccs.sample`: retrieve
+      responses:
+        200:
+          $ref: '../components/ccs/sampleSamples.yaml#/components/responses/SampleListResult'
+  /sample/samples/{id}:
+    get:
+      tags:
+        - CCS
+      summary: Retrieve sample
+      description: |
+        Perms:
+        * `ccs.sample`: retrieve
+      parameters:
+        - $ref: '../components/ccs/sampleSamplesPK.yaml#/components/parameters/SampleIDParam'
+      responses:
+        200:
+          $ref: '../components/ccs/sampleSamplesPK.yaml#/components/responses/SampleResult'
+    put:
+      tags:
+        - CCS
+      summary: Update sample
+      description: |
+        Perms:
+        * `ccs.sample`: update
+      parameters:
+        - $ref: '../components/ccs/sampleSamplesPK.yaml#/components/parameters/SampleIDParam'
+      requestBody:
+        $ref: '../components/ccs/sampleSamplesPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/ccs/sampleSamplesPK.yaml#/components/responses/SampleResult'
+    patch:
+      tags:
+        - CCS
+      summary: Update sample
+      description: |
+        Perms:
+        * `ccs.sample`: update
+      parameters:
+        - $ref: '../components/ccs/sampleSamplesPK.yaml#/components/parameters/SampleIDParam'
+      requestBody:
+        $ref: '../components/ccs/sampleSamplesPK.yaml#/components/requestBodies/PatchRequest'
+      responses:
+        200:
+          $ref: '../components/ccs/sampleSamplesPK.yaml#/components/responses/SampleResult'
+
+  /raw_event/raw_events:
+    get:
+      tags:
+        - CCS
+      summary: View all raw_event info
+      description: |
+        Perms:
+        * `ccs.rawevent`: retrieve
+      responses:
+        200:
+          $ref: '../components/ccs/raw_eventRaw_events.yaml#/components/responses/200'
+
+  /raw_event/raw_events/{pk}:
+    get:
+      tags:
+        - CCS
+      summary: Retrieve raw_event
+      description: |
+        Perms:
+        * `ccs.rawevent`: retrieve
+      parameters:
+        - $ref: '../components/ccs/raw_eventRaw_eventsPK.yaml#/components/parameters/RawEventIDParam'
+      responses:
+        200:
+          $ref: '../components/ccs/raw_eventRaw_eventsPK.yaml#/components/responses/200'
+
+  /raw_event/raw_events/{pk}/misreport:
+    put:
+      tags:
+        - CCS
+      summary: Misreport raw_event
+      description: |
+        Perms:
+        * `ccs.rawevent`: update
+      parameters:
+        - $ref: '../components/ccs/raw_eventRaw_eventsPK.yaml#/components/parameters/RawEventIDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          $ref: '../components/ccs/raw_eventRaw_eventsPK.yaml#/components/responses/200'
+  /raw_event/raw_events/{pk}/verified:
+    put:
+      tags:
+        - CCS
+      summary: Verified raw_event
+      description: |
+        Perms:
+        * `ccs.rawevent`: update
+      parameters:
+        - $ref: '../components/ccs/raw_eventRaw_eventsPK.yaml#/components/parameters/RawEventIDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          $ref: '../components/ccs/raw_eventRaw_eventsPK.yaml#/components/responses/200'
+  /raw_event/raw_events/create_or_update_for_camera:
+    post:
+      tags:
+        - CCS
+      summary: Box creat raw_event (To be confirmed) (Box only)
+      description: |
+        Perms:
+        * User: Box
+      requestBody:
+        $ref: '../components/ccs/raw_eventsCreate_or_update_for_camera.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/ccs/raw_eventRaw_eventsPK.yaml#/components/responses/200'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

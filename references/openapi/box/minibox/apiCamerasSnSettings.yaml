@@ -1,0 +1,136 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PostRequest'
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+    PostResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/PostResult'
+  schemas:
+    Result:
+      allOf:
+        - $ref: 'common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                enable:
+                  type: string
+                  description: Temperature detection enabled
+                  enum:
+                    - true
+                    - false
+                limit:
+                  type: integer
+                  format: int32
+                  description: The temperature limit
+                outdoor:
+                  type: string
+                  description: Is it outdoors
+                  enum:
+                    - true
+                    - false
+                range_min:
+                  type: integer
+                  format: int32
+                  description: Temperature minimum
+                range_max:
+                  type: integer
+                  format: int32
+                  description: Temperature maximum
+                fahrenheit_unit:
+                  type: string
+                  description: Whether it is a Fahrenheit temperature unit
+                  enum:
+                    - true
+                    - false
+                correction_value:
+                  type: integer
+                  format: int32
+                  description: Correction value
+                multi_frame_confir:
+                  type: string
+                  description: Multi-frame configuration
+                  enum:
+                    - true
+                    - false
+
+    PostRequest:
+      type: object
+      properties:
+        limit:
+          type: integer
+          format: int32
+          description: The temperature limit
+        outdoor:
+          type: string
+          description: Is it outdoors
+          enum:
+            - true
+            - false
+        range_min:
+          type: integer
+          format: int32
+          description: Temperature minimum
+        range_max:
+          type: integer
+          format: int32
+          description: Temperature maximum
+        fahrenheit_unit:
+          type: string
+          description: Whether it is a Fahrenheit temperature unit
+          enum:
+            - true
+            - false
+
+  examples:
+    PostRequest:
+      value:
+        limit: 38.25
+        outdoor: false
+        range_min: 35
+        range_max: 43.5
+        fahrenheit_unit: true
+    PostResult:
+      value:
+        code: 0
+        msg: ok
+        data: null
+
+    Result:
+      value:
+        code: 0
+        msg: ok
+        data:
+          enable: false
+          limit: 38.25
+          outdoor: false
+          range_min: 35
+          range_max: 43.5
+          fahrenheit_unit: true
+          correction_value: 0
+          multi_frame_confir: true

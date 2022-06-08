@@ -1,0 +1,94 @@
+# Name: test_default.tavern
+test_name: Create target-point
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create target
+    request: &request_anchor
+      url: "{url}/map/targets"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        target_type: point
+        name: tavern_point
+        point:
+          lat: 32.0572354
+          lng: 118.77807441
+        auto_threshold: 1
+        camera_id: 5
+    response: &response_anchor
+      status_code: 200
+      body:
+        ret:
+          id: !anyint
+      save:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Create target-polygons
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create target
+    request:
+      <<: *request_anchor
+      json:
+        target_type: polygons
+        name: tavern_polygons
+        polygons:
+          - points:
+            - lat: 23.21312312312
+              lng: 112.23213213
+            - lat: 24.21212312312
+              lng: 112.43253213
+            - lat: 24.21332312312
+              lng: 112.44213213
+        auto_threshold: 2
+        robot_id: robot_test_10002
+    response: *response_anchor
+
+---
+test_name: Create target-position
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create target
+    request:
+      <<: *request_anchor
+      json:
+        target_type: position
+        name: tavern_position
+        position:
+          x: 24.21332312312
+          y: 112.44213213
+          z: 3
+        auto_threshold: null
+        camera_id: 6
+    response: *response_anchor
+
+---
+test_name: Create target-auto
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create target
+    request:
+      <<: *request_anchor
+      json:
+        target_type: auto
+        name: tavern_auto
+        point:
+          lat: 32.0572354
+          lng: 118.77807441
+        polygons:
+          - points:
+            - lat: 23.21312312312
+              lng: 112.23213213
+            - lat: 24.21212312312
+              lng: 112.43253213
+            - lat: 24.21332312312
+              lng: 112.44213213
+        domain_id: 1
+    response: *response_anchor

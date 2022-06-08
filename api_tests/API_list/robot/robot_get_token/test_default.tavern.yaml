@@ -1,0 +1,68 @@
+# Name: test_default.tavern
+test_name: Renewal when token expires or is invalid
+marks:
+  - parametrize:
+      key: name_robot
+      vals:
+        - robot_events
+        - robot_snaps
+        - robot_videos
+        - robot_inspections
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: robot_initiate
+  - type: ref
+    id: robot_authenticate
+  - name: get_token?name=camera_preview|camera_events|camera_snaps|camera_videos
+    request:
+      url: "{url}/robot/robots/get_token?name={name_robot}"
+      method: GET
+      headers:
+        content-type: application/json
+#        X-APP: "Robot/{robot_level}/{robot_version}"
+#        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          user_id: !anyint
+          url: !anything
+          fields: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_box_get_token
+---
+test_name: Renewal when token error
+marks:
+  - parametrize:
+      key: err_name_robot
+      vals:
+        - ""
+        - 12312
+        - qweasd
+        - wqe@#$%1424
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: robot_initiate
+  - type: ref
+    id: robot_authenticate
+  - name: Renewal when token error
+    request:
+      url: "{url}/robot/robots/get_token?name={err_name_robot}"
+      method: GET
+      headers:
+        content-type: application/json
+#        X-APP: "Robot/{robot_level}/{robot_version}"
+#        Referer: "{Referer}"
+    response:
+      status_code: 400
+      body:
+        extra:
+          detail:
+            name:
+              - !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400

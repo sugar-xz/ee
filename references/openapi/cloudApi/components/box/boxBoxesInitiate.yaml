@@ -1,0 +1,60 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+  responses:
+    200:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Box id
+
+    Result:
+      description: Box initiate, renturn `challenge`
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              description: Content returned by request (JSON type)
+              properties:
+                id:
+                  type: string
+                challenge:
+                  type: string
+                hash_algorithm:
+                  type: string
+                  enum:
+                    - sha512
+
+  examples:
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: box_super_10001
+          challenge: "fAeaEQlYUiGbgDfDVKSezO8lv0Ef41EfCxoSXZuJ0vymiQ7xus="
+          hash_algorithm: sha512

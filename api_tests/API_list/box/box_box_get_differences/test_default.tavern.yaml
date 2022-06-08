@@ -1,0 +1,88 @@
+# Name: test_default.tavern
+test_name:  Get differences with existing versions
+stages:
+  - type: ref
+    id: login_customer
+  - name: Get differences with existing versions
+    request: &differebnces_anchor
+      url: "{url}/box/boxes/differences"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+      json:
+        boxes:
+          - id: "{test_box_id}"
+            version: 1
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+  - name: Get differences with existing versions
+    request:
+      <<: *differebnces_anchor
+      json:
+        boxes: []
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Missing header view information
+stages:
+  - type: ref
+    id: login_customer
+  - name: view information
+    request:
+      <<: *differebnces_anchor
+      headers:
+        content-type: application/json
+    response:
+      status_code: 403
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_403
+
+---
+test_name: User error login
+marks:
+  - parametrize:
+      key:
+        - err_logic_box_id
+        - err_versions
+      vals:
+        - ["", ""]
+        - ["", 1]
+        - ["{test_box_id}", ""]
+stages:
+  - type: ref
+    id: login_customer
+  - name: Abnormal error
+    request:
+      <<: *differebnces_anchor
+      json:
+        boxes:
+          - id: "{err_logic_box_id}"
+            version: "{err_versions}"
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+
+---
+test_name: Not logged in to see box information
+stages:
+  - name: Not logged in to see box information
+    request: *differebnces_anchor
+    response:
+      status_code: 401
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_401

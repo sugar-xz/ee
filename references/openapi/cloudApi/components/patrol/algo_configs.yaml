@@ -1,0 +1,195 @@
+openapi: 3.0.2
+components:
+  parameters:
+    TargetIDParam:
+      in: query
+      name: target_id
+      description: Target id
+      schema:
+        type: integer
+    ActionParam:
+      in: query
+      name: waypoint_action
+      description: Daily scheduling information
+      schema:
+        type: string
+    EnabledParam:
+      in: query
+      name: enabled
+      description: Whether to enable
+      schema:
+        type: boolean
+        enum:
+          - true
+          - false
+  requestBodies:
+    PostRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PostRequest'
+  responses:
+    ConfigResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConfigResult'
+          examples:
+            response:
+              $ref: '#/components/examples/ConfigResult'
+    ConfigListResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConfigListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/ConfigListResult'
+  schemas:
+    PostRequest:
+      type: object
+      required:
+        - target_id
+        - algo_id
+        - params
+        - waypoint_action
+      properties:
+        target_id:
+          type: integer
+          description: Target id
+        algo_id:
+          type: integer
+          description: Algorithm id
+        params:
+          type: string
+          description: Algorithm parameter information
+        thresholds:
+          type: string
+          description: Algorithm parameter information
+        schedules:
+          type: string
+          description: Daily scheduling information, you can specify multiple time periods, the value is the number of minutes per day, supports cross-day. Such as [[200, 600], [1200, 60]]
+        enabled:
+          type: boolean
+          description: Whether to enable
+        waypoint_action:
+          type: string
+        fetch_tasks_count:
+          type: integer
+          description: The number of historical tasks required by the algorithm service
+
+    ConfigResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/ConfigInfo'
+    ConfigListResult:
+      description: Robot algo config list
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ConfigInfo'
+
+    ConfigInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: AlgorithmConfig id
+        target_id:
+          type: integer
+          description: Target id
+        algo_id:
+          type: integer
+          description: Algorithm id
+        params:
+          type: string
+          description: Algorithm parameter information
+        thresholds:
+          type: string
+          description: Algorithm parameter information
+        schedules:
+          type: string
+          description: Daily scheduling information, you can specify multiple time periods, the value is the number of minutes per day, supports cross-day. Such as [[200, 600], [1200, 60]]
+        enabled:
+          type: boolean
+          description: Whether to enable
+        waypoint_action:
+          type: string
+        fetch_tasks_count:
+          type: integer
+          description: The number of historical tasks required by the algorithm service
+
+  examples:
+    PostRequest:
+      value:
+        target_id: 2
+        algo_id: 4
+        params: {}
+        thresholds: {}
+        schedules:
+          -
+            - 1070
+            - 1220
+        enabled: True
+        waypoint_action: video
+        fetch_tasks_count: 0
+
+    ConfigResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 3
+          target_id: 2
+          algo_id: 4
+          params: {}
+          thresholds: {}
+          schedules:
+            - - 1070
+              - 1220
+          enabled: True
+          waypoint_action: video
+          fetch_tasks_count: 0
+
+    ConfigListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 1
+          next: null
+          previous: null
+          results:
+            - id: 3
+              target_id: 2
+              algo_id: 4
+              params: {}
+              thresholds: {}
+              schedules:
+                - - 1070
+                  - 1220
+              enabled: True
+              waypoint_action: video
+              fetch_tasks_count: 0

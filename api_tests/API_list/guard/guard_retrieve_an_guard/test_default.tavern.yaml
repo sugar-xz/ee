@@ -1,0 +1,17 @@
+# Name: test_default.tavern
+test_name:  Retrieve an guard
+stages:
+  - type: ref
+    id: login_guard_admin
+  - name: Get one guard
+    request:
+      url: "{url}/guard/guards/6"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

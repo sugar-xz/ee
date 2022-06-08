@@ -1,0 +1,67 @@
+# Name: test_default.tavern
+# Name: test_auth_reset_password.tavern
+#---
+##发邮件 不调用
+#test_name: User reset password
+#stages:
+#  - type: ref
+#    id: login_customer
+#  - name: User reset password
+#    request:
+#      url: "{url}/user/auth/reset_password"
+#      method: POST
+#      headers:
+#        content-type: application/json
+#        X-CSRFTOKEN: "{get_csrftoken}"
+#      json:
+#        email: "{customer}"
+#    response:
+#      status_code: 200
+#      body:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Reset password error
+marks:
+  - parametrize:
+      key: err_email
+      vals:
+        - ""
+        - "@turingvideo.net"
+        - "#@￥%我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@#@￥%我是测试字段段我真的是测试字段段我真的是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段段我真的是测试字段段我真段我真的是测试字段段我真的是测试字段的是测试字段段我真的是测试字段"
+stages:
+  - type: ref
+    id: login_customer
+  - name:  User error reset password
+    request: &reset_password_anchor
+      url: "{url}/user/auth/reset_password"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        email: "{err_email}"
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+
+---
+test_name: method error to reset password & 注册请求方法错误
+stages:
+  - type: ref
+    id: login_customer
+  - name: method error
+    request:
+      <<: *reset_password_anchor
+      method: GET
+      json:
+        email: "{customer}"
+    response:
+      status_code: 405
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_405

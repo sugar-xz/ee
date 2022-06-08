@@ -1,0 +1,250 @@
+openapi: 3.0.2
+components:
+  parameters:
+    TrackIDParam:
+      in: path
+      name: id
+      required: true
+      description: Face track id
+      schema:
+        type: string
+        format: uuid
+    OrgIDParam:
+      in: query
+      name: organization
+      description: Organization id
+      schema:
+        type: integer
+        format: int32
+    SerialNoParam:
+      in: query
+      name: serial_no
+      description: Tracking object serial no
+      schema:
+        type: string
+    NameParam:
+      in: query
+      name: name
+      description: Tracking object name
+      schema:
+        type: string
+  requestBodies:
+    EnableDisable:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+    PostRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PostRequest'
+  responses:
+    TrackListResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TrackListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/TrackListResult'
+    TrackResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TrackResult'
+          examples:
+            response:
+              $ref: '#/components/examples/TrackResult'
+  schemas:
+    PostRequest:
+      type: object
+      required:
+        - organization
+        - name
+        - business_type
+      properties:
+        organization:
+          type: integer
+          format: int32
+          description: Organization id
+        img:
+          type: object
+          description: S3 object
+          required:
+            - Key
+            - Bucket
+          properties:
+            meta:
+              type: object
+              properties:
+                file_size:
+                  type: string
+                content_type:
+                  type: string
+            Key:
+              type: string
+            Bucket:
+              type: string
+            Etag:
+              type: string
+            Location:
+              type: string
+        event_id:
+          type: integer
+          format: int32
+          description: Belongs to the event id
+        enabled_tracking:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Enabled tracking
+        note:
+          type: string
+          description:  Adds note to
+        params:
+          type: string
+          format: JSONObjectField
+        data:
+          type: object
+          properties:
+            serial_no:
+              type: string
+              description: Tracking object serial no
+            name:
+              type: string
+              description: Tracking object name
+
+
+    TrackListResult:
+      description: Face tracking list
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/TrackingInfo'
+    TrackingInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Tracking id
+        created_at:
+          type: string
+          description: Data create time
+          format: date-time
+        updated_at:
+          type: string
+          description: Data update time
+          format: date-time
+        enabled_tracking:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Enabled tracking
+        note:
+          type: string
+        params:
+          type: string
+          format: JSONObjectField
+        organization_id:
+          type: integer
+          format: int32
+          description: Organization id
+        img_url:
+          type: string
+          description: Img path
+        data:
+          type: object
+          properties:
+            serial_no:
+              type: string
+              description: Tracking object serial no
+            name:
+              type: string
+              description: Tracking object name
+
+    TrackResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/TrackingInfo'
+
+
+  examples:
+    PostRequest:
+      value:
+        organization: 9
+        img:
+          Key: test
+          Bucket: test
+        event_id: 1
+        enabled_tracking: false
+        note:
+        params: {}
+        data:
+          serial_no: serial_no1
+          name: test
+
+    TrackListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 1
+          next: null
+          previous: null
+          results:
+            - id: 4366ea92-b2ee-45aa-8580-2985392518a5
+              created_at: '2020-07-11T10:33:45Z'
+              updated_at: '2020-07-12T04:57:57Z'
+              enabled_tracking: false
+              note:
+              params: {}
+              organization_id: 9
+              img_url: https://turingvideo-staging-api.s3.amazonaws.com
+              data:
+                serial_no: serial_no1
+                name: test
+
+    TrackResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 4366ea92-b2ee-45aa-8580-2985392518a5
+          created_at: '2020-07-11T10:33:45Z'
+          updated_at: '2020-07-12T04:57:57Z'
+          enabled_tracking: false
+          note:
+          params: {}
+          organization_id: 9
+          img_url: https://turingvideo-staging-api.s3.amazonaws.com
+          data:
+            serial_no: serial_no1
+            name: test

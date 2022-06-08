@@ -1,0 +1,65 @@
+# Name: test_default.tavern
+test_name: Validate Resource Scope (perm)
+marks:
+  - parametrize:
+      key: scope_value
+      vals:
+        - auth.user
+        - logic.site/Q(id__in=[1])
+        - logic.site/Q(id__in=[1])::site:logic.box
+        - !raw logic.box/Q(user_id={user_id})
+        - !raw logic.camera/Q(box__site__managements__site_manager={user_id})
+stages:
+  - type: ref
+    id: login_admin
+  - name: Validate Resource Scope
+    request:
+      url: "{url}/perm/validate_resource_scope"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        scope: "{scope_value}"
+        user_id: 1
+    response:
+      status_code: 200
+      body:
+        ret:
+          total: !anyint
+          model: !anystr
+          qs: !anystr
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Validate Resource Scope error (perm)
+marks:
+  - parametrize:
+      key:
+        - err_scope
+        - err_user_id
+      vals:
+        - ["", ""]
+        - ["", 1]
+        - [!raw "auth.user/Q(id={user_id})", ""]
+        - [asdasdasd, 1]
+        - [!raw "auth.user/Q(id={user_id})", err]
+stages:
+  - type: ref
+    id: login_admin
+  - name: Validate Resource Scope error
+    request:
+      url: "{url}/perm/validate_resource_scope"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        scope: "{err_scope}"
+        user_id: "{err_user_id}"
+    response:
+      status_code: 400
+      body:
+        extra: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400

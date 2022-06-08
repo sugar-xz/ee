@@ -1,0 +1,87 @@
+openapi: 3.0.2
+components:
+  parameters:
+    InspectionIDParam:
+      in: path
+      name: id
+      required: true
+      description: Inspection materials id
+      schema:
+        type: string
+        format: int64
+  responses:
+    200:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Result:
+      description: Inspection materials
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: 'inspectionInspections.yaml#/components/schemas/InspectionInfo'
+
+  examples:
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 184
+          robot_id: robot_dog_sr_20002
+          robot:
+            id: robot_dog_sr_20002
+            name: 20002
+            type: test_li
+          camera:
+            name: front
+            lablel: Front camera
+          started_at: '2019-10-17T07:01:14Z'
+          ended_at: '2019-10-17T07:01:14Z'
+          location: null
+          mediums:
+            - id: 185
+              name: snapshot
+              file:
+                size:
+                  1920
+                  1080
+                content_type: image/jpeg
+                file_size: 528447
+                url: https://wanda-poc.s3.cn-northwest-1.amazonaws.com.cn/users/2/robots/wx
+          way_point:
+            x: 9.294153850803237
+            y: -1.1163073281321914
+            id: 23
+            name: I Do
+            site: 1
+            map_id: robot_dog_sr_20002.1570763226327
+            route_id: 34
+          type: check
+          algo_types: []
+          target_id: 3
+          site_id: null
+          route_id: 1
+          map_id: 2
+          target:
+            id: 3
+            site: 2
+            serial_no: 5-312
+            name: 办公室
+            floor: 3
+            longitude: '116.397128'
+            latitude: '39.916527'
+            desc: ''
+            category: ''
+            latest_inspection_time: '2019-08-16T09:15:22Z'
+          case: null

@@ -1,0 +1,8 @@
+websockets==8.1
+requests==2.22.0
+PyYAML
+tavern==0.30.3
+flake8
+flake8-commas==2.0.0
+cryptography==2.7
+pglast==1.9

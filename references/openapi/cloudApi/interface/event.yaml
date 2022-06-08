@@ -1,0 +1,231 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Event
+    description: Event related interface
+security:
+  - BasicAuth: []
+
+paths:
+  /event/events:
+    get:
+      tags:
+        - Event
+      summary: View events information
+      description: |
+        Perms：
+        * `logic.event`: retrieve
+
+        Displays current user event information
+        * When using conditional queries, multiple parameters `,` separated
+      parameters:
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/BoxCameraIdParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/RobotIdParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/StartTimeParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/EndTimeParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/RobotCameraNameParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/TypeParam'
+        - $ref: '../components/common.yaml#/components/parameters/limitParam'
+      responses:
+        200:
+          $ref: '../components/event/eventEvents.yaml#/components/responses/EventListResult'
+
+  /event/events/camera:
+    post:
+      tags:
+        - Event
+        - Box
+      summary: Create Event (Box only)
+      description: |
+        Perms：
+        * User: Box
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/event/eventEventsCamera.yaml#/components/requestBodies/request'
+      responses:
+        200:
+          $ref: '../components/event/eventEventsCamera.yaml#/components/responses/200'
+
+  /event/events/robot:
+    post:
+      tags:
+        - Event
+        - Robot
+      summary: Create Event (Robot only)
+      description:  |
+        Perms：
+        * User: Robot
+      requestBody:
+        $ref: '../components/event/eventEventsRobot.yaml#/components/requestBodies/request'
+      responses:
+        200:
+          $ref: '../components/event/eventEventsRobot.yaml#/components/responses/200'
+
+  /event/events/slot:
+    get:
+      tags:
+        - Event
+      summary: "Event Slot: timeline"
+      description: |
+        Perms：
+        * `logic.event`: retrieve
+
+        When using conditional queries, multiple parameters `,` separated
+      parameters:
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/BoxCameraIdParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/RobotIdParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/EndTimeParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/StartTimeParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/RobotCameraNameParam'
+      responses:
+        200:
+          $ref: '../components/event/eventEventsSlot.yaml#/components/responses/200'
+
+  /event/events/{event_id}:
+    get:
+      tags:
+        - Event
+      summary: View event information
+      description: |
+        Perms：
+        * `logic.event`: retrieve
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/EventIDParam'
+      responses:
+        200:
+          $ref: '../components/event/eventEventsPK.yaml#/components/responses/EventResult'
+    put:
+      tags:
+        - Event
+      summary: Update Event
+      description: |
+        Perms：
+        * `logic.event`: update
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/EventIDParam'
+      requestBody:
+        $ref: '../components/event/eventEventsPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/event/eventEventsPK.yaml#/components/responses/EventResult'
+    patch:
+      tags:
+        - Event
+      summary: Update Event
+      description: |
+        Perms：
+        * `logic.event`: update
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/EventIDParam'
+      requestBody:
+        $ref: '../components/event/eventEventsPK.yaml#/components/requestBodies/PatchRequest'
+      responses:
+        200:
+          $ref: '../components/event/eventEventsPK.yaml#/components/responses/EventResult'
+    delete:
+      tags:
+        - Event
+      summary: Delete event
+      description: |
+        Perms：
+        * `logic.event`: destory
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/EventIDParam'
+      responses:
+        200:
+          $ref: '../components/event/eventEventsPK.yaml#/components/responses/DeleteResult'
+
+  /event/events/updates:
+    patch:
+      tags:
+        - Event
+      summary: Batch update Event
+      description: |
+        Perms：
+        * `logic.event`: update
+
+        Condition:
+        * Batch update robot or box event
+        * 'caerma_ids' and 'robot_ids' select one
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIdsParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/BoxCameraIdParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/RobotIdParam'
+      requestBody:
+        $ref: '../components/event/eventEventsPK.yaml#/components/requestBodies/PatchRequest'
+      responses:
+        200:
+          $ref: '../components/event/eventEventsPK.yaml#/components/responses/EventResult'
+
+  /event/events/all:
+    get:
+      tags:
+        - Event
+      summary: View all event information
+      description: |
+        Perms：
+        * `logic.event`: retrieve
+
+        When using conditional queries, multiple parameters `,` separated
+      parameters:
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/BoxCameraIdParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/RobotIdParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/StartTimeParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/EndTimeParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/RobotCameraNameParam'
+        - $ref: '../components/event/eventEvents.yaml#/components/parameters/TypeParam'
+        - $ref: '../components/common.yaml#/components/parameters/limitParam'
+      responses:
+        200:
+          $ref: '../components/event/eventEvents.yaml#/components/responses/EventListResult'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    X_APP:
+      type: apiKey
+      in: header
+      name: X-APP

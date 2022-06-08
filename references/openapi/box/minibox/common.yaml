@@ -1,0 +1,52 @@
+openapi: 3.0.2
+components:
+  parameters:
+    SnParam:
+      in: path
+      name: sn
+      description: device serial number
+      required: true
+      schema:
+        type: string
+    EventIDParam:
+      in: path
+      name: id
+      description: Event id
+      required: true
+      schema:
+        type: integer
+        format: int32
+  schemas:
+    Result:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Request return code (example:`0`)
+        msg:
+          type: string
+          description: Request return message (example:`ok`)
+
+    ListResult:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Request return code (example:`0`)
+        msg:
+          type: string
+          description: Request return message (example:`ok`)
+        total:
+          type: integer
+          format: int32
+          description: Total count
+        page:
+          type: integer
+          format: int32
+          description: Page number, starts with 1
+        pagesize:
+          type: integer
+          format: int32
+          description: Page size, default 10, max 50. starts with 1

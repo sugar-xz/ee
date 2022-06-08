@@ -1,0 +1,97 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AndroidRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/AndroidRequest'
+  responses:
+    200:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AndroidResult'
+          examples:
+            response:
+              $ref: '#/components/examples/AndroidResult'
+  schemas:
+    AndroidRequest:
+      type: object
+      required:
+        - registration_id
+        - device_id
+        - cloud_message_type
+      properties:
+        name:
+          type: string
+          description: Device name
+        registration_id:
+          type: string
+          description: Android phone registration id
+        device_id:
+          type: string
+          description: Android UUID
+          format: uuid
+        cloud_message_type:
+          type: string
+
+    AndroidResult:
+      description: Result of authentication
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: Device id
+                name:
+                  type: string
+                  description: Device name
+                registration_id:
+                  type: string
+                  description: Android iphone registration id
+                device_id:
+                  type: string
+                  description: Android UUID
+                active:
+                  type: boolean
+                  enum:
+                    - true
+                    - false
+                date_created:
+                  type: string
+                  format: date-time
+                cloud_message_type:
+                  type: string
+  examples:
+    AndroidRequest:
+      value:
+        name: Galaxy Note 5
+        registration_id: foobar
+        device_id: 0x1031af3b
+        cloud_message_type: FCM
+
+    AndroidResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 22
+          name: Galaxy Note 5
+          registration_id: foobar
+          device_id: 271691579
+          active: true
+          date_created: '2019-11-21T06:43:02Z'
+          cloud_message_type: FCM

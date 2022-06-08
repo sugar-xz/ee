@@ -1,0 +1,150 @@
+# Name: test_default.tavern
+#test_name: User update robot & 用户更新robot
+#stages:
+#  - type: ref
+#    id: login_customer
+#  - name: User update robot
+#    request:
+#      url: "{url}/robot/robots/robot_test_10001"
+#      method: PUT
+#      headers:
+#        content-type: application/json
+#        X-CSRFTOKEN: "{get_csrftoken}"
+#        Referer: "{Referer}"
+#      json:
+#        timezone: !!str UTC
+#        name: !!str sugar_robot
+#        notifies: !!str push
+#        upload_video_enabled: !!str true
+#        detect_params:
+#          algos: !!str person
+#          threshold: !!str 0.6
+#          auto_speak_enabled: !!str true
+#          detect_enabled: !!str true
+#        detection_config:
+#          detection_rules:
+#            - name: !!str person
+#              mode: !!str on
+#              start_at: !int 0
+#              end_at: !int 1
+#              algos: !!str person
+#          detection_threshold: !!str 0.5
+#        patrol_params:
+#            radius: !int 4
+#            speed: !!str 0.35
+#        mac_params:
+#          detect_macs:
+#            - mac_address: !!str 11:22:33:44:55:66
+#              name: !!str Name
+#              vendor: !!str Apple
+#              type: !!str restricted
+#          detect_macs_enabled: !!str true
+#          auto_speak_enabled: !!str true
+#    response:
+#      status_code: 200
+#      body:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200
+# ##   delay_after: 1
+---
+test_name: User error update robot
+marks:
+  - parametrize:
+      key: err_robot_id
+      vals:
+        - 4567895465
+        - sakjdhsajk#^%$$@
+stages:
+  - type: ref
+    id: login_customer
+  - name: User error update robott
+    request:
+      url: "{url}/camera/cameras/{err_robot_id}"
+      method: PUT
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        timezone: UTC
+        name: sugar_robot
+        notifies: push
+        upload_video_enabled: true
+        detect_params:
+          algos: person
+          threshold: 0.6
+          auto_speak_enabled: true
+          detect_enabled: true
+        detection_config:
+          detection_rules:
+            - name: person
+              mode: on
+              start_at: 0
+              end_at: 1
+              algos: person
+          detection_threshold: 0.5
+        patrol_params:
+            radius: 4
+            speed: 0.35
+        mac_params:
+          detect_macs:
+            - mac_address: 11:22:33:44:55:66
+              name: Name
+              vendor: Apple
+              type: restricted
+          detect_macs_enabled: true
+          auto_speak_enabled: true
+    response:
+      status_code: 404
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_404
+ ##   delay_after: 1
+
+---
+test_name: Missing request header
+stages:
+  - type: ref
+    id: login_customer
+  - name: User update robot missing request header
+    request:
+      url: "{url}/robot/robots/robot_test_10001"
+      method: PUT
+      headers:
+        content-type: application/json
+        Referer: "{Referer}"
+      json:
+        timezone: !!str UTC
+        name: !!str sugar_robot
+        notifies: !!str push
+        upload_video_enabled: !!str true
+        detect_params:
+          algos: !!str person
+          threshold: !!str 0.6
+          auto_speak_enabled: !!str true
+          detect_enabled: !!str true
+        detection_config:
+          detection_rules:
+            - name: !!str person
+              mode: !!str on
+              start_at: !int 0
+              end_at: !int 1
+              algos: !!str person
+          detection_threshold: !!str 0.5
+        patrol_params:
+            radius: !int 4
+            speed: !!str 0.35
+        mac_params:
+          detect_macs:
+            - mac_address: !!str 11:22:33:44:55:66
+              name: !!str Name
+              vendor: !!str Apple
+              type: !!str restricted
+          detect_macs_enabled: !!str true
+          auto_speak_enabled: !!str true
+    response:
+      status_code: 403
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_403
+ #   delay_after: 1

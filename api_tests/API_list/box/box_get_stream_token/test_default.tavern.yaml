@@ -1,0 +1,57 @@
+# Name: test_default.tavern
+test_name: Remember to renew when stream expires or invalid
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_initiate
+  - type: ref
+    id: box_authenticate
+  - name: Remember to renew when stream expires or invalid
+    request:
+      url: "{url}/box/boxes/get_stream_token?camera_id={camera_id}"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Renewal when token error
+marks:
+  - parametrize:
+      key: err_name_camera
+      vals:
+        - ""
+        - 123122452
+        - qweasd
+        - wqe@#$%1424
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_initiate
+  - type: ref
+    id: box_authenticate
+
+  - name: Renewal when token error
+    request:
+      url: "{url}/box/boxes/get_token?name={err_name_camera}"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+    response:
+      status_code: 400
+      body:
+        extra:
+          detail:
+            name:
+              - !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400

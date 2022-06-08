@@ -1,0 +1,151 @@
+openapi: 3.0.2
+components:
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserNodeListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/UserNodeListResult'
+  schemas:
+    UserNodeListResult:
+      description: Org domain list
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/UserNodeInfo'
+
+    UserNodeInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Domain id
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              description: user id
+            username:
+              type: string
+              description: User name
+            first_name:
+              type: string
+              description: User surname
+            last_name:
+              type: string
+              description: User name
+            lang:
+              type: string
+              description: language
+            timezone:
+              type: string
+              description: The time zone
+            activated:
+              type: boolean
+              enum:
+                - true
+                - false
+              description: User active state
+            role:
+              type: string
+              description: User role
+            roles:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                    description: Role id
+                  code_name:
+                    type: string
+                    description: Role code_name
+                  name:
+                    type: string
+                    description: Role name
+        parent_id:
+          type: integer
+          format: int32
+          description: Domain parent id
+        tree_id:
+          type: integer
+          format: int32
+          description: Django-mptt domain tree id
+        level:
+          type: integer
+          format: int32
+          description: Django-mptt domain level
+        lft:
+          type: integer
+          format: int32
+          description: The left border of django-mptt domain
+        rght:
+          type: integer
+          format: int32
+          description: The right border of django-mptt domain
+
+  examples:
+    UserNodeListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 2
+          next: null
+          previous: null
+          results:
+            - id: 3
+              user:
+                id: 12
+                first_name: turing
+                last_name: video
+                username: test@turingvideo.net
+                lang: en
+                timezone: America/Los_Angeles
+                role: customer
+                activated: true
+                roles:
+                  - id: 5
+                    code_name: customer
+                    name: customer
+              parent_id: null
+              tree_id: 1
+              level: 0
+              lft: 1
+              rght: 4
+            - id: 4
+              user:
+                id: 4
+                first_name: org
+                last_name: lee
+                username: org@turingvideo.net
+                lang: en
+                timezone: America/Los_Angeles
+                role: customer
+                activated: false
+                roles:
+                  -
+              parent_id: 3
+              tree_id: 1
+              level: 1
+              lft: 2
+              rght: 3

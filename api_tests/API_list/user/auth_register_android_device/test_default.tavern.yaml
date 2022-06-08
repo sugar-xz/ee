@@ -1,0 +1,70 @@
+# Name: test_default.tavern
+test_name: Register android Device
+stages:
+  - type: ref
+    id: login_customer
+  - name: Register android Device
+    request: &registration_anchor
+      url: "{url}/device/gcm"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        name: Galaxy Note 5
+        registration_id: foobar
+        device_id: 0x1031af3b
+        cloud_message_type: FCM
+    response:
+      status_code:
+        - 200
+        - 201
+
+
+---
+test_name: Repeat register
+stages:
+  - type: ref
+    id: login_customer
+  - name: Register android Device
+    request: *registration_anchor
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Info error to registration
+marks:
+  - parametrize:
+      key:
+        - err_name
+        - err_registration_id
+        - err_device_id
+      vals:
+        - ["", "",""]
+        - ["Galaxy", "",""]
+        - ["", "foobar",""]
+        - ["", "","0x1031af3b"]
+        - ["Galaxy", "foobar","0x1031a@#$%^f3b"]
+stages:
+  - type: ref
+    id: login_customer
+  - name:  Device error registration
+    request:
+      url: "{url}/device/gcm"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        name: "{err_name}"
+        registration_id: "{err_registration_id}"
+        device_id: "{err_device_id}"
+        cloud_message_type: FCM
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400

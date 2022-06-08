@@ -1,0 +1,42 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+
+  schemas:
+    Request:
+      type: object
+      description: S3 object
+      required:
+        - Key
+        - Bucket
+      properties:
+        meta:
+          type: object
+          properties:
+            file_size:
+              type: string
+            content_type:
+              type: string
+        Key:
+          type: string
+        Bucket:
+          type: string
+        Etag:
+          type: string
+        Location:
+          type: string
+
+  examples:
+    Request:
+      value:
+        Key: test
+        Bucket: test

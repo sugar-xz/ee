@@ -1,0 +1,97 @@
+# Name: test_default.tavern
+test_name: User add camera
+stages:
+  - type: ref
+    id: login_customer
+  - name: User add camera
+    request:
+      url: "{url}/camera/cameras"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        box_id: "box_test_10002"
+        name: sugar_camera
+        mac_address: "6c:ef:cc:55:dd:75"
+        notifies: ""
+        username: admin
+        password: a123456
+        upload_video_enabled: true
+        uri: https://www.turingvideo.com
+        hd_uri: https://www.turingvideo.com
+        mode: 'on'
+        algo: human
+        location:
+          lng: 0.0
+          lat: 0.0
+        detect_params:
+          threshold: 0.5
+        rules:
+          - name: rule1
+            mode: 'on'
+            start_at: 0
+            end_at: 1
+            algo: person
+            region: 0.151,0.513,0.234,0.135
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+
+---
+test_name: User error add camera
+marks:
+  - parametrize:
+      key:
+        - err_name
+        - err_raw_address
+      vals:
+        - ["", ""]
+        - ["", "3c:ef:7c:4a:dd:79"]
+        - ["#@￥%我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@", "3c:ef:8c:43:dd:79"]
+        - [testcamera, ""]
+stages:
+  - type: ref
+    id: login_customer
+  - name: User add camera
+    request:
+      url: "{url}/camera/cameras"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        box_id: "{test_box_id}"
+        name: "{err_name}"
+        mac_address: "{err_raw_address}"
+        notifies: ""
+        username: admin
+        password: qwe12345
+        upload_video_enabled: true
+        uri: https://www.turingvideo.com
+        hd_uri: https://www.turingvideo.com
+        mode: 'on'
+        algo: human
+        location:
+          lng: 0.0
+          lat: 0.0
+        detect_params:
+          threshold: 0.5
+        rules:
+          - name: rule1
+            mode: 'on'
+            start_at: 0
+            end_at: 1
+            algo: person,car
+            region: 0.151,0.513,0.234,0.135
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+ #   delay_after: 1

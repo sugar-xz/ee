@@ -1,0 +1,31 @@
+# Name: test_default.tavern
+test_name: Save Robot Video
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_initiate
+  - type: ref
+    id: box_authenticate
+  - name: Save Robot Video
+    request:
+      url: "{url}/robot_video/robot_videos/save_video"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Robot/{robot_level}/{robot_version}"
+        Referer: "{Referer}"
+      json:
+          robot_id: "{test_robot_id}"
+          camera: "{robot_camera_name}"
+          started_at: "2019-12-07T17:28:02Z"
+          ended_at: "2019-12-07T17:29:02Z"
+    response:
+      status_code:
+        - 200
+        - 409
+#      status_code: 200
+#      body:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200
+# #   delay_after: 1

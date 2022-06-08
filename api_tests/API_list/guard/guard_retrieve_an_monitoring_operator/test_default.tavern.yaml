@@ -1,0 +1,17 @@
+# Name: test_default.tavern
+test_name:  Retrieve an guard monitoring_operator
+stages:
+  - type: ref
+    id: login_guard_admin
+  - name: Get one guard monitoring_operator
+    request:
+      url: "{url}/monitoring_operator/monitoring_operators/7"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

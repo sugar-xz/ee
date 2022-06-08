@@ -1,0 +1,124 @@
+# Name: test_default.tavern
+test_name: Box create video & box保存视频
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_initiate
+  - type: ref
+    id: box_authenticate
+  - name: Box create video
+    request:
+      url: "{url}/camera_saved_video/camera_saved_videos"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+        Referer: "{Referer}"
+      json:
+        camera_id: "{camera_id}"
+        snapshot:
+            Key: users/1/cameras/1/events/logo.jpg
+            Bucket: dev-turingvideo-com
+            meta:
+                file_size: 1188
+                size:
+                  - 640
+                  - 360
+                content_type: image/jpeg
+        video:
+            Key: users/1/cameras/1/events/logo.jpg
+            Bucket: dev-turingvideo-com
+            meta:
+                file_size: 2288
+                size:
+                  - 640
+                  - 360
+                content_type: "image/jpeg"
+        started_at: "2019-09-27 06:15:31+00"
+        ended_at: "2019-09-27 06:15:32+00"
+    response:
+      status_code:
+        - 200
+        - 409 # Saving video for this camera is unavailable
+        - 503 # send_message
+#      status_code: 200
+#      body:
+#        ret:
+#          camera_id: !int "{camera_id}"
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200
+# #   delay_after: 1
+
+---
+test_name: Box create video check
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_debug_login
+  - type: ref
+    id: box_initiate
+  - name: Box no arguments to create video
+    request:
+      url: "{url}/camera_saved_video/camera_saved_videos"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+        Referer: "{Referer}"
+      json:
+        camera_id: ""
+        snapshot:
+          Key: ""
+          Bucket: ""
+          meta:
+            file_size: ""
+            size:
+              - ""
+            content_type: ""
+        video:
+          Key: ""
+          Bucket: ""
+          meta:
+            file_size: ""
+            size:
+              - ""
+            content_type: ""
+        started_at: ""
+        ended_at: ""
+    response:
+      status_code: 400
+      body:
+        err: !anything
+        extra:
+          detail:
+            camera_id:
+              - "A valid integer is required."
+            snapshot:
+              Key:
+                - "This field may not be blank."
+              Bucket:
+                - "This field may not be blank."
+              meta:
+                file_size:
+                  - "A valid integer is required."
+                content_type:
+                  - "This field may not be blank."
+            video:
+              Key:
+                - "This field may not be blank."
+              Bucket:
+                - "This field may not be blank."
+              meta:
+                file_size:
+                  - "A valid integer is required."
+                content_type:
+                  - "This field may not be blank."
+            started_at:
+              - "Datetime has wrong format. Use one of these formats instead: YYYY-MM-DDThh:mm[:ss[.uuuuuu]][+HH:MM|-HH:MM|Z]."
+            ended_at:
+              - "Datetime has wrong format. Use one of these formats instead: YYYY-MM-DDThh:mm[:ss[.uuuuuu]][+HH:MM|-HH:MM|Z]."
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+ #   delay_after: 1

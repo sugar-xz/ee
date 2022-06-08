@@ -1,0 +1,99 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      properties:
+        resource_type:
+          type: string
+          description: Resource type
+        user_id:
+          type: integer
+          format: int32
+          description: User id
+        actions:
+          type: string
+          description: Code_name of the action you can take on ResourceType. For example, retrieve, create, update, destroy, etc
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                error:
+                  type: string
+                  description: Error message
+                total:
+                  type: integer
+                  format: int32
+                  description: Total number of instances
+                model:
+                  type: string
+                  description: Resource type
+                qs:
+                  type: string
+                  description: Resource instances
+                sql:
+                  type: string
+                  description: Query sql
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      pk:
+                        type: integer
+                        format: int32
+                        description: id
+                      _actions:
+                        type: string
+                        description: Type permissions. For example, retrieve, create, update, destroy
+
+  examples:
+    Request:
+      value:
+        resource_type: auth.user
+        user_id: 1
+        actions: update
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          error: null
+          total: 2
+          model: auth.user
+          qs: "<QuerySet [<User: jsslxz@163.com>, <User: dev@turingvideo.net>]>"
+          sql: "SELECT (t._actions) AS \"_actions\", \"auth_user\".\"id\", \"auth_user\".\"password\", \"auth_user\".\"last_login\", \"auth_user\".\"is_superuser\", \"auth_user\".\"first_name\", \"auth_user\".\"last_name\", \"auth_user\".\"email\", \"auth_user\".\"is_staff\", \"auth_user\".\"is_active\", \"auth_user\".\"date_joined\", \"auth_user\".\"username\", \"auth_user\".\"updated_at\", \"auth_user\".\"role\", \"auth_user\".\"lang\", \"auth_user\".\"nonce\", \"auth_user\".\"timezone\" FROM \"auth_user\" , (select id, string_agg(_actions, ',') as _actions from (SELECT \"auth_user\".\"id\", (select retrieve,update,destroy) AS \"_actions\" FROM \"auth_user\") as t group by id) as t WHERE (t.id = auth_user.id)"
+          date:
+            - pk: 1
+              _actions: retrieve, update, destroy
+            - pk: 12
+              _actions: retrieve, update, destroy

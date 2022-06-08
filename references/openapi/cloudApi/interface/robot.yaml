@@ -1,0 +1,560 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Robot
+    description: Robot device interface
+security:
+  - BasicAuth: []
+
+paths:
+  /robot/robots/initiate:
+    post:
+      tags:
+        - Robot
+      summary: Robot initiate
+      description: Robot to start
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/robot/robotRobotsInitiate.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/robot/robotRobotsInitiate.yaml#/components/responses/200'
+
+  /robot/robots/authenticate:
+    post:
+      tags:
+        - Robot
+      summary: Robot Authenticate
+      description:  Verify the operation after the robot starts
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/robot/robotRobotsAuthenticate.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/robot/robotRobotsAuthenticate.yaml#/components/responses/200'
+
+  /robot/robots/get_config:
+    get:
+      tags:
+        - Robot
+      summary: Get Config
+      description: |
+        Perms:
+        * Robot.retrieve
+
+        Condition:
+        * if sequence not same, perform this operation
+        * Robot needs to be started and validated to invoke this interface
+      responses:
+        200:
+          $ref: '../components/robot/robotRobotsGet_config.yaml#/components/responses/200'
+
+  /robot/robots/get_token:
+    get:
+      tags:
+        - Robot
+      summary: Get Token (Robot only)
+      description: |
+        Perms:
+          * User: Robot
+
+        name:
+          * robot_events for all files (snapshot, video, bbox, etc) of the
+          * robot event,
+          * robot_snaps for the files of the robot_snaps api
+      parameters:
+        - $ref: '../components/robot/robotRobotsGet_token.yaml#/components/parameters/NameParam'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesGet_token.yaml#/components/responses/200'
+
+  /robot/robots/get_stream_token:
+    get:
+      tags:
+        - Robot
+      summary: Get Stream Token (Robot only)
+      description: |
+        Perms:
+        * User: Robot
+
+        Remember to renew when it expires or invalid
+      parameters:
+        - $ref: '../components/robot/robotRobotsGet_stream_token.yaml#/components/parameters/CameraNameParam'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesGet_stream_token.yaml#/components/responses/200'
+
+  /robot/robots/get_analytics_token:
+    get:
+      tags:
+        - Robot
+      summary: Get Analytics Token (Robot only)
+      description: |
+        Perms:
+        * User: Robot
+
+        Remember to renew when it expires or invalid
+      parameters:
+        - $ref: '../components/robot/robotRobotsGet_analytics_token.yaml#/components/parameters/NameParam'
+      responses:
+        200:
+          $ref: '../components/robot/robotRobotsGet_analytics_token.yaml#/components/responses/200'
+
+  /robot/robots/update_state:
+    post:
+      tags:
+        - Robot
+      summary: Update State (Robot only)
+      description:  |
+        Perms:
+        * User: Robot
+
+        Use `partial = false` if failed last time
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/robot/robotRobotsUpdate_state.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/robot/robotRobotsUpdate_state.yaml#/components/responses/200'
+
+  /robot/robots/claim:
+    post:
+      tags:
+        - Robot
+      summary: Claim robot
+      description: |
+        Perms:
+        * `logic.robot`: claim
+      requestBody:
+        $ref: '../components/robot/robotRobotsClaim.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/robot/robotRobotsClaim.yaml#/components/responses/200'
+
+  /robot/robots/unclaim:
+    post:
+      tags:
+        - Robot
+      summary: Unclaim robot
+      description: |
+        Perms:
+        * `logic.robot`: uncalim
+      requestBody:
+        $ref: '../components/robot/robotRobotsUnclaim.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/robot/robotRobotsUnclaim.yaml#/components/responses/200'
+
+  /robot/robots:
+    get:
+      tags:
+        - Robot
+      summary: Robot List
+      description: |
+        Perms:
+        * `logic.robot`: retrieve
+      responses:
+        200:
+          $ref: '../components/robot/robotRobots.yaml#/components/responses/200'
+
+  /robot/robots/{id}:
+    get:
+      tags:
+        - Robot
+      summary: Retrieve robot
+      description: |
+        Perms:
+        * `logic.robot`: retrieve
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      responses:
+        200:
+          $ref: '../components/robot/robotRobotsPK.yaml#/components/responses/200'
+    put:
+      tags:
+        - Robot
+      summary: Update robot
+      description: |
+        Perms:
+        * `logic.robot`: update
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      requestBody:
+        $ref: '../components/robot/robotRobotsPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/robot/robotRobotsPK.yaml#/components/responses/200'
+
+  /robot/robots/{id}/get_meta:
+    get:
+      tags:
+        - Robot
+      summary: Robot Get Meta
+      description: |
+        Perms:
+        * `logic.robot`: meta
+
+        Condition:
+        * Box needs to be started and validated to invoke this interface
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      responses:
+        200:
+          $ref: '../components/robot/robotRobotsPKGet_meta.yaml#/components/responses/Result'
+
+  /robot/robots/differences:
+    post:
+      tags:
+        - Robot
+      summary: Get differences with existing versions
+      description: |
+        Perms:
+        * `logic.robot`: retrieve
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/robot/robotRobotsDifferences.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/robot/robotRobotsDifferences.yaml#/components/responses/200'
+
+  /robot/robots/debug_login:
+    post:
+      tags:
+        - Robot
+      summary: Robot Debug Login
+      description: To simulate the robot
+      requestBody:
+        $ref: '../components/robot/robotRobotsDebug_login.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/robot/robotRobotsAuthenticate.yaml#/components/responses/200'
+
+  /robot/robots/update_robot_meta:
+    put:
+      tags:
+        - Robot
+      summary: Update Robot Meta (Robot only)
+      description: |
+        Perms:
+        * User: Robot
+
+        Conditions: call once the meta changes
+      requestBody:
+        $ref: '../components/robot/robotRobotsUpdate_robot_meta.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/robot/robotRobotsUpdate_robot_meta.yaml#/components/responses/200'
+
+  /route/routes:
+    post:
+      tags:
+        - Robot
+        - Patrol
+      summary: Create a route
+      description: |
+        Perms:
+        * `logic.route`: create
+      requestBody:
+        $ref: '../components/robot/routeRoutes.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/robot/routeRoutes.yaml#/components/responses/200'
+
+  /route/routes/{route_id}:
+    get:
+      tags:
+        - Robot
+        - Patrol
+      summary: Retrieve robot
+      description: |
+        Perms:
+        * `logic.route`: retrieve
+      parameters:
+        - $ref: '../components/robot/routeRoutes.yaml#/components/parameters/RouteIDParam'
+      responses:
+        200:
+          $ref: '../components/robot/routeRoutes.yaml#/components/responses/200'
+    put:
+      tags:
+        - Robot
+        - Patrol
+      summary: User update robot
+      description: |
+        Perms:
+        * `logic.route`: update
+      parameters:
+        - $ref: '../components/robot/routeRoutes.yaml#/components/parameters/RouteIDParam'
+      requestBody:
+        $ref: '../components/robot/routeRoutes.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/robot/routeRoutes.yaml#/components/responses/200'
+
+  /robot/{id}/patrols:
+    post:
+      tags:
+        - Robot
+        - Patrol
+      summary: Create Patrol
+      description:  |
+        Perms:
+        * `logic.patrol`: create
+
+        Condition:
+        * There needs to be a route
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      requestBody:
+        $ref: '../components/robot/robotPKPatrols.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/robot/robotPKPatrols.yaml#/components/responses/200'
+
+  /robot_snap/robot_snaps:
+    get:
+      tags:
+        - Robot
+      summary: View all of robot's snap information
+      description: |
+        Perms:
+        * `logic.robotsnap`: retrieve
+      responses:
+        200:
+          $ref: '../components/robot/robot_snapRobot_snaps.yaml#/components/responses/SnapListResult'
+    post:
+      tags:
+        - Robot
+      summary: Create Robot Snap
+      description: |
+        Perms:
+        * `logic.robotsnap`: retrieve
+      requestBody:
+        $ref: '../components/robot/robot_snapRobot_snaps.yaml#/components/requestBodies/CreateRequest'
+      responses:
+        200:
+          $ref: '../components/robot/robot_snapRobot_snaps.yaml#/components/responses/CreateResult'
+
+  /robot_snap/robot_snaps/{id}:
+    get:
+      tags:
+        - Robot
+      summary: View a snap information
+      description: |
+        Perms:
+        * `logic.robotsnap`: retrieve
+      parameters:
+        - $ref: '../components/robot/robot_snapRobot_snaps.yaml#/components/parameters/SnapIDParam'
+      responses:
+        200:
+          $ref: '../components/robot/robot_snapRobot_snaps.yaml#/components/responses/CreateResult'
+
+  /robot_snap/robot_snaps/slot:
+    get:
+      tags:
+        - Robot
+      summary: Snap slot, View snap info
+      description:  |
+        Perms:
+        * `logic.robotsnap`: retrieve
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIdsParam'
+        - $ref: '../components/common.yaml#/components/parameters/RobotCameraParam'
+        - $ref: '../components/robot/robot_snapRobot_snapsSlot.yaml#/components/parameters/StartAtParam'
+        - $ref: '../components/robot/robot_snapRobot_snapsSlot.yaml#/components/parameters/EndAtParam'
+        - $ref: '../components/common.yaml#/components/parameters/limitParam'
+        - $ref: '../components/common.yaml#/components/parameters/offsetParam'
+      responses:
+        200:
+          $ref: '../components/robot/robot_snapRobot_snapsSlot.yaml#/components/responses/200'
+
+  /robot_video/robot_videos:
+    get:
+      tags:
+        - Robot
+        - RobotCamera
+      summary: List Robot Video
+      description: |
+        Perms:
+        * `logic.robotvideo`: retrieve
+
+        Condition:
+        * Robot needs to be started and validated to invoke this interface
+        * Query the video stored in the specified camera
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIdsParam'
+        - $ref: '../components/common.yaml#/components/parameters/StartAtParam'
+        - $ref: '../components/common.yaml#/components/parameters/EndAtParam'
+        - $ref: '../components/common.yaml#/components/parameters/RobotCameraParam'
+        - $ref: '../components/common.yaml#/components/parameters/limitParam'
+        - $ref: '../components/common.yaml#/components/parameters/offsetParam'
+      responses:
+        200:
+          $ref: '../components/robot/robot_videos.yaml#/components/responses/VideoListParam'
+    post:
+      tags:
+        - Robot
+        - RobotCamera
+      summary: Create Robot Video
+      description: |
+        Perms:
+        * `logic.robotvideo`: retrieve
+
+        Condition:
+        * robot needs to be started and validated to invoke this interface
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/robot/robot_videos.yaml#/components/requestBodies/VideoRequest'
+      responses:
+        200:
+          $ref: '../components/robot/robot_videos.yaml#/components/responses/VideoResult'
+
+  /robot_video/robot_videos/save_video:
+    post:
+      tags:
+        - Robot
+        - RobotCamera
+      summary: Save Robot Video
+      description: |
+        Perms:
+        * `logic.robotvideo`: retrieve
+        * `logic.robot`: save_video
+
+        Condition:
+        * robot needs to be started and validated to invoke this interface
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/robot/robot_videosSave_video.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/robot/robot_videosSave_video.yaml#/components/responses/200'
+
+  /robot_video/robot_videos/slot:
+    get:
+      tags:
+        - Robot
+        - RobotCamera
+      summary: Robot Video Slot
+      description: |
+        Perms:
+        * `logic.robotvideo`: retrieve
+
+        Condition:
+        * robot needs to be started and validated to invoke this interface
+        * Query the video stored in the specified camera
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIdsParam'
+        - $ref: '../components/common.yaml#/components/parameters/RobotCameraParam'
+        - $ref: '../components/common.yaml#/components/parameters/StartAtParam'
+        - $ref: '../components/common.yaml#/components/parameters/EndAtParam'
+        - $ref: '../components/common.yaml#/components/parameters/limitParam'
+        - $ref: '../components/common.yaml#/components/parameters/offsetParam'
+      responses:
+        200:
+          $ref: '../components/robot/robot_videosSlot.yaml#/components/responses/200'
+
+  /robot_saved_video/robot_saved_videos:
+    get:
+      tags:
+        - Robot
+        - RobotCamera
+      summary: List Robot Saved Video
+      description: |
+        Perms:
+        * `logic.robotsavedvideo`: retrieve
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIdsParam'
+        - $ref: '../components/common.yaml#/components/parameters/RobotCameraParam'
+      responses:
+        200:
+          $ref: '../components/robot/robot_saved_videos.yaml#/components/responses/200'
+
+  /inspection/inspections:
+    get:
+      tags:
+        - Robot
+      summary: Inspection List
+      description: |
+        Perms：
+        * `logic.inspection`: retrieve
+      parameters:
+        - $ref: '../components/robot/inspectionInspections.yaml#/components/parameters/RobotIDParam'
+        - $ref: '../components/robot/inspectionInspections.yaml#/components/parameters/SiteIDParam'
+        - $ref: '../components/robot/inspectionInspections.yaml#/components/parameters/TargetIDParam'
+        - $ref: '../components/robot/inspectionInspections.yaml#/components/parameters/RouteIDParam'
+        - $ref: '../components/robot/inspectionInspections.yaml#/components/parameters/MapIDParam'
+        - $ref: '../components/robot/inspectionInspections.yaml#/components/parameters/VisibleParam'
+        - $ref: '../components/robot/inspectionInspections.yaml#/components/parameters/MediumParam'
+        - $ref: '../components/common.yaml#/components/parameters/limitParam'
+        - $ref: '../components/common.yaml#/components/parameters/offsetParam'
+      responses:
+        200:
+          $ref: '../components/robot/inspectionInspections.yaml#/components/responses/200'
+  /inspection/inspections/{id}:
+    get:
+      tags:
+        - Robot
+      summary: Retrieve Inspection
+      description: |
+        Perms：
+        * `logic.inspection`: retrieve
+      parameters:
+        - $ref: '../components/robot/inspectionInspectionsPK.yaml#/components/parameters/InspectionIDParam'
+      responses:
+        200:
+          $ref: '../components/robot/inspectionInspectionsPK.yaml#/components/responses/200'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    X_APP:
+      type: apiKey
+      in: header
+      name: X-APP

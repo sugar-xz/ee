@@ -1,0 +1,67 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      required:
+      - "disable"
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Org user_node id, when null values the path id
+        disable:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: First call, disable to true, and modify the auth_user table is_active field to false
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                pk:
+                  type: integer
+                  format: int32
+                  description: Org user_node id
+
+  examples:
+    Request:
+      value:
+        user: null
+        disable: false
+
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 5

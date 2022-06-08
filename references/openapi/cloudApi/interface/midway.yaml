@@ -1,0 +1,595 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Config
+    description: Config related interface (Development environment call to add path `/config`)
+  - name: Map
+    description: Map related interface (Dev environment call to add path `/config`)
+  - name: Route
+    description: Route related interface (Dev environment call to add path `/config`)
+  - name: Routine
+    description: Routine related interface (Dev environment call to add path `/config`)
+security:
+  - BasicAuth: []
+
+paths:
+  /robot/robot_configs:
+    post:
+      tags:
+        - Config
+      summary: Get robots config
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPK.yaml#/components/requestBodies/ConfigsRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPK.yaml#/components/responses/ConfigsResult'
+  /robot/robot_configs/batch:
+    post:
+      tags:
+        - Config
+      summary: Create robots config
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPK.yaml#/components/requestBodies/ConfigsRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPK.yaml#/components/responses/BatchResult'
+  /robot/{id}:
+    get:
+      tags:
+        - Config
+      summary: Get a robot config
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPK.yaml#/components/responses/200'
+    put:
+      tags:
+        - Config
+      summary: Update robot config
+      description: |
+        Use `put` to add, delete or modify `config`,`put` input parameter is` result` obtained by `get` interface
+
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPK.yaml#/components/responses/200'
+    patch:
+      tags:
+        - Config
+      summary: Part update robot config
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPK.yaml#/components/responses/200'
+  /robot/{id}/state:
+    get:
+      tags:
+        - Config
+      summary: Get a robot state
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPK.yaml#/components/responses/State'
+  /robot/detection_configs:
+    post:
+      tags:
+        - Config
+      summary: Get robot detection configs
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPK.yaml#/components/requestBodies/ConfigsRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPK.yaml#/components/responses/Detection'
+  /robot/detection_configs/batch:
+    post:
+      tags:
+        - Config
+      summary: Create robot detection config
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPK.yaml#/components/requestBodies/ConfigsRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPK.yaml#/components/responses/BatchResult'
+  /robot/{id}/detection:
+    get:
+      tags:
+        - Config
+      summary: Get robot detection info
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPK.yaml#/components/responses/Detection'
+    put:
+      tags:
+        - Config
+      summary: Update robot detection info
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPK.yaml#/components/requestBodies/Detection'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPK.yaml#/components/responses/Detection'
+  /robot/{id}/maps:
+    get:
+      tags:
+        - Map
+      summary: Get all inspection map information of the specified robot
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/responses/200'
+    delete:
+      tags:
+        - Map
+      summary: Delete all map information specified by the robot
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/requestBodies/DeleteMaps'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200_ok'
+  /robot/maps/copy:
+    post:
+      tags:
+        - Map
+      summary: Copy robot maps
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/requestBodies/MapCopyRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/responses/200'
+  /robot/map/backup:
+    post:
+      tags:
+        - Map
+      summary: Backup robot map
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/requestBodies/BackupRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/responses/MapResult'
+  /robot/map/restore:
+    post:
+      tags:
+        - Map
+      summary: Restore robot map
+      description: |
+        The map_id of response is new
+
+        Condition:
+        * Login as Operator or Customer
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/requestBodies/BackupRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/responses/MapResult'
+  /robot/{user_id}/backup_map/{map_id}:
+    put:
+      tags:
+        - Map
+      summary: Update the backup map
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/parameters/UserIDParam'
+        - $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/parameters/MapId'
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/responses/MapResult'
+    delete:
+      tags:
+        - Map
+      summary: Delete the backup map
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/parameters/UserIDParam'
+        - $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/parameters/MapId'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/responses/MapResult'
+  /robot/{id}/map/{map_id}:
+    get:
+      tags:
+        - Map
+      summary: Get the map information specified by the robot
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+        - $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/parameters/MapId'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/responses/MapResult'
+    put:
+      tags:
+        - Map
+      summary: Update the map information specified by the robot
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+        - $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/parameters/MapId'
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/responses/MapResult'
+    delete:
+      tags:
+        - Map
+      summary: Delete the map information specified by the robot
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+        - $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/parameters/MapId'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200_ok'
+  /robot/{id}/routes:
+    get:
+      tags:
+        - Route
+      summary: 获取指定机器人的所有巡检路径信息
+      description: |
+        获取该机器人的路径（包含巡检点位信息）
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/responses/200'
+  /robot/route/backup:
+    post:
+      tags:
+        - Route
+      summary: Backup robot route
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/requestBodies/BackupRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/responses/RouteResult'
+  /robot/route/restore:
+    post:
+      tags:
+        - Route
+      summary: Restore robot route
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/requestBodies/RestoreRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/responses/RouteResult'
+  /robot/{user_id}/backup_map/{route_id}:
+    put:
+      tags:
+        - Route
+      summary: Update the backup route
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/parameters/UserIDParam'
+        - $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/parameters/RouteId'
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/responses/RouteResult'
+    delete:
+      tags:
+        - Route
+      summary: Delete the backup route
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/parameters/UserIDParam'
+        - $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/parameters/RouteId'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/responses/RouteResult'
+  /robot/{id}/route/{map_id}/{route_id}:
+    get:
+      tags:
+        - Route
+      summary: Get the specified inspection path information
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+        - $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/parameters/MapId'
+        - $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/parameters/RouteId'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/responses/RouteResult'
+    put:
+      tags:
+        - Route
+      summary: Update the specified inspection path information
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+        - $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/parameters/MapId'
+        - $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/parameters/RouteId'
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/responses/RouteResult'
+    delete:
+      tags:
+        - Route
+      summary: Delete the specified inspection path information
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+        - $ref: '../components/midway/ConfigRobotPKMaps.yaml#/components/parameters/MapId'
+        - $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/parameters/RouteId'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200_ok'
+  /robot/routes/copy:
+    post:
+      tags:
+        - Route
+      summary: Copy robot routes
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/requestBodies/RouteCopyRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/responses/RouteResult'
+  /robot/{id}/routes/full_route:
+    put:
+      tags:
+        - Route
+      summary: Update robot full route
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      requestBody:
+        $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/requestBodies/FullRouteRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRobotPKRoutes.yaml#/components/responses/FullRouteResult'
+  /robot/routines:
+    post:
+      tags:
+        - Routine
+      summary: Create robot routines
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      requestBody:
+        $ref: '../components/midway/ConfigRoutine.yaml#/components/requestBodies/RoutineRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRoutine.yaml#/components/responses/RoutineResult'
+  /robot/{id}/routines:
+    get:
+      tags:
+        - Routine
+      summary: Get robot routines
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRoutine.yaml#/components/responses/RoutinesResult'
+  /robot/{id}/routine_executions/day_executions:
+    get:
+      tags:
+        - Routine
+      summary: Get routine day executions
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+        - $ref: '../components/midway/ConfigRoutine.yaml#/components/parameters/RoutineId'
+        - $ref: '../components/midway/ConfigRoutine.yaml#/components/parameters/Date'
+        - $ref: '../components/midway/ConfigRoutine.yaml#/components/parameters/Limit'
+        - $ref: '../components/common.yaml#/components/parameters/StartAtParam'
+        - $ref: '../components/common.yaml#/components/parameters/EndAtParam'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRoutine.yaml#/components/responses/RoutineDayResult'
+  /robot/routine_executions/execute:
+    post:
+      tags:
+        - Routine
+      summary: Create routine execution
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      requestBody:
+        $ref: '../components/midway/ConfigRoutine.yaml#/components/requestBodies/ExecuteRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRoutine.yaml#/components/responses/ExecuteResult'
+  /robot/{id}/routine_executions/executions:
+    get:
+      tags:
+        - Routine
+      summary: Get routine executions
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRoutine.yaml#/components/responses/RoutineExecutionsResult'
+  /robot/{id}/routine_executions/executions/{Execution_id}:
+    get:
+      tags:
+        - Routine
+      summary: Get routine execution
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+        - $ref: '../components/midway/ConfigRoutine.yaml#/components/parameters/ExecutionId'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRoutine.yaml#/components/responses/RoutineExecutionResult'
+  /robot/{id}/routines/executions/{Execution_id}/stages/{index}state:
+    put:
+      tags:
+        - Routine
+      summary: Update routine execution stage state
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+        - $ref: '../components/midway/ConfigRoutine.yaml#/components/parameters/ExecutionId'
+        - $ref: '../components/midway/ConfigRoutine.yaml#/components/parameters/Index'
+      requestBody:
+        $ref: '../components/midway/ConfigRoutine.yaml#/components/requestBodies/StateRequest'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200_ok'
+  /robot/{id}/routines/executions/{Execution_id}/state:
+    patch:
+      tags:
+        - Routine
+      summary: Update routine execution state
+      description: |
+        Condition:
+        * Login as Operator or Customer
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+        - $ref: '../components/midway/ConfigRoutine.yaml#/components/parameters/ExecutionId'
+      requestBody:
+        $ref: '../components/midway/ConfigRoutine.yaml#/components/requestBodies/StateRequest'
+      responses:
+        200:
+          $ref: '../components/midway/ConfigRoutine.yaml#/components/responses/RoutineExecutionResult'
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    X_APP:
+      type: apiKey
+      in: header
+      name: X-APP

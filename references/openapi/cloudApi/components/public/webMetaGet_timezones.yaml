@@ -1,0 +1,32 @@
+openapi: 3.0.2
+
+components:
+  schemas:
+    TimezonesResult:
+      description: Get time zone information
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: array
+              description: Get all time zones(One example)
+              items:
+                type: array
+                items:
+                  type: string
+
+  examples:
+    TimezonesResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          -
+            - Africa/Abidjan
+            - Africa/Abidjan
+          -
+            - Africa/Accra
+            - Africa/Accra

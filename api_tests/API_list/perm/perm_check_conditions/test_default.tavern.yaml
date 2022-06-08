@@ -1,0 +1,81 @@
+# Name: test_default.tavern
+test_name: Check conditions (perm)
+marks:
+  - parametrize:
+      key:
+        - resource_type
+        - user_id
+        - actions
+      vals:
+        - [logic.site, 1, update]
+        - [logic.site, 1, create]
+        - [logic.site, 1, retrieve]
+        - [logic.site, 1, destroy]
+stages:
+  - name: Check conditions
+    request:
+      url: "{url}/perm/role_policy/validate_conditions"
+      method: POST
+      headers:
+        content-type: application/json
+        Authorization: "{Authorization}"
+      json:
+        resource_type: "{resource_type}"
+        user_id: "{user_id}"
+        actions:
+          - "{actions}"
+        data:
+          name: test
+    response:
+      status_code: 200
+      body:
+        ret:
+          success: true
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Check conditions(perm)
+stages:
+  - name: Check conditions
+    request:
+      url: "{url}/perm/role_policy/validate_conditions"
+      method: POST
+      headers:
+        content-type: application/json
+        Authorization: "{Authorization}"
+      json:
+        resource_type: logic.site
+        user_id: 1
+        actions:
+          - retrieve
+          - update
+        data:
+          names: res
+    response:
+      status_code: 200
+      body:
+        ret:
+          success: true
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Check conditions err(perm)
+stages:
+  - name: Check conditions
+    request:
+      url: "{url}/perm/role_policy/validate_conditions"
+      method: POST
+      headers:
+        content-type: application/json
+        Authorization: "{Authorization}"
+      json:
+        resource_type: logic.site
+        user_id: 11
+        actions:
+          - retrieve
+    response:
+      status_code: 409
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_409
+

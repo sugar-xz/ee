@@ -1,0 +1,633 @@
+swagger: "2.0"
+info:
+  version: "2.0.0"
+  title: video2.0
+  termsOfService: 'https://dev-api.turingvideo.cn'
+tags:
+- name: "video2.0"
+  description: "video2.0 api"
+schemes:
+- "https"
+- "http"
+paths:
+  
+  /sites/stats/realtime:
+    get:
+      tags:
+      - "Video2.0"
+      summary: "Return realtime sites"
+      description: "Return realtime sites"
+      operationId: "realtime"
+      produces:
+      - "application/json"
+      parameters:
+        - in: 'path'
+          name: 'types'
+          description: "event type"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Realtime"
+  /sites/stats/history:
+    get:
+      tags:
+      - "video2.0"
+      summary: "Return history sites"
+      description: "Return history sites"
+      operationId: "history"
+      produces:
+      - "application/json"
+      parameters:
+      - in: 'path'
+        name: 'types'
+        description: "event type"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'start'
+        description: "sites history start time"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'end'
+        description: "sites history end time"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/History'
+  /events/trend:
+    get:
+      tags:
+      - "video2.0"
+      summary: "Return events trend"
+      description: "Return events trend"
+      operationId: "trend"
+      produces:
+      - "application/json"
+      parameters:
+      - in: 'path'
+        name: 'types'
+        description: "event type"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'range'
+        description: "trend range"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'start'
+        description: "trend range start time"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'end'
+        description: "trend range end time"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/Trend'
+  /siteext/siteexts:
+    get:
+      tags:
+      - "video2.0"
+      summary: "Return sites simple info"
+      description: "Return sites simple info"
+      operationId: "siteexts"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/Site'
+  /cases:
+    get:
+      tags:
+      - "video2.0"
+      summary: "Return case list"
+      description: "Return case list"
+      operationId: "cases"
+      produces:
+      - "application/json"
+      parameters:
+      - in: 'path'
+        name: 'types'
+        description: "event type"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'site'
+        description: "site id"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'status'
+        description: "case status"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'action'
+        description: "case action"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'limit'
+        description: "case list size"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'ordering'
+        description: "case list sort by"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'time_after'
+        description: "case begin time"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'time_before'
+        description: "case end time"
+        required: true
+        type: "string"
+      responses:
+        default:
+          description: "successful operation"
+  /stat/position:
+    get:
+      tags:
+      - "video2.0"
+      summary: "Return divices with top alerts"
+      description: "Return divices with top alerts"
+      operationId: "position"
+      produces:
+      - "application/json"
+      parameters: 
+      - in: 'path'
+        name: 'types'
+        description: "event type"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'start'
+        description: "sites history start time"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'end'
+        description: "sites history end time"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'site'
+        description: "site id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                event__camera__name:
+                  type: string
+                event_count:
+                  type: integer
+  /stat/overview:
+    get:
+      tags:
+      - "video2.0"
+      summary: "Return alert statistics"
+      description: "Return alert statistics"
+      operationId: "overview"
+      produces:
+      - "application/json"
+      parameters: 
+      - in: 'path'
+        name: 'types'
+        description: "event type"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'start'
+        description: "alert statistics start time"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'end'
+        description: "alert statistics end time"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'site'
+        description: "site id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              cameraCount:
+                type: "integer"
+                format: "int64"
+              eventCount:
+                type: "integer"
+                format: "int64"
+              falseAlarmCount:
+                type: "integer"
+                format: "int64"
+              trueAlarmCount:
+                type: "integer"
+                format: "int64"
+              autoClosedCount:
+                type: "integer"
+                format: "int64"
+              pendingAlarmCount:
+                type: "integer"
+                format: "int64"
+              pendingCameraCount:
+                type: "integer"
+                format: "int64"
+  /stat/case_types :
+    get:
+      tags:
+      - "video2.0"
+      summary: "Return alert type statistics"
+      description: "Return alert type statistics"
+      operationId: "case_types"
+      produces:
+      - "application/json"
+      parameters: 
+      - in: 'path'
+        name: 'start'
+        description: "alert statistics start time"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'end'
+        description: "alert statistics end time"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'site'
+        description: "site id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              total:
+                type: "integer"
+                format: "int64"
+              types:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    label:
+                      type: string
+  /web/meta/all_event_types:
+    get:
+      tags:
+      - "video2.0"
+      summary: "Return all event types"
+      description: "Return all event types"
+      operationId: "all_event_types"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: array
+            items:
+              type: object
+              description: Multiple object contains all the algorithms
+              properties:
+                name:
+                  type: string
+                label:
+                  type: string
+  /cameras:
+    get:
+      tags:
+      - "video2.0"
+      summary: "Return camera list"
+      description: "Return camera list"
+      operationId: "cameras"
+      produces:
+      - "application/json"
+      parameters:
+      - in: 'path'
+        name: 'site_id'
+        description: "site id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+  /camera/cameras:
+    get:
+      tags:
+      - "video2.0"
+      summary: "Return camera box list"
+      description: "Return camera box list"
+      operationId: "camera_cameras"
+      produces:
+      - "application/json"
+      parameters:
+      - in: 'path'
+        name: 'site_id'
+        description: "site id"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'limit'
+        description: "case list size"
+        required: true
+        type: "string"
+      - in: 'path'
+        name: 'offset'
+        description: "get case list by pagination"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              count:
+                type: "integer"
+                format: "int64"
+              next: 
+                type: string
+                description: "next page url"
+              prev: 
+                type: string
+                description: "prev page url"
+              results:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    box_id:
+                      type: string
+  /monitor/case:
+    put:
+      tags:
+      - "video2.0"
+      summary: "Return camera stream"
+      description: "Return camera stream"
+      operationId: "put_case"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Updated Camera Status"
+        required: true
+        schema:
+          $ref: "#/definitions/CameraAction"
+      responses:
+        default:
+          description: "successful operation"
+  /stream:
+    post:
+      tags:
+      - "video2.0"
+      summary: "Return camera stream"
+      description: "Return camera stream"
+      operationId: "stream"
+      produces:
+      - "application/json"
+      parameters:
+      - in: 'body'
+        name: 'body'
+        schema:
+           $ref: '#/definitions/Stream'
+      responses:
+        default:
+          description: "successful operation"
+
+securityDefinitions:
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Stream:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        description: "Camera ID"
+      rtsp_url:
+        type: "string"
+        description: "Camera Resource Url"
+  CameraAction:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      action:
+        type: "string"
+        description: "Event Action"
+      note:
+        type: "string"
+        description: "Operator note"
+  Site:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      label:
+        type: "string"
+        description: "site name"
+      status:
+        type: "string"
+        description: "site status"
+        enum:
+        - "online"
+        - "offline"
+      province:
+        type: "string"
+        description: "site location province/state"
+      city:
+        type: "string"
+        description: "site location city/country"
+      last_event_time:
+        type: "string"
+        format: "date-time"
+        description: "the last event time of the site"
+      name:
+        type: "string"
+        description: "site name"
+      location:
+        type: "string"
+        description: "site location"
+      polygons:
+        type: "array"
+        description: "site location latitude & lng"
+        items: 
+          type: "object"
+          properties: 
+            lat:
+              type: "integer"
+              format: "int64"
+            lng:
+              type: "integer"
+              format: "int64"
+  Realtime:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      label:
+        type: "string"
+        description: "site name"
+      status:
+        type: "string"
+        description: "site status"
+        enum:
+        - "online"
+        - "offline"
+      province:
+        type: "string"
+        description: "site location province/state"
+      city:
+        type: "string"
+        description: "site location city/country"
+      last_event_time:
+        type: "string"
+        format: "date-time"
+        description: "the last event time of the site"
+      name:
+        type: "string"
+        description: "site name"
+      location:
+        type: "string"
+        description: "site location"
+      polygons:
+        type: "array"
+        description: "site location latitude & lng"
+        items: 
+          type: "object"
+          properties: 
+            lat:
+              type: "integer"
+              format: "int64"
+            lng:
+              type: "integer"
+              format: "int64"
+      realtime_event_count:
+        type: "integer"
+        format: "int64"
+  History:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      label:
+        type: "string"
+        description: "site name"
+      status:
+        type: "string"
+        description: "site status"
+        enum:
+        - "online"
+        - "offline"
+      province:
+        type: "string"
+        description: "site location province/state"
+      city:
+        type: "string"
+        description: "site location city/country"
+      last_event_time:
+        type: "string"
+        format: "date-time"
+        description: "the last event time of the site"
+      name:
+        type: "string"
+        description: "site name"
+      location:
+        type: "string"
+        description: "site location"
+      polygons:
+        type: "array"
+        description: "site location latitude & lng"
+        items: 
+          type: "object"
+          properties: 
+            lat:
+              type: "integer"
+              format: "int64"
+            lng:
+              type: "integer"
+              format: "int64"
+      history_event_count:
+        type: "integer"
+        format: "int64"
+  Trend:
+    type: "object"
+    properties:
+      time:
+        type: "string"
+        format: "date-time"
+      count:
+        type: "integer"
+        format: "int64"
+#externalDocs:
+#  description: "Find out more about Swagger"
+#  url: "http://swagger.io"

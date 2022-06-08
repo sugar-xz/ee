@@ -1,0 +1,242 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+          * Requires `transcoding`/`decoding` to invoke
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      required:
+        - type
+        - challenge
+        - ip_address
+      properties:
+        type:
+          type: string
+          description: Algorithm product type
+        challenge:
+          type: string
+          description: Box validation
+        ip_address:
+          type: string
+          description: IP address of the box
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Box id
+                user_id:
+                  type: integer
+                  description: User id
+                  format: int32
+                max_camera_cnt:
+                  type: integer
+                  description: Maximum number of cameras
+                  format: int32
+                camera_cnt:
+                  type: integer
+                  description: Number of cameras
+                  format: int32
+                max_detect_cnt:
+                  type: integer
+                  description: Maximum number of cameras detected
+                  format: int32
+                paid_cnt:
+                  type: integer
+                  description: Number of paid cameras
+                  format: int32
+                created_at:
+                  type: string
+                  description: Data create time
+                  format: date-time
+                updated_at:
+                  type: string
+                  description: Data update time
+                  format: date-time
+                state:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Box status
+                      enum:
+                        - online
+                        - offline
+                        - inactive
+                    label:
+                      type: string
+                      description: Box status label
+                      enum:
+                        - Online
+                        - Offline
+                        - Inactive
+                scene:
+                  type: integer
+                  description: State version
+                  format: int64
+                sequence:
+                  type: integer
+                  description: Config version
+                  format: int64
+                billing:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Box billing status
+                      enum:
+                        - disabled
+                        - paid
+                        - unpaid
+                    label:
+                      type: string
+                      description: Box billing label
+                      enum:
+                        - Disabled
+                        - Paid
+                        - Unpaid
+                upload_video_expire:
+                  type: integer
+                  description: Upload video expiration time in seconds
+                  format: int32
+                upload_event_expire:
+                  type: integer
+                  description: Upload event expiration time in seconds
+                  format: int32
+                version:
+                  type: integer
+                  description:  Box version
+                  format: int32
+                type:
+                  type: string
+                  description: Product type
+                ip_address:
+                  type: string
+                  description: IP address of the box
+                meta:
+                  type: object
+                  properties:
+                    agent:
+                      type: object
+                      properties:
+                        name:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              description: Box name
+                            label:
+                              type: string
+                              description: Label of the box
+                        level:
+                          type: integer
+                          description: Box level
+                        version:
+                          type: string
+                          description: Box app version
+                          format: int32
+                        upgradable:
+                          type: boolean
+                          enum:
+                            - true
+                            - false
+                          description: Box app version upgrade
+                        outdated:
+                          type: boolean
+                          description: Box app version expired
+                        upgrading:
+                          type: string
+                          description: Box app version upgrading
+                    max_camera_cnt:
+                      type: integer
+                      description: Maximum number of cameras
+                      format: int32
+                    max_detect_cnt:
+                      type: integer
+                      description: Maximum number of cameras detected
+                      format: int32
+                timezone:
+                  type: string
+                  description: Box location time zone
+                  format: date-time
+                site:
+                  type: integer
+                  description: The id of the site that box belongs to
+                  format: int32
+
+  examples:
+    Request:
+      value:
+        type: xc_v1
+        challenge: "p5jXaQ/CHBaIwnTvPI7h7LVKAWOFL+4OpDqd9WSMgrmHQXi5F+2O+gydCvqM8YXw=="
+        ip_address: "127.0.0.1"
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: box_super_10001
+          type: xc_v1
+          ip_address: 127.0.0.1
+          meta:
+            agent:
+              name:
+                name: Box
+                label: Turing Box
+              level: 0
+              version: 1.0.0
+              upgradable: null
+              outdated: null
+              upgrading: null
+            max_camera_cnt: 100
+            max_detect_cnt: 100
+          user_id: 2
+          max_camera_cnt: 100
+          camera_cnt: 14
+          max_detect_cnt: 100
+          paid_cnt: 0
+          created_at: 2019-08-20T07:06:53Z
+          updated_at: 2019-09-18T01:14:37Z
+          state:
+            name: offline
+            label: Offline
+          scene: 465
+          sequence: 17
+          billing:
+            name: paid
+            label: Paid
+          upload_video_expire: 1209600
+          upload_event_expire: 1209600
+          version: 261
+          timezone: UTC
+          site: 1

@@ -1,0 +1,19 @@
+# Name: test_default.tavern
+test_name: Delete target
+stages:
+  - type: ref
+    id: login_customer
+  - name: Delete target
+    request:
+      url: "{url}/map/targets/2"
+      method: DELETE
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !int 2
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

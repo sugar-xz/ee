@@ -1,0 +1,57 @@
+# Name: test_default.tavern
+test_name: "All event List: (Used for admin, need to be removed later)"
+marks:
+  - parametrize:
+      key:
+        - camera_ids
+        - started_at__lte
+        - started_at__gt
+        - source
+        - types
+        - limit
+      vals:
+        - ["", "", "", "", "", ""]
+        - ["1", "", "", "", "", ""]
+        - ["1,3", "", "", "", "", ""]
+        - ["", "", "2019-10-11 23:00:57.262076-07", "", "", ""]
+        - ["", "2019-09-17 23:00:57.262076-07", "", "", "", ""]
+        - ["", "", "", "camera|robot", "person,car", "30"]
+        - ["", "", "", "camera|robot", "", ""]
+        - ["", "", "", "", "person,car", ""]
+        - ["", "", "", "", "", "30"]
+stages:
+  - type: ref
+    id: login_admin
+  - name: All event List
+    request:
+      url: "{url}/event/events/all?camera_ids={camera_ids}&started_at__lte={started_at__lte}&started_at__gt={started_at__gt}&source={source}&types={types}&limit={limit}"
+      method: GET
+      headers:
+        content-type: application/json
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+---
+test_name: All event List error
+stages:
+  - type: ref
+    id: login_customer
+  - name: All event List
+    request:
+      url: "{url}/event/events/all"
+      method: GET
+      headers:
+        content-type: application/json
+        Referer: "{Referer}"
+    response:
+      status_code: 401
+      body:
+
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_401
+ #   delay_after: 1

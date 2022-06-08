@@ -1,0 +1,704 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    ConfigsRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConfigsRequest'
+    PutRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConfigInfo'
+    Detection:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Detection'
+  responses:
+    200:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConfigResult'
+          examples:
+            response:
+              $ref: '#/components/examples/ConfigResult'
+    ConfigsResult:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConfigsResult'
+          examples:
+            response:
+              $ref: '#/components/examples/ConfigsResult'
+    BatchResult:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BatchResult'
+          examples:
+            response:
+              $ref: '#/components/examples/BatchResult'
+    DetectionConfigsResult:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DetectionConfigsResult'
+          examples:
+            response:
+              $ref: '#/components/examples/DetectionConfigsResult'
+    State:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StateResult'
+          examples:
+            response:
+              $ref: '#/components/examples/StateResult'
+    Detection:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DetectionResult'
+          examples:
+            response:
+              $ref: '#/components/examples/DetectionResult'
+  schemas:
+    StateResult:
+      description: View robot state
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                mode:
+                  type: string
+                status:
+                  type: string
+                power_level:
+                  type: number
+                  format: float
+                power_range_high:
+                  type: integer
+                  format: int64
+                power_range_low:
+                  type: integer
+                  format: int64
+                signal_strength:
+                  type: integer
+                  format: int32
+                current_routine_id:
+                  type: string
+                floor:
+                  type: integer
+                  format: int64
+                estimated_targets:
+                  type: integer
+                  format: int64
+    DetectionConfigsResult:
+      description: |
+        `robot_id` is the requested `ids`
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                robot_id:
+                  $ref: '#/components/schemas/Detection'
+    DetectionResult:
+      description: View robot detection
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/Detection'
+    Detection:
+      type: object
+      properties:
+        auto_speak_enabled:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Automatic Speak enabled
+        detect_enabled:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Enable the detection
+        detection_rules:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Rule algorithm name
+              mode:
+                type: string
+                description: Rule state
+                enum:
+                  - on
+                  - off
+                  - schedule
+              start_at:
+                type: integer
+                format: int64
+              end_at:
+                type: integer
+                format: int64
+              algos:
+                type: string
+                description: Algorithm name
+        detection_threshold:
+          type: number
+          format: float
+          description: Camera detection parameter
+        robot_ids:
+          type: array
+          items:
+            type: string
+            description: Robot ids
+        meta_id:
+          type: string
+          description: Robot meta_id
+    ConfigsResult:
+      description: |
+        `robot_id` is the requested `ids`
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                robot_id:
+                  $ref: '#/components/schemas/ConfigInfo'
+    BatchResult:
+      description: View robot config information
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/ConfigsRequest'
+    ConfigResult:
+      description: View robot config information
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/ConfigInfo'
+    ConfigsRequest:
+      type: object
+      properties:
+        robot_ids:
+          type: array
+          items:
+            type: string
+            description: Robot ids
+    ConfigInfo:
+      type: object
+      properties:
+        home_cargo_mode:
+          type: boolean
+          description: 货运模式
+          enum:
+            - true
+            - false
+        home_head_angle:
+          type: integer
+          format: int32
+          description: 产地角度
+        light_enabled:
+          type: boolean
+          description: 指示灯是否开启
+          enum:
+            - true
+            - false
+        media_alarm_file:
+          type: string
+          description: 媒体警报文件
+        media_background_file:
+          type: string
+          description: 媒体警报背景文件
+        media_speak_message:
+          type: string
+          description: 媒体警报信息
+        power_range_high:
+          type: integer
+          format: int32
+          description: 功率范围最大值
+        power_range_low:
+          type: integer
+          format: int32
+          description: 功率范围最小值
+        sensor_lidar_enhanced:
+          type: boolean
+          description: 传感器激光雷达是否增强
+          enum:
+            - true
+            - false
+        slam_optimization_interval:
+          type: integer
+          format: int32
+          description: 机器人同时定位和建图的优化间隔
+        slam_submap_trim_number:
+          type: integer
+          format: int32
+          description: 机器人同时定位和建图的子图修剪数量
+        streaming_hd:
+          type: boolean
+          description: 视频流是否高清
+          enum:
+            - true
+            - false
+        streaming_overlay_map:
+          type: boolean
+          description: 视频流是否叠加地图
+          enum:
+            - true
+            - false
+        enable_nav_update:
+          type: boolean
+          description: 是否启用导航更新
+          enum:
+            - true
+            - false
+        current_map_id:
+          type: string
+          description: 机器人当前地图的ID
+        current_route_id:
+          type: integer
+          format: int32
+          description: 机器人地图当前线路的ID
+        streaming_audio_enabled:
+          type: boolean
+          description: 视频流音频是否启用
+          enum:
+            - true
+            - false
+        sensor_enabled:
+          type: boolean
+          description: 机器人是否使用传感器
+          enum:
+            - true
+            - false
+        sensor_types:
+          type: string
+          description: 机器人传感器类型
+        sensor_lidar_model:
+          type: string
+          description: 机器人传感器激光雷达型号
+        way_point_names:
+          type: array
+          items:
+            type: string
+            description: Waypoint 路点名称
+        routines:
+          type: array
+          items:
+            $ref: '#/components/schemas/Routine'
+        routine_schedukes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Schedule'
+        home_map_route_ids:
+          type: object
+          properties:
+            map_id:
+              type: string
+            route_id:
+              type: string
+        patrol_check_wheel_stuck:
+          type: boolean
+          description: 巡检检查车轮是否被卡住
+          enum:
+            - true
+            - false
+        patrol_linear_speed:
+          type: number
+          format: float
+          description: 巡检速度
+        patrol_obstacle_padding:
+          type: number
+          format: float
+          description: 巡检障碍物检测
+        patrol_schedule_enabled:
+          type: boolean
+          description: 巡检时间表是否启用
+          enum:
+            - true
+            - false
+        patrol_schedule_end_time:
+          type: integer
+          format: int32
+          description: 巡检结束时间
+        patrol_schedule_start_time:
+          type: integer
+          format: int32
+          description: 巡检开启时间
+        goal_distance_tolerance_one_loop:
+          type: number
+          format: float
+          description: 巡检一圈目标距离公差
+        passed_way_point_ratio:
+          type: number
+          format: float
+          description: 巡检waypoint路点检验通过率
+        elevator_obstacle_padding:
+          type: number
+          format: float
+        robot_ids:
+          type: array
+          items:
+            type: string
+            description: 机器人ID
+    Routine:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 巡检任务ID
+        name:
+          type: string
+          description: 巡检任务名称
+        actions:
+          type: array
+          items:
+            type: object
+            properties:
+              act:
+                type: string
+                description: 机器人举动/行径
+              arg:
+                type: object
+                properties:
+                  from_floor:
+                    type: integer
+                    format: int32
+                    description: 机器人进行操作的楼层
+                  to_flooor:
+                    type: integer
+                    format: int32
+                    description: 机器人进行操作到达楼层
+                  delay_secs:
+                    type: integer
+                    format: int32
+                    description: 延迟时间
+                  map_id:
+                    type: string
+                    format: int32
+                    description: 地图ID
+                  reset_slam:
+                    type: boolean
+                    description: 重置机器人同时定位和建图
+                    enum:
+                      - true
+                      - false
+                  route_id:
+                    type: integer
+                    format: int32
+                    description: 巡检路径ID
+                  rheta:
+                    type: number
+                    format: double
+                  x:
+                    type: number
+                    format: double
+                    description: x坐标点
+                  y:
+                    type: number
+                    format: double
+                    description: y坐标点
+        type:
+          type: string
+          description: Routine type
+          enum:
+            - regular
+            - temporary
+        parent_routine_id:
+          type: string
+          description: Parent routine id
+        schedule:
+          $ref: '#/components/schemas/Schedule'
+        robot_ids:
+          type: array
+          items:
+            type: string
+            description: 机器人ID
+    Schedule:
+      type: object
+      properties:
+        name:
+          type: string
+        disabled:
+          type: boolean
+          enum:
+            - true
+            - false
+        routine_id:
+          type: string
+        repetitive:
+          type: boolean
+          enum:
+            - true
+            - false
+        days_of_week:
+          type: array
+          items:
+            type: string
+        date:
+          type: string
+          format: date-time
+        skipped_date:
+          type: string
+          format: date-time
+        start_times:
+          type: array
+          items:
+            type: string
+        timezeno:
+          type: string
+  examples:
+    DetectionResult:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: ok
+        ret:
+          auto_speak_enabled: false
+          detect_enabled: false
+          detection_rules:
+            - name: test
+              mode: on
+              start_at: 0
+              end_at: 0
+              algos: person
+          detection_threshold: 0.7200000286102295
+          robot_ids:
+            - robot_dog_sr_20020
+          meta_id: ""
+    DetectionConfigsResult:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: ok
+        ret:
+          robot_dog_sr_20020:
+            auto_speak_enabled: false
+            detect_enabled: false
+            detection_rules:
+              - name: test
+                mode: on
+                start_at: 0
+                end_at: 0
+                algos: person
+            detection_threshold: 0.7200000286102295
+            robot_ids:
+              - robot_dog_sr_20020
+            meta_id: ""
+    StateResult:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: ok
+        ret:
+          mode: idle
+          status: online
+          power_level: 87
+          power_range_high: 90
+          power_range_low: 30
+          signal_strength:  95
+          current_routine_id: ""
+          floor: 1
+          estimated_targets: 261
+
+    ConfigResult:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: ok
+        ret:
+          home_cargo_mode: false
+          home_head_angle: 0
+          light_enabled: false
+          media_alarm_file: alarm.mp3
+          media_background_file: bg.mp3
+          media_speak_message:
+          power_range_high: 90
+          power_range_low: 30
+          sensor_lidar_enhanced: true
+          slam_optimization_interval: 15
+          slam_submap_trim_number: 12
+          streaming_hd: true
+          streaming_overlay_map: false
+          enable_nav_update: true
+          current_map_id: robot_dog_sr_20020.1590546545353
+          current_route_id: 1590558781758
+          streaming_audio_enabled: false
+          sensor_enabled: true
+          sensor_types: g5stpatrol_performance
+          sensor_lidar_model: S1
+          way_point_names: []
+          routines:
+            - id: 1589202954571
+              name: 全自动店铺巡检
+              actions:
+                - act: leave_home
+                  arg: {}
+                - act: take_elevator
+                  arg:
+                    from_floor: 1
+                    to_flooor: 2
+                - act: load_map_route
+                  arg:
+                    delay_secs: 2
+                    map_id: robot_dog_sr_20020.1590546545352
+                    reset_slam: true
+                    route_id: 1589202954331
+                    rheta: -2.8966139904629244
+                    x: -45.83862361370879
+                    y: 56.25018576088915
+              type: ""
+              parent_routine_id: ""
+              schedule: null
+              robot_ids: null
+          routine_schedules:
+            name: test
+            disabled: false
+            routine_id: 1603423046764
+            repetitive: true
+            days_of_week:
+              - 5
+              - 1
+            date: 0001-01-01T00:00:00Z
+            skipped_date: 0001-01-01T00:00:00Z
+            start_times:
+              - 682
+            timezeno: Asia/Shanghai
+          home_map_route_ids:
+            map_id: robot_dog_sr_20041.1600419056563
+            route_id: 1600419312783
+          patrol_check_wheel_stuck: false
+          patrol_linear_speed: 0.7
+          patrol_obstacle_padding: 0.42
+          patrol_schedule_enabled: false
+          patrol_schedule_end_time: 0
+          patrol_schedule_start_time: 0
+          goal_distance_tolerance_one_loop: 0.5
+          passed_way_point_ratio: 0.3
+          robot_ids:
+            - robot_dog_sr_20020
+    BatchResult:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: ok
+        ret:
+          robot_ids:
+            - robot_test_10001
+            - robot_test_10002
+    ConfigsResult:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: ok
+        ret:
+          robot_test_10001: null
+          robot_test_10002:
+            home_cargo_mode: false
+            home_head_angle: 0
+            light_enabled: false
+            media_alarm_file: alarm.mp3
+            media_background_file: bg.mp3
+            media_speak_message:
+            power_range_high: 90
+            power_range_low: 30
+            sensor_lidar_enhanced: true
+            slam_optimization_interval: 15
+            slam_submap_trim_number: 12
+            streaming_hd: true
+            streaming_overlay_map: false
+            enable_nav_update: true
+            current_map_id: robot_dog_sr_20020.1590546545353
+            current_route_id: 1590558781758
+            streaming_audio_enabled: false
+            sensor_enabled: true
+            sensor_types: g5stpatrol_performance
+            sensor_lidar_model: S1
+            way_point_names: []
+            routines:
+              - id: 1589202954571
+                name: 全自动店铺巡检
+                actions:
+                  - act: leave_home
+                    arg: {}
+                  - act: take_elevator
+                    arg:
+                      from_floor: 1
+                      to_flooor: 2
+                  - act: load_map_route
+                    arg:
+                      delay_secs: 2
+                      map_id: robot_dog_sr_20020.1590546545352
+                      reset_slam: true
+                      route_id: 1589202954331
+                      rheta: -2.8966139904629244
+                      x: -45.83862361370879
+                      y: 56.25018576088915
+                type: ""
+                parent_routine_id: ""
+                schedule: null
+                robot_ids: null
+            routine_schedules:
+              name: test
+              disabled: false
+              routine_id: 1603423046764
+              repetitive: true
+              days_of_week:
+                - 5
+                - 1
+              date: 0001-01-01T00:00:00Z
+              skipped_date: 0001-01-01T00:00:00Z
+              start_times:
+                - 682
+              timezeno: Asia/Shanghai
+            home_map_route_ids:
+              map_id: robot_dog_sr_20041.1600419056563
+              route_id: 1600419312783
+            patrol_check_wheel_stuck: false
+            patrol_linear_speed: 0.7
+            patrol_obstacle_padding: 0.42
+            patrol_schedule_enabled: false
+            patrol_schedule_end_time: 0
+            patrol_schedule_start_time: 0
+            goal_distance_tolerance_one_loop: 0.5
+            passed_way_point_ratio: 0.3
+            robot_ids:
+              - robot_dog_sr_20020

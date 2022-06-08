@@ -1,0 +1,149 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      required:
+        - route_id
+        - name
+        - mode
+        - start_at
+        - end_at
+      properties:
+        route_id:
+          type: integer
+          format: int64
+          description: Robot route id
+        name:
+          type: string
+          description: Robot task name
+        mode:
+          type: string
+          description: Robot task state
+        start_at:
+          type: integer
+          format: int32
+        end_at:
+          type: integer
+          format: int32
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  description: Task id
+                robot_id:
+                  type: string
+                  description: Robot id
+                route_id:
+                  type: integer
+                  format: int64
+                  description: Route id
+                name:
+                  type: string
+                  description: Task name
+                mode:
+                  type: string
+                  description: Task state
+                start_at:
+                  type: integer
+                  format: int32
+                end_at:
+                  type: integer
+                  format: int32
+                route:
+                  type: object
+                  properties:
+                    version:
+                      type: integer
+                      format: int64
+                      description: Route version
+                    id:
+                      type: integer
+                      format: int64
+                      description: Route id
+                    name:
+                      type: string
+                      description: Route name
+                    points:
+                      type: string
+                      description: Route points
+                    checkpoints:
+                      type: string
+                      description: Route check points
+                created_at:
+                  type: string
+                  format: date-time
+                  description: Data create time
+                updated_at:
+                  type: string
+                  format: date-time
+                  description: Data update time
+                version:
+                  type: integer
+                  format: int64
+                  description: Route version
+                type:
+                  type: string
+                  description: Route type
+  examples:
+    Request:
+      value:
+        route_id: 33
+        name: route_test
+        mode: off
+        start_at: 1
+        end_at: 33
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 3
+          robot_id: robot_dog_sr_20002
+          route_id: 33
+          name: patrol1
+          mode: on
+          start_at: 1
+          end_at: 33
+          route:
+            version: 0
+            id: 33
+            name: route1
+            points: point1
+            checkpoints: checkpoints
+          created_at: '2019-11-07T10:19:09Z'
+          updated_at: '2019-11-07T10:19:09Z'
+          version: 0
+          type: patrol
+

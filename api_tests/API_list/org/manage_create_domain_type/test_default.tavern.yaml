@@ -1,0 +1,79 @@
+# Name: test_default.tavern
+test_name: Create domain type (org)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create domain type
+    request: &type_request_anchor
+      url: "{url}/domain_type/domain_types"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        name: "parent"
+        code_name: "root"
+        is_leaf: true
+        parent_id: null
+    response: &type_response_anchor
+      status_code: 200
+      body:
+        ret:
+          id: !anyint
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Create domain type (org)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create domain type
+    request:
+      <<: *type_request_anchor
+      json:
+        name: "parent2"
+        code_name: "root"
+        is_leaf: false
+        parent_id: null
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !anyint
+      save:
+        $ext:
+          function: api_tests.utils.validation_method:validate_get_domain_type_parent_id
+
+---
+test_name: Create domain type (org)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create domain type
+    request:
+      <<: *type_request_anchor
+      json:
+        name: "test_type"
+        code_name: "test_type"
+        is_leaf: true
+        parent_id: "{domain_type_parent_id}"
+    response: *type_response_anchor
+
+---
+test_name: Repeat create domain type (org)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Repeat create domain type
+    request:
+      <<: *type_request_anchor
+      json:
+        name: "test_type"
+        code_name: "test_type"
+        is_leaf: true
+        parent_id: "{domain_type_parent_id}"
+    response:
+      status_code: 409
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_409

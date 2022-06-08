@@ -1,0 +1,92 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      properties:
+        app_agent:
+          type: object
+          properties:
+            name:
+              type: string
+              description: App agent name
+            level:
+              type: integer
+              format: int32
+              description: App agent level
+            version:
+              type: string
+              description: App agent version
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                app_agent:
+                  type: object
+                  properties:
+                    name:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: App agent name
+                        label:
+                          type: string
+                          description: App agent name label
+                    level:
+                      type: integer
+                      format: int32
+                      description: App agent level
+                    version:
+                      type: string
+                      description: App agent version
+                    upgrading:
+                      type: string
+                      description: Robot app version upgrading
+  examples:
+    Request:
+      value:
+        app_agent:
+          name: Bot_Nimbo
+          level: 3
+          version: 1.0.1
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          app_agent:
+            name:
+              name: Bot_Nimbo
+              label: Nimbo App
+            level: 3
+            version: 1.0.1
+            upgrading: null

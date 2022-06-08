@@ -1,0 +1,59 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Box id
+        signature:
+          type: string
+          description: Box signature
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: boolean
+              description: Claim status
+              enum:
+                - true
+                - false
+
+  examples:
+    Request:
+      value:
+        id: box_dog_sr_50001
+        signature: "o4w0GJuvCu/Q++xLn+A49wa2HSOP+Ri33RLYx8SVUws="
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret: true

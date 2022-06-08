@@ -1,0 +1,65 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      properties:
+        camera_id:
+          type: integer
+          description: Camera id
+          format: int32
+        host:
+          type: string
+          description: Camera host address
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                camera_id:
+                  type: integer
+                  description: Camera id
+                  format: int32
+                host:
+                  type: string
+                  description: Camera host address
+
+  examples:
+    Request:
+      value:
+        camera_id: 1
+        host: 192.168.0.1
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          camera_id: 1
+          host: 192.168.0.1

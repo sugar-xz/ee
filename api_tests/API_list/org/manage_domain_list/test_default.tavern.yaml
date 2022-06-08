@@ -1,0 +1,21 @@
+# Name: test_default.tavern
+test_name: Get org domain list
+stages:
+  - type: ref
+    id: login_customer
+  - name: Get domain list
+    request:
+      url: "{url}/domain/domains"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+        ret:
+          count: !anyint
+          results: !anything
+            - id: !anyint

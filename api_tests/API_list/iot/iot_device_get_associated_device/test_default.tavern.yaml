@@ -1,0 +1,32 @@
+# Name: test_default.tavern
+test_name: Get associated device
+marks:
+  - parametrize:
+      key:
+        - device_ids
+        - product_types
+      vals:
+        - ["{test_robot_id}", "robot"]
+        - ["{test_box_id}", "box"]
+stages:
+  - type: ref
+    id: login_admin
+  - name: Get associated device
+    request:
+      url: "{url}/iot/device/get_associated_device"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        id: "{device_ids}"
+        product_type: "{product_types}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !!str "{device_ids}"
+          product_type: !!str "{product_types}"
+          device: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

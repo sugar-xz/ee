@@ -1,0 +1,178 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    DomainRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/DomainRequest'
+  responses:
+    DomainListResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/DomainListResult'
+    DomainResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainResult'
+          examples:
+            response:
+              $ref: '#/components/examples/DomainResult'
+  schemas:
+    DomainRequest:
+      type: object
+      required:
+      - "name"
+      - "code_name"
+      - "domain_type_id"
+      properties:
+        name:
+          type: string
+          description: Domain name
+        code_name:
+          type: string
+          description: Domain code name
+        domain_type_id:
+          type: integer
+          format: int32
+          description: Domain type id
+        parent_id:
+          type: integer
+          format: int32
+          description: Domain parent id
+
+    DomainResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/DomainInfo'
+    DomainListResult:
+      description: Org domain list
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/DomainInfo'
+    DomainInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Domain id
+        organization:
+          type: integer
+          format: int32
+          description: Organization id
+        tree_id:
+          format: int32
+          type: integer
+          description: Django-mptt domain tree id
+        level:
+          type: integer
+          format: int32
+          description: Django-mptt domain level
+        lft:
+          type: integer
+          format: int32
+          description: The left border of django-mptt domain
+        rght:
+          type: integer
+          format: int32
+          description: The right border of django-mptt domain
+        name:
+          type: string
+          description: Domain name
+        code_name:
+          type: string
+          description: Domain code name
+        domain_type_id:
+          type: integer
+          format: int32
+          description: Domain type id
+        parent_id:
+          type: integer
+          format: int32
+          description: Domain parent id
+
+  examples:
+    DomainRequest:
+      value:
+        name: org_test
+        code_name: org
+        domain_type_id: 3
+        parent_id: null
+
+    DomainListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 3
+          next: null
+          previous: null
+          results:
+            - id: 3
+              organization: 4
+              tree_id: 1
+              level: 0
+              lft: 1
+              rght: 4
+              name: domain_type_sugar
+              code_name: root
+              domain_type_id: 3
+              parent_id: null
+              _actions: retrieve，update, destroy
+            - id: 5
+              organization: 4
+              tree_id: 1
+              level: 1
+              lft: 2
+              rght: 3
+              name: org_test
+              code_name: org
+              domain_type_id: 4
+              parent_id: 3
+              _actions: retrieve，update, destroy
+
+    DomainResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 5
+          organization: 4
+          tree_id: 1
+          level: 1
+          lft: 2
+          rght: 3
+          name: org_test
+          code_name: org
+          domain_type_id: 4
+          parent_id: 3
+

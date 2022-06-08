@@ -1,0 +1,71 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PostRequest'
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+    PostResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/PostResult'
+  schemas:
+    Result:
+      allOf:
+        - $ref: 'common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                volume:
+                  type: integer
+                  format: int32
+                  description:  |
+                    Volume for this camera value: [0, 100]
+
+    PostRequest:
+      type: object
+      properties:
+        volume:
+          type: integer
+          format: int32
+          description:  |
+            Volume for this camera value: [0, 100]
+
+  examples:
+    PostRequest:
+      value:
+        volume: 50
+    PostResult:
+      value:
+        code: 0
+        msg: ok
+        data: null
+
+    Result:
+      value:
+        code: 0
+        msg: ok
+        data:
+          volume: 50

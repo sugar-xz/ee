@@ -1,0 +1,182 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    PostRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PostRequest'
+  responses:
+    ConfigListResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConfigListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/ConfigListResult'
+    ConfigResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConfigResult'
+          examples:
+            response:
+              $ref: '#/components/examples/ConfigResult'
+  schemas:
+    PostRequest:
+      type: object
+      required:
+        - map_type
+      properties:
+        map_type:
+          type: string
+          description: Map type(choice)
+          enum:
+            - image
+            - baidu
+            - amap
+            - tencent
+            - feng_map
+            - google
+            - bing
+        config:
+          type: string
+          description: |
+            Config(JSON Object Field)
+            * Required when map_type is not image
+        is_default:
+          type: boolean
+          enum:
+            - true
+            - false
+    ConfigResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/ConfigInfo'
+    ConfigListResult:
+      description: Map config list
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ConfigInfo'
+    ConfigInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Map config id
+        organization:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              description: Organization id
+            code_name:
+              type: string
+              description: Organization code name
+            name:
+              type: string
+              description: Organization name
+            owner_id:
+              type: integer
+              format: int32
+              description: Organization owner id
+        map_type:
+          type: string
+          description: Map type(choice)
+          enum:
+            - image
+            - baidu
+            - amap
+            - tencent
+            - feng_map
+            - google
+            - bing
+        config:
+          type: string
+          description: Config(JSON Object Field)
+        is_default:
+          type: boolean
+          enum:
+            - true
+            - false
+
+  examples:
+    PostRequest:
+      value:
+        map_type: baidu
+        config:
+          test: sugar
+        is_default: true
+    ConfigListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 1
+          next: null
+          previous: null
+          results:
+            - id: 2
+              organization:
+                id: 4
+                code_name: test@163.com
+                name: test@163.com
+                owner_id: 12
+              map_type: baidu
+              config:
+                test: sugar
+              is_default: true
+              _actions: retrieve,destroy,update,create
+            - id: 3
+              organization:
+                id: 4
+                code_name: test@163.com
+                name: test@163.com
+                owner_id: 12
+              map_type: image
+              config:
+                image: sugar
+              is_default: false
+              _actions: retrieve,destroy,update,create
+    ConfigResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 2
+          organization:
+            id: 4
+            code_name: test@163.com
+            name: test@163.com
+            owner_id: 12
+          map_type: baidu
+          config:
+            test: sugar
+          is_default: true
+          _actions: retrieve,destroy,update,create

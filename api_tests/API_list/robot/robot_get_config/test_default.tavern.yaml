@@ -1,0 +1,19 @@
+# Name: test_default.tavern
+test_name: Get Config(if sequence not same, perform this operation)
+stages:
+  - type: ref
+    id: robot_initiate
+#  - type: ref
+#    id: robot_authenticate
+#  - name: Get Config
+#    request:
+#      url: "{url}/robot/robots/get_config"
+#      method: GET
+#      headers:
+#        content-type: application/json
+#        X-APP: "Robot/{robot_level}/{robot_version}"
+#    response:
+#      status_code: 200
+#      body:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200

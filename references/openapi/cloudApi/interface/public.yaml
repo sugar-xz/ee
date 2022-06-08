@@ -1,0 +1,197 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Public
+    description: User interface
+security:
+  - BasicAuth: []
+
+paths:
+  /web/meta/get_agent:
+    get:
+      tags:
+        - Public
+      summary: Get Agent Meta
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/ProductTypeParam'
+      responses:
+        200:
+          $ref: '../components/public/webMetaGet_agent.yaml#/components/responses/200'
+        400:
+          $ref: '../components/public/webMetaGet_agent.yaml#/components/responses/400'
+
+  /web/meta/get_global:
+    get:
+      tags:
+        - Public
+      summary: Get Global Config
+      description: Get global configuration information
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: '../components/public/webMetaGet_global.yaml#/components/schemas/GlobalResult'
+              examples:
+                response:
+                  $ref: '../components/public/webMetaGet_global.yaml#/components/examples/GlobalResult'
+
+  /web/meta/get_timezones:
+    get:
+      tags:
+        - Public
+      summary: Get Timezones
+      description: Get time zone information
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: '../components/public/webMetaGet_timezones.yaml#/components/schemas/TimezonesResult'
+              examples:
+                response:
+                  $ref: '../components/public/webMetaGet_timezones.yaml#/components/examples/TimezonesResult'
+
+  /web/meta/all_event_types:
+    get:
+      tags:
+        - Public
+      summary: Get all event types
+      description: |
+        * Permissions: Customer
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: '../components/public/webMetaAll_event_type.yaml#/components/schemas/AlgoTypeResult'
+              examples:
+                response:
+                  $ref: '../components/public/webMetaAll_event_type.yaml#/components/examples/AlgoTypeResult'
+
+  /manual_cleanup_task/manual_cleanup_tasks:
+    get:
+      tags:
+        - Public
+      summary: View all manual cleanup task information
+      description: |
+        Perms：
+        * `logic.manualcleanuptask`: retrieve
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: '../components/public/manual_cleanup_task.yaml#/components/schemas/TaskListResult'
+              examples:
+                response:
+                  $ref: '../components/public/manual_cleanup_task.yaml#/components/examples/TaskListResult'
+    post:
+      tags:
+        - Public
+      summary: Create a manual cleanup task
+      description: |
+        Perms：
+        * `logic.manualcleanuptask`: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '../components/public/manual_cleanup_task.yaml#/components/schemas/TaskRequest'
+            examples:
+              ParamIsNull:
+                $ref: '../components/public/manual_cleanup_task.yaml#/components/examples/ParamIsNull'
+              TaskRequest:
+                $ref: '../components/public/manual_cleanup_task.yaml#/components/examples/TaskResult'
+
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: '../components/public/manual_cleanup_task.yaml#/components/schemas/TaskResult'
+              examples:
+                response:
+                  $ref: '../components/public/manual_cleanup_task.yaml#/components/examples/TaskResult'
+
+  /manual_cleanup_task/manual_cleanup_tasks/{pk}:
+    get:
+      tags:
+        - Public
+      summary: View all manual cleanup task information
+      description: |
+        Perms：
+        * `logic.manualcleanuptask`: retrieve
+      parameters:
+        - in: path
+          name: pk
+          required: true
+          description: Manual cleanup task id
+          schema:
+            type: integer
+            format: int32
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: '../components/public/manual_cleanup_task.yaml#/components/schemas/TaskResult'
+              examples:
+                response:
+                  $ref: '../components/public/manual_cleanup_task.yaml#/components/examples/TaskResult'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    X_APP:
+      type: apiKey
+      in: header
+      name: X-APP

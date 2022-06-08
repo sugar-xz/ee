@@ -1,0 +1,25 @@
+# Name: test_default.tavern
+test_name: List Camera Video
+stages:
+  - type: ref
+    id: login_customer
+  - name: Query the video stored in the specified camera
+    request:
+      url: "{url}/camera_saved_video/camera_saved_videos?camera_id={camera_id}"
+      method: GET
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        ret:
+          count: !anyint
+          next: !anything
+          previous: !anything
+          results: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1

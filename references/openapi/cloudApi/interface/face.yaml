@@ -1,0 +1,433 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Face
+    description: Face related interface
+security:
+  - BasicAuth: []
+
+paths:
+  /face/libs:
+    get:
+      tags:
+        - Face
+      summary: View face lib list
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: '../components/face/faceLibs.yaml#/components/parameters/OrgIDParam'
+      responses:
+        200:
+          $ref: '../components/face/faceLibs.yaml#/components/responses/FaceLibResult'
+    post:
+      tags:
+        - Face
+      summary: Create face lib
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      requestBody:
+        $ref: '../components/face/faceLibs.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: '../components/face/faceLibs.yaml#/components/responses/LibResult'
+  /face/libs/{id}:
+    get:
+      tags:
+        - Face
+      summary: View the specified Face Lib
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: '../components/face/faceLibsID.yaml#/components/parameters/LibIDParam'
+      responses:
+        200:
+          $ref: '../components/face/faceLibs.yaml#/components/responses/LibResult'
+    put:
+      tags:
+        - Face
+      summary: Update the specified Face Lib
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      requestBody:
+        $ref: '../components/face/faceLibsID.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/face/faceLibs.yaml#/components/responses/LibResult'
+    delete:
+      tags:
+        - Face
+      summary: Delete the specified Face Lib
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: '../components/face/faceLibsID.yaml#/components/parameters/LibIDParam'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200'
+
+  /face/faces:
+    get:
+      tags:
+        - Face
+      summary: View face detection list
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: '../components/face/faceFaces.yaml#/components/parameters/LibIDParam'
+        - $ref: '../components/face/faceFaces.yaml#/components/parameters/LibOrgIDParam'
+      responses:
+        200:
+          $ref: '../components/face/faceFaces.yaml#/components/responses/FaceListResult'
+    post:
+      tags:
+        - Face
+      summary: Create face detection
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      requestBody:
+        $ref: '../components/face/faceFaces.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: '../components/face/faceFaces.yaml#/components/responses/FaceResult'
+
+  /face/faces/{id}:
+    get:
+      tags:
+        - Face
+      summary: View the specified face detection
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: '../components/face/faceFaces.yaml#/components/parameters/FaceIDParam'
+      responses:
+        200:
+          $ref: '../components/face/faceFaces.yaml#/components/responses/FaceResult'
+    delete:
+      tags:
+        - Face
+      summary: Delete the specified Face Lib
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: '../components/face/faceFaces.yaml#/components/parameters/FaceIDParam'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200'
+
+  /face/tracking_objects:
+    get:
+      tags:
+        - Face
+      summary: View detection tracking objects
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: '../components/face/faceTracking_objects.yaml#/components/parameters/OrgIDParam'
+        - $ref: '../components/face/faceTracking_objects.yaml#/components/parameters/SerialNoParam'
+        - $ref: '../components/face/faceTracking_objects.yaml#/components/parameters/NameParam'
+      responses:
+        200:
+          $ref: '../components/face/faceTracking_objects.yaml#/components/responses/TrackListResult'
+    post:
+      tags:
+        - Face
+      summary: Create face detection tracking
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      requestBody:
+        $ref: '../components/face/faceTracking_objects.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: '../components/face/faceTracking_objects.yaml#/components/responses/TrackResult'
+
+  /face/tracking_objects/{id}:
+    get:
+      tags:
+        - Face
+      summary: View the specified tracking objects
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: '../components/face/faceTracking_objects.yaml#/components/parameters/TrackIDParam'
+      responses:
+        200:
+          $ref: '../components/face/faceTracking_objects.yaml#/components/responses/TrackResult'
+    delete:
+      tags:
+        - Face
+      summary: Delete the specified tracking objects
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: '../components/face/faceTracking_objects.yaml#/components/parameters/TrackIDParam'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200'
+
+  /face/tracking_objects/merge:
+    post:
+      tags:
+        - Face
+      summary: Tracking objects merge
+      description: |
+        Perms:
+        * ...
+      requestBody:
+        $ref: '../components/face/faceTracking_objectsMerge.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/face/faceTracking_objectsMerge.yaml#/components/responses/MergeResult'
+
+  /face/tracking_objects/{id}/add_face:
+    post:
+      tags:
+        - Face
+      summary: Modify S3 information
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: '../components/face/faceTracking_objects.yaml#/components/parameters/TrackIDParam'
+      requestBody:
+        $ref: '../components/face/faceTracking_objectsIDAdd_face.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/face/faceTracking_objects.yaml#/components/responses/TrackResult'
+
+  /face/tracking_objects/{id}/enable:
+    post:
+      tags:
+        - Face
+      summary: Enabled tracking
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: '../components/face/faceTracking_objects.yaml#/components/parameters/TrackIDParam'
+      requestBody:
+        $ref: '../components/face/faceTracking_objects.yaml#/components/requestBodies/EnableDisable'
+      responses:
+        200:
+          $ref: '../components/face/faceTracking_objects.yaml#/components/responses/TrackResult'
+
+  /face/tracking_objects/{id}/disable:
+    post:
+      tags:
+        - Face
+      summary: Disabled tracking
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: '../components/face/faceTracking_objects.yaml#/components/parameters/TrackIDParam'
+      requestBody:
+        $ref: '../components/face/faceTracking_objects.yaml#/components/requestBodies/EnableDisable'
+      responses:
+        200:
+          $ref: '../components/face/faceTracking_objects.yaml#/components/responses/TrackResult'
+
+  /face/tracking_objects/{id}/list_faces:
+    get:
+      tags:
+        - Face
+      summary: Tracking objects list of The same id
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: '../components/face/faceTracking_objects.yaml#/components/parameters/TrackIDParam'
+      responses:
+        200:
+          $ref: '../components/face/faceTracking_objectsIDList_faces.yaml#/components/responses/200'
+
+  /face/tracking_objects/{id}/remove_faces:
+    post:
+      tags:
+        - Face
+      summary: Delete faces
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: '../components/face/faceTracking_objects.yaml#/components/parameters/TrackIDParam'
+      requestBody:
+        $ref: '../components/face/faceTracking_objectsIDRemove_faces.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/face/faceTracking_objectsIDRemove_faces.yaml#/components/responses/200'
+
+  /face/tracking_records:
+    get:
+      tags:
+        - Face
+      summary: View face detection track record list
+      description: |
+        The query criteria `started_at` and `ended_at` can only be selected one at a time
+
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/TrackIDParam'
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/StartAtParam'
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/StartAtParam2'
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/StartAtParam3'
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/StartAtParam4'
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/EndAtParam'
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/EndAtParam2'
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/EndAtParam3'
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/EndAtParam4'
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/CameraIDParam'
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/SiteIDParam'
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/OrgIDParam'
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/EventIDParam'
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/SerialNoParam'
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/NameParam'
+      responses:
+        200:
+          $ref: '../components/face/faceTracking_records.yaml#/components/responses/200'
+  /face/tracking_records/{id}:
+    get:
+      tags:
+        - Face
+      summary: View the specified track record
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/RecordIDParam'
+      responses:
+        200:
+          $ref: '../components/face/faceTracking_records.yaml#/components/responses/RecordResult'
+    delete:
+      tags:
+        - Face
+      summary: Delete the specified track record
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: '../components/face/faceTracking_records.yaml#/components/parameters/RecordIDParam'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200'
+  /face/settings:
+    get:
+      tags:
+        - Face
+      summary: Gets the temperature detection Settings
+      description: |
+        Notice:
+        * `Settings` creation requires `Enable Face Detection` to be checked in `Organization`
+        * To close you need to uncheck `Enable Face Detection` in `Organization`
+
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      responses:
+        200:
+          $ref: '../components/face/faceSettings.yaml#/components/responses/200'
+    put:
+      tags:
+        - Face
+      summary: Modify the temperature detection Settings
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      requestBody:
+        $ref: '../components/face/faceSettings.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/face/faceSettings.yaml#/components/responses/200'
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

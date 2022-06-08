@@ -1,0 +1,20 @@
+# Name: test_default.tavern
+test_name:  Update guard_company
+stages:
+  - type: ref
+    id: login_admin
+  - name: Update guard_company
+    request:
+      url: "{url}/guard_admin/guard_admins/4"
+      method: PUT
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        phone_number: "13111112233"
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

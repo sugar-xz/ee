@@ -1,0 +1,62 @@
+# Name: test_default.tavern
+test_name: Create user role (org)
+# org_organizationuser,org_usernode,auth_user
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create user role
+    request: &user_request_anchor
+      url: "{url}/user_node/user_nodes/create_user_roles"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        user:
+          first_name: test
+          last_name: lee
+          username: test@turingvideo.com
+          lang: en
+          timezone: UTC
+          role_ids:
+            - 5
+        parent_id: 1
+    response: &user_response_anchor
+      status_code: 200
+      body:
+        ret: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Create domain type (org)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create user role
+    request:
+      <<: *user_request_anchor
+      json:
+        user:
+          first_name: test
+          last_name: lee
+          username: test1@turingvideo.com
+          lang: en
+          timezone: UTC
+          role_ids:
+            - 1
+            - 5
+        parent_id: 1
+    response: *user_response_anchor
+
+---
+test_name: Repeat create user role (org)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Repeat create user role
+    request: *user_request_anchor
+    response:
+      status_code: 409
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_409

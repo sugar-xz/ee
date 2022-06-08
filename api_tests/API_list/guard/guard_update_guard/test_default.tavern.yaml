@@ -1,0 +1,39 @@
+# Name: test_default.tavern
+test_name:  Update guard
+stages:
+  - type: ref
+    id: login_guard_guard
+  - name: Update guard
+    request:
+      url: "{url}/guard/guards/6"
+      method: PUT
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        phone_number: 13111113334
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name:  Update guard_company error
+stages:
+  - type: ref
+    id: login_customer
+  - name: Update guard error
+    request:
+      url: "{url}/guard/guards/6"
+      method: PUT
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        phone_number: 13111113334
+    response:
+      status_code: 401
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_401

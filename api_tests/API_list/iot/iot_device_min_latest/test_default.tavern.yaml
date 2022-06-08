@@ -1,0 +1,32 @@
+# Name: test_default.tavern
+test_name:  Get device min_and_latest
+marks:
+  - parametrize:
+      key:
+        - device_service
+        - device_system
+      vals:
+        - ["box", "ubuntu_18.04"]
+        - ["robox", "ubuntu_18.04"]
+stages:
+  - type: ref
+    id: login_admin
+  - name: Get device min_and_latest
+    request:
+      url: "{url}/iot/device/get_min_and_latest_lr"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        service: "{device_service}"
+        system: "{device_system}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          service: !!str "{device_service}"
+          system: !!str "{device_system}"
+          lrs: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

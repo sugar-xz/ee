@@ -1,0 +1,126 @@
+openapi: 3.0.2
+components:
+  parameters:
+    TargetIDParam:
+      in: query
+      name: target_id
+      description: Target id
+      schema:
+        type: integer
+        format: int32
+    StatusIDParam:
+      in: query
+      name: review_status
+      description: Review status
+      schema:
+        type: boolean
+        enum:
+          - true
+          - false
+    InspectionIDParam:
+      in: query
+      name: inspection_id
+      description: Inspection id
+      schema:
+        type: integer
+        format: int32
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DwtwctionTaskListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/DwtwctionTaskListResult'
+  schemas:
+    DwtwctionTaskListResult:
+      description: Org domain list
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            format: int32
+                            description: DetectionTask id
+                          inspection:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                format: int32
+                                description: Inspection id
+                              mediums:
+                                type: arrary
+                                items:
+                                  type: string
+                                  format: JSONObjectField
+                                  description: Mediums info
+                          algo_config:
+                            type: object
+                            properties:
+                              algo:
+                                type: string
+                                description: Algo code name
+                              params:
+                                type: string
+                                format: JSONObjectField
+                              schedules:
+                                type: array
+                                items:
+                                  type: string
+                                  description: Daily scheduling information
+                          algo_reference:
+                            type: object
+                            properties:
+                              config:
+                                type: string
+                                format: JSONObjectField
+                              cache:
+                                type: string
+                                format: JSONObjectField
+                          historical_tasks:
+                            type: array
+                            items:
+                              type: string
+  examples:
+    DwtwctionTaskListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          - id: 2231
+            inspection:
+              id: 22
+              mediums:
+                - testtestest
+            algo_config:
+              algo: store
+              params:
+                params
+              schedules:
+                -
+                  - 1231
+                  - 2124
+                -
+                  - 12
+                  - 123
+            algo_reference:
+              config: {}
+              cache: {}
+            historical_tasks:
+              -

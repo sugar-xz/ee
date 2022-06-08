@@ -1,0 +1,221 @@
+openapi: 3.0.2
+components:
+  parameters:
+    SampleIDParam:
+      in: path
+      name: id
+      required: true
+      description: Sample id
+      schema:
+        type: integer
+        format: int32
+  requestBodies:
+    PutRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PutRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PutRequest'
+    PatchRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PatchRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PutRequest'
+  responses:
+    SampleResult:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SampleResult'
+          examples:
+            response:
+              $ref: '#/components/examples/SampleResult'
+
+  schemas:
+    PutRequest:
+      type: object
+      required:
+        - started_at
+        - ended_at
+        - media
+        - camera
+      properties:
+        started_at:
+          type: string
+          format: date-time
+          description: Sample event start time
+        ended_at:
+          type: string
+          format: date-time
+          description: Sample event end time
+        data:
+          type: string
+          format: JSONObjectField
+        media:
+          type: object
+          properties:
+            file_size:
+              type: integer
+              description: Video file size
+              format: int32
+            size:
+              type: array
+              items:
+                type: string
+                description: Medium file length and width
+            content_type:
+              type: string
+              description: Choose according to File content type
+              enum:
+                - video/mp4
+                - text/json
+                - image/jpeg
+            url:
+              type: string
+              description: Video url path
+        types:
+          type: string
+          description: Algorithms code
+        expiration:
+          type: integer
+          format: int32
+          description: Sample expire date
+        uuid:
+          type: string
+          description: Zeno id
+        camera:
+          type: integer
+          description: Camera id
+          format: int32
+    PatchRequest:
+      type: object
+      properties:
+        started_at:
+          type: string
+          format: date-time
+          description: Sample event start time
+        ended_at:
+          type: string
+          format: date-time
+          description: Sample event end time
+        data:
+          type: string
+          format: JSONObjectField
+        media:
+          type: object
+          properties:
+            file_size:
+              type: integer
+              description: Video file size
+              format: int32
+            size:
+              type: array
+              items:
+                type: string
+                description: Medium file length and width
+            content_type:
+              type: string
+              description: Choose according to File content type
+              enum:
+                - video/mp4
+                - text/json
+                - image/jpeg
+            url:
+              type: string
+              description: Video url path
+        types:
+          type: string
+          description: Algorithms code
+        expiration:
+          type: integer
+          format: int32
+          description: Sample expire date
+        uuid:
+          type: string
+          description: Zeno id
+        camera:
+          type: integer
+          description: Camera id
+          format: int32
+    SampleResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: 'sampleSamples.yaml#/components/schemas/SampleInfo'
+
+  examples:
+    PutRequest:
+      value:
+        started_at: '2020-04-15T06:05:00Z'
+        ended_at: '2020-04-15T06:05:07Z'
+        data:
+          test: aaa
+        media: {}
+        types: person
+        expiration: 12
+        uuid: e9cc10e1-ddf2-440f-a1ca-c2862a2a0e40
+        camera: 1
+    SampleResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 1
+          started_at: '2020-04-15T06:05:00Z'
+          ended_at: '2020-04-15T06:05:07Z'
+          data:
+            test: testdata
+          media: {}
+          types: person
+          expiration: 10000
+          uuid: e9cc10e1-ddf2-440f-a1ca-cc862a0a0e40
+          camera: 1
+          site: 1
+          created_at: '2020-04-15T06:04:46Z'
+          expired_at: '2020-04-16T06:09:00Z'
+          mediums:
+            - snapshot:
+                id: 690689
+                name: snapshot
+                file:
+                  file_size: 8888
+                  size:
+                    - 640
+                    - 360
+                  content_type: image/jpeg
+                  url: https://develop-data-turingvideo-com.s3.cn
+                event_id: 229985
+            - bbox:
+                id: 690690
+                name: bbox
+                file:
+                  file_size: 8888
+                  content_type: text/json
+                  url: https://develop-data-turingvideo-com.s3.cn
+                event_id: 229985
+            - videos:
+                - id: 690691
+                  name: video
+                  file:
+                    file_size: 8888
+                    content_type: video/mp4
+                    url: https://develop-data-turingvideo-com.s3.cn
+                  event_id: 229985
+                  started_at: '2020-04-05T06:00:57Z'
+                  ended_at: '2020-04-05T06:00:57Z'
+          status: todo
+          mark: misreport
+          user: 1

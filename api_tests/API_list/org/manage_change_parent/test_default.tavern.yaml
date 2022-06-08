@@ -1,0 +1,42 @@
+# Name: test_default.tavern
+test_name: Change user_node parent (org)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Change user_node parent
+    request:
+      url: "{url}/user_node/user_nodes/6/change_parent"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        id: 6
+        parent_id: 2
+    response:
+      status_code: 200
+      body:
+        ret: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Change user_node parent (org)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Change user_node parent
+    request:
+      url: "{url}/user_node/user_nodes/3/change_parent"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        id: 3
+        parent_id: 1
+    response:
+      status_code: 200
+      body:
+        ret: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

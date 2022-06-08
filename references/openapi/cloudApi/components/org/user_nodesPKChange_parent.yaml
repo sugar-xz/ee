@@ -1,0 +1,32 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  schemas:
+    Request:
+      type: object
+      required:
+      - "parent_id"
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Org user_node id, when null values the path id
+        parent_id:
+          type: integer
+          format: int32
+          description: Org user_node id, allow null
+
+  examples:
+    Request:
+      value:
+        user: null
+        parent_id: 3

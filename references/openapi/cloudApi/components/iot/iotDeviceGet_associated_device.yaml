@@ -1,0 +1,77 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Box/Robot id
+        product_type:
+          type: string
+          enum:
+            - box
+            - robot
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Box id
+                product_type:
+                  type: string
+                  enum:
+                    - box
+                    - robot
+                device:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                    system:
+                      type: string
+
+  examples:
+    Request:
+      value:
+        id: box_dog_sr_50006
+        product_type: box
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: box_dog_sr_50006
+          product_type: box
+          device:
+            id: 27bf74b0-4ef0-4e0d-a92d-eb99b9987dea
+            system: ubuntu_18.04

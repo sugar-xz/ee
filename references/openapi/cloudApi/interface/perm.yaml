@@ -1,0 +1,120 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Perm
+    description: Perm related interface
+security:
+  - BasicAuth: []
+
+paths:
+  # Perm: add resource access api
+  /perm/role_policy/get_queryset_sql:
+    post:
+      tags:
+        - Perm
+      summary: Get queryset sql
+      security:
+        - Authorization: []
+      requestBody:
+        $ref: '../components/perm/get_queryset_sql.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/perm/get_queryset_sql.yaml#/components/responses/200'
+
+  /perm/role_policy/validate_conditions:
+    post:
+      tags:
+        - Perm
+      summary: Check conditions
+      security:
+        - Authorization: []
+      requestBody:
+        $ref: '../components/perm/validate_conditions.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/perm/validate_conditions.yaml#/components/responses/200'
+
+  /perm/validate_resource_scope:
+    post:
+      tags:
+        - Perm
+      summary: Validate Resource Scope
+      description: |
+        Resource Scope:
+        * 'expression : MODEL'
+        * 'expression : expression / FILTER'
+        * 'expression : expression :: NAME : MODEL'
+        * 'expression : expression / NAME PARAM'
+
+        Examples:
+        * org.domain
+        * logic.site/Q(id__in=[17, 18])
+        * logic.site/Q(id__in=[17, 18])::site:logic.box
+        * logic.box/Q(user_id={user_id})
+        * logic.camera/Q(box__site__managements__site_manager={user_id})
+        * logic.robotvideo/Q(robot__user__customer__guard_company_id__monitoring_operator_org={user_id})
+        * org.domainuser/Q(user_id={user_id}, domain__domain_type__code_name='business')::domain_users:org.domain/get_descendants()/Q(domain_type__code_name='site')::domain:logic.site::site:logic.robot
+      requestBody:
+        $ref: '../components/perm/validate_resource_scope.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/perm/validate_resource_scope.yaml#/components/responses/200'
+
+  /perm/validate_cross_join:
+    post:
+      tags:
+        - Perm
+      summary: Validate Cross Join
+      description: Validate Cross Join
+      requestBody:
+        $ref: '../components/perm/validate_cross_join.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/perm/validate_cross_join.yaml#/components/responses/200'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+

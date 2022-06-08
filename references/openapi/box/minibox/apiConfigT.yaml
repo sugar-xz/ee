@@ -1,0 +1,77 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PostRequest'
+  responses:
+    UnitResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnitResult'
+          examples:
+            response:
+              $ref: '#/components/examples/UnitResult'
+    PostResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnitResult'
+          examples:
+            response:
+              $ref: '#/components/examples/PostResult'
+  schemas:
+    UnitResult:
+      allOf:
+        - $ref: 'common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                temperature_unit:
+                  type: string
+                  description: |
+                    Temperature unit
+                    * Degrees Celsius (°C)
+                    * Degrees Fahrenheit (°F)
+                  enum:
+                    - f
+                    - c
+    PostRequest:
+      type: object
+      properties:
+        temperature_unit:
+          type: string
+          description: |
+            Temperature unit
+            * Degrees Celsius (°C)
+            * Degrees Fahrenheit (°F)
+          enum:
+            - f
+            - c
+
+  examples:
+    PostRequest:
+      value:
+        temperature_unit: f
+    UnitResult:
+      value:
+        code: 0
+        msg: ok
+        data:
+          temperature_unit: f
+    PostResult:
+      value:
+        code: 0
+        msg: ok
+        data: null

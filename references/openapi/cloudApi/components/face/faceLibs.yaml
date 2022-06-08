@@ -1,0 +1,181 @@
+openapi: 3.0.2
+components:
+  parameters:
+    OrgIDParam:
+      in: query
+      name: organization
+      description: Organization id
+      schema:
+        type: integer
+        format: int32
+  requestBodies:
+    PostRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PostRequest'
+  responses:
+    ErrorResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResult'
+          examples:
+            response:
+              $ref: '#/components/examples/ErrorResult'
+    FaceLibResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FaceLibResult'
+          examples:
+            response:
+              $ref: '#/components/examples/FaceLibResult'
+    LibResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LibResult'
+          examples:
+            response:
+              $ref: '#/components/examples/LibResult'
+  schemas:
+    PostRequest:
+      type: object
+      required:
+        - organization
+        - name
+        - business_type
+      properties:
+        organization:
+          type: integer
+          format: int32
+          description: Organization id
+        name:
+          type: string
+          description: Face lib name
+        comment:
+          type: string
+          description: The face lib notes
+        similarity_threshold:
+          type: number
+          description: The face lib similarity threshold
+        business_type:
+          type: integer
+          format: int32
+          description: Default 1, business type tracking
+
+    FaceLibResult:
+      description: Face libs list
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/FaceLibInfo'
+    FaceLibInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Face lib id
+        organization:
+          type: integer
+          format: int32
+          description: Organization id
+        created_at:
+          type: string
+          description: Data create time
+          format: date-time
+        updated_at:
+          type: string
+          description: Data update time
+          format: date-time
+        name:
+          type: string
+          description: Face lib name
+        comment:
+          type: string
+          description: The face lib notes
+        similarity_threshold:
+          type: number
+          description: The face lib similarity threshold
+        face_count:
+          type: integer
+          format: int32
+          description: Total face lib
+        business_type:
+          type: integer
+          format: int32
+          description: Default 1, business type tracking
+
+    LibResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/FaceLibInfo'
+
+
+  examples:
+    PostRequest:
+      value:
+        organization: 9
+        name: face tracking
+        comment: test from face tracking
+        similarity_threshold: 0.9
+        business_type: 1
+
+    FaceLibResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 1
+          next: null
+          previous: null
+          results:
+            - id: 327f5a1eb46945d48bb3f3316e5c8866
+              organization: 9
+              created_at: "2020-07-11T09:13:36Z"
+              updated_at: "2020-07-11T09:13:36Z"
+              name: face tracking
+              comment: test from face tracking
+              similarity_threshold: 0.9
+              face_count: 0
+              business_type: 1
+
+    LibResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 327f5a1eb46945d48bb3f3316e5c8866
+          organization: 9
+          created_at: "2020-07-11T09:13:36Z"
+          updated_at: "2020-07-11T09:13:36Z"
+          name: face tracking
+          comment: test from face tracking
+          similarity_threshold: 0.9
+          face_count: 0
+          business_type: 1

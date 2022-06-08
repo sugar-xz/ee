@@ -1,0 +1,319 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description: Query videos created by robot
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      required:
+        - started_at
+        - ended_at
+      properties:
+        started_at:
+          type: string
+          format: date-time
+          description: Save the create time of the event
+        ended_at:
+          type: string
+          format: date-time
+          description: Save the end time of the event
+        media:
+          type: object
+          properties:
+            snapshot:
+              type: object
+              properties:
+                flie:
+                  type: object
+                  properties:
+                    meta:
+                      type: object
+                      properties:
+                        file_size:
+                          type: integer
+                          format: int32
+                          description: Snapshot file size
+                        size:
+                          type: array
+                          items:
+                            type: string
+                            description: Snapshot file length and width
+                        content_type:
+                          type: string
+                          description: File content type
+                    Key:
+                      type: string
+                      description: Store file name
+                    Bucket:
+                      type: string
+                      description: Store path
+            bbox:
+              type: object
+              properties:
+                flie:
+                  type: object
+                  properties:
+                    meta:
+                      type: object
+                      properties:
+                        file_size:
+                          type: integer
+                          format: int32
+                          description: bbox file size
+                        content_type:
+                          type: string
+                          description: File content type
+                    Key:
+                      type: string
+                      description: Store file name
+                    Bucket:
+                      type: string
+                      description: Store path
+            videos:
+              type: array
+              items:
+                type: object
+                properties:
+                  flie:
+                    type: object
+                    properties:
+                      meta:
+                        type: object
+                        properties:
+                          file_size:
+                            type: integer
+                            format: int32
+                            description: Video file size
+                          content_type:
+                            type: string
+                            description: File content type
+                      Key:
+                        type: string
+                        description: Store file name
+                      Bucket:
+                        type: string
+                        description: Store path
+                  started_at:
+                    type: string
+                    format: date-time
+                    description: Save the create time of the videos
+                  ended_at:
+                    type: string
+                    format: date-time
+                    description: Save the end time of the videos
+        location:
+          type: object
+          properties:
+            lng:
+              type: number
+              format: double
+              description: Location of latitude
+            lat:
+              type: number
+              format: double
+              description: Location of longitude
+        detected_macs:
+          type: array
+          items:
+            type: object
+            properties:
+              mac_address:
+                type: string
+                description: IP address of the camera
+              event_type:
+                type: string
+                description: Algorithm product type
+        detection:
+          type: object
+          properties:
+            camera:
+              type: string
+              description: Robot camera name
+            algos:
+              type: string
+              description: Algorithm of robot detection
+            threshold:
+              type: number
+              format: float
+              description: Threshold of robot detection
+
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: 'eventEvents.yaml#/components/schemas/EventInfo'
+
+
+  examples:
+    Request:
+      value:
+        robot_id: robot_dog_sr_20002
+        started_at: "2019-10-14T06:00:57.262076Z"
+        ended_at: "2019-10-14T06:01:57.262076Z"
+        media:
+          snapshot:
+            file:
+              Key: users/1/cameras/1/events/logo.jpg
+              Bucket: develop-data-turingvideo-com
+              meta:
+                file_size: 1888
+                size:
+                  - 640
+                  - 360
+                content_type: image/jpeg
+          bbox:
+            file:
+              Key: users/3/cameras/3/events/0dc87e3
+              Bucket: develop-data-turingvideo-com
+              meta:
+                file_size: 1888
+                content_type: text/json
+          videos:
+            - file:
+                Key: users/3/cameras/3/events/0dc87e3
+                Bucket: develop-data-turingvideo-com
+                meta:
+                  file_size: 1888
+                  content_type: video/mp4
+              started_at: "2019-10-14T06:00:57.262076Z"
+              ended_at: "2019-10-14T06:02:57.262076Z"
+        location:
+          lng: 0.0
+          lat: 0.0
+        detected_macs:
+          - mac_address: 11:22:33:44:55:66
+            event_type: enter
+        detection:
+          camera: front
+          algos: person:514
+          threshold: 0.9
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 1111
+          camera_id: null
+          robot_id: robot_dog_sr_20002
+          robot_camera:
+            name: front
+            lablel: Front
+          camera: null
+          robot:
+            id : robot_dog_sr_20002
+            name: 20002
+            type: test_li
+          types:
+            - name: dog
+              label: Dog
+            - name: enter
+              label: Enter
+          started_at: "2019-09-27 06:15:31+00"
+          ended_at: "2019-09-27 06:15:31+00"
+          mediums:
+            - id: 6689
+              name: snapshot
+              file:
+                file_size: 8888
+                size:
+                  - 640
+                  - 360
+                content_type: image/jpeg
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/3/cameras/3/events/8d40608c-9090-4e5a-98f4-26415058b487?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA3ADBR2YP4I3FGEGQ%2F20191021%2Fcn-northwest-1%2Fs3%2Faws4_request&X-Amz-Date=20191021T013415Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=4433e29c0f825191f7b850c783917644da7fff3f9c6b7e74825db9f575d14f86
+              event_id: 1111
+            - id: 6690
+              name: bbox
+              file:
+                file_size: 8888
+                content_type: text/json
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/3/cameras/3/events/0dc87e33-0ee6-41d2-9a79-fcb6446a6bc7?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA3ADBR2YP4I3FGEGQ%2F20191021%2Fcn-northwest-1%2Fs3%2Faws4_request&X-Amz-Date=20191021T013415Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=3d01cacdb2bef507948c4b21af44d5a702c4b0398a28f493d2eddd7b302beff4
+              event_id: 1111
+            - id: 6691
+              name: video
+              file:
+                file_size: 8888
+                content_type: video/mp4
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/3/cameras/3/events/b389e90c-b58e-4206-97f4-20249f55c5aa?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA3ADBR2YP4I3FGEGQ%2F20191021%2Fcn-northwest-1%2Fs3%2Faws4_request&X-Amz-Date=20191021T013415Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=9e079a8c2933810e7cb82c2da79a7106790cd5db28cf786c7631f04a53efc1ae
+              event_id: 1111
+          robot_date:
+            frtected_macs: []
+            camera:
+              name: front
+              label: Frant camera
+            threshold: 0.9
+          camera_data: null
+          media:
+            snapshot:
+              id: 689
+              name: snapshot
+              file:
+                file_size: 8888
+                size:
+                  - 640
+                  - 360
+                content_type: image/jpeg
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/3/cameras/3/events/8d40608c-9090-4e5a-98f4-26415058b487?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA3ADBR2YP4I3FGEGQ%2F20191021%2Fcn-northwest-1%2Fs3%2Faws4_request&X-Amz-Date=20191021T013415Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=4433e29c0f825191f7b850c783917644da7fff3f9c6b7e74825db9f575d14f86
+              event_id: 1111
+            bbox:
+              id: 690
+              name: bbox
+              file:
+                file_size: 8888
+                content_type: text/json
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/3/cameras/3/events/0dc87e33-0ee6-41d2-9a79-fcb6446a6bc7?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA3ADBR2YP4I3FGEGQ%2F20191021%2Fcn-northwest-1%2Fs3%2Faws4_request&X-Amz-Date=20191021T013415Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=3d01cacdb2bef507948c4b21af44d5a702c4b0398a28f493d2eddd7b302beff4
+              event_id: 1111
+            videos:
+              - id: 691
+                name: video
+                file:
+                  file_size: 8888
+                  content_type: video/mp4
+                  url: https://develop-data-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/3/cameras/3/events/b389e90c-b58e-4206-97f4-20249f55c5aa?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA3ADBR2YP4I3FGEGQ%2F20191021%2Fcn-northwest-1%2Fs3%2Faws4_request&X-Amz-Date=20191021T013415Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=9e079a8c2933810e7cb82c2da79a7106790cd5db28cf786c7631f04a53efc1ae
+                event_id: 1111
+                started_at: '2017-10-18T06:00:57Z'
+                ended_at: '2017-10-19T06:00:57Z'
+          location:
+            lat: 0.0
+            lng: 0.0
+          source: robot
+          tag: ''
+          marked: false
+          viewed: false
+          annotate: unknown
+          site:
+            id: 1
+            created_at: '2019-08-16T09:06:45Z'
+            updated_at: '2019-08-16T09:15:22Z'
+            name: test-site
+            location: Nanjing/China
+            note: ''
+            polygons: []
+          data:
+            detected_macs: []
+            camera:
+              name: front
+              label: Frant camera
+            threshold: 0.9

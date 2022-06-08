@@ -1,0 +1,88 @@
+# Name: test_default.tavern
+test_name: Unclaim Robot
+stages:
+  - type: ref
+    id: login_customer
+  - name: unclaim box
+    request:
+      url: "{url}/robot/robots/unclaim"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        id: robot_test_10002
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Unclaim Robot
+marks:
+  - parametrize:
+      key: err_unclaim_id
+      vals:
+        - "12312"
+        - "sadjaj2sad"
+        - "萨达撒"
+stages:
+  - type: ref
+    id: login_customer
+  - name: unclaim box
+    request:
+      url: "{url}/robot/robots/unclaim"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        id: "{err_unclaim_id}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Unclaim Robot err
+stages:
+  - type: ref
+    id: login_customer
+  - name: Unclaim Robot err
+    request:
+      url: "{url}/robot/robots/unclaim"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        id: ""
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+---
+test_name: Unclaim Robot err
+stages:
+  - type: ref
+    id: login_customer
+  - name: Restore the claim robot
+    request:
+      url: "{url}/robot/robots/claim"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        id: robot_test_10002
+        signature: "A3CqZJR5lzaPHljnpxgwvODm0qgrRgb92Z8L0Q+E+IU="
+    response:
+      status_code: 200
+      body:
+        ret: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

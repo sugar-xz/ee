@@ -1,0 +1,75 @@
+# Name: test_default.tavern
+test_name: Claim robot
+stages:
+  - type: ref
+    id: login_customer
+  - &unclaim_anthor
+    name: unclaim box
+    request:
+      url: "{url}/robot/robots/unclaim"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        id: robot_test_10002
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+  - &claim_robot_anthor
+    name: Claim robot
+    request: &claim_anthor
+      url: "{url}/robot/robots/claim"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        id: robot_test_10002
+        signature: "A3CqZJR5lzaPHljnpxgwvODm0qgrRgb92Z8L0Q+E+IU="
+    response:
+      status_code: 200
+      body:
+        ret: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+  - *unclaim_anthor
+
+---
+test_name: Claim robot error
+marks:
+  - parametrize:
+      key:
+        - err_id
+        - err_signature
+      vals:
+        - ["robot_dog_sr_2000333", "qa4Lwz9KW5MJrLqvM7Z3135rfQmu84xb1uuzeV+f/cg="]
+        - ["robot_test_10002", "qa4Lwz9KW5MJrLqvM7Z3135rfQmu84xb1uuzeV+f/cg="]
+        - ["robot_test_10001", "ja4Lwz9KW5MJrLqvM7Z3135rfQmu84xb1uuzeV+f/cg="]
+stages:
+  - type: ref
+    id: login_customer
+  - *unclaim_anthor
+  - name: Claim robot
+    request:
+      <<: *claim_anthor
+      json:
+        id: "{err_id}"
+        signature: "{err_signature}"
+    response:
+      status_code: 409
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_409
+
+---
+test_name: Claim robot error
+stages:
+  - type: ref
+    id: login_customer
+  - *unclaim_anthor
+  - *claim_robot_anthor

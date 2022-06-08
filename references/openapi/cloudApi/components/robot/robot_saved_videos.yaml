@@ -1,0 +1,62 @@
+openapi: 3.0.2
+
+components:
+  responses:
+    200:
+      description: Query videos by robot
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Result:
+      description: Paged list of videos
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: 'robot_videosSave_video.yaml#/components/schemas/SaveVideo'
+
+  examples:
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          next: null
+          previous: null
+          results:
+            - id: 33
+              robot:
+                id: robot_dog_sr_20002
+                name: 20002
+              camera:
+                name: front
+                lablel: Front camera
+              started_at: "2019-10-14T06:00:57.262076Z"
+              ended_at: "2019-10-14T06:01:57.262076Z"
+              snapshot:
+                file_size: 1888
+                size:
+                  - 640
+                  - 360
+                content_type: video/mp4
+                url: https://develop-data-turingvideo-com.s3.cn-nort
+              video:
+                file_size: 1888
+                content_type: video/mp4
+                url: https://develop-data-turingvideo-com.s3.cn-nort
+

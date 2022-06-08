@@ -1,0 +1,18 @@
+# Name: test_default.tavern
+test_name: "All event List: (Used for admin, need to be removed later)"
+stages:
+  - type: ref
+    id: login_customer
+  - name: All event List
+    request:
+      url: "{url}/event/events/slot"
+      method: GET
+      headers:
+        content-type: application/jsons
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1

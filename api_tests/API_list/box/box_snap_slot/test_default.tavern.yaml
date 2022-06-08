@@ -1,0 +1,17 @@
+# Name: test_default.tavern
+test_name: Snap Slot
+stages:
+  - type: ref
+    id: login_customer
+  - name: Snap Slot
+    request:
+      url: "{url}/snap/snaps/slot"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1

@@ -1,0 +1,41 @@
+# Name: test_default.tavern
+test_name: Get Agent Meta
+stages:
+  - type: ref
+    id: login_customer
+  - name: Get Agent Meta
+    request:
+      url: "{url}/web/meta/get_agent?name={box_type}"
+      method: GET
+      headers:
+        content-type: application/json
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          max_camera_cnt: !anyint
+          max_detect_cnt: !anyint
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Get Agent Meta
+stages:
+  - type: ref
+    id: login_customer
+  - name: Get Agent Meta
+    request:
+      url: "{url}/web/meta/get_agent?name={robot_type}"
+      method: GET
+      headers:
+        content-type: application/json
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          cameras: !anything
+          mac_types: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

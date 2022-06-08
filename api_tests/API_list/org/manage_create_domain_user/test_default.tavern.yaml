@@ -1,0 +1,23 @@
+# Name: test_default.tavern
+test_name: Create domain user (org)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create domain user
+    request:
+      url: "{url}/domain/domains/2/attach_user"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        domain_id: 2
+        user_id: 2
+        in_charge: false
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !anyint
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

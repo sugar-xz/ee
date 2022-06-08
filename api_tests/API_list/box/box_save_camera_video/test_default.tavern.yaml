@@ -1,0 +1,33 @@
+# Name: test_default.tavern
+test_name: Save Camera Video
+stages:
+  - type: ref
+    id: login_customer
+  - name: Save Camera Video
+    request:
+      url: "{url}/camera_video/camera_videos/save_video"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        X-APP: "Box/{box_level}/{box_version}"
+        Referer: "{Referer}"
+      json:
+        camera_id: "{camera_id}"
+        started_at: "2019-10-26T06:17:57.262076Z"
+        ended_at: "2019-10-26T06:17:58.262076Z"
+    response:
+      status_code:
+        - 409
+        - 200
+#      status_code: 409
+#      body:
+#        err:
+#          ec: 106
+#          em: "This chosen video segment is not available. (segment_unavailable)"
+#          dm: segment_unavailable
+#        ret:
+#          camera_id: 1
+#          started_at: "2019-10-26T06:17:57Z"
+#          ended_at: "2019-10-26T06:17:58Z"
+# #   delay_after: 1

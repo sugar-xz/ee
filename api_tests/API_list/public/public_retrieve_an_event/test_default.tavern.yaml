@@ -1,0 +1,18 @@
+# Name: test_default.tavern
+test_name: View information about the specified event
+stages:
+  - type: ref
+    id: login_customer
+  - name: View information about the specified event
+    request:
+      url: "{url}/event/events/{box_event_id}"
+      method: GET
+      headers:
+        content-type: application/json
+
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1

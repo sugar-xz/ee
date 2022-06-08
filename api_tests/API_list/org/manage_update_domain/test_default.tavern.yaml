@@ -1,0 +1,44 @@
+# Name: test_default.tavern
+test_name: Update domain type (org put)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Update domain type
+    request:
+      url: "{url}/domain/domains/3"
+      method: PUT
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        name: "first_update"
+        code_name: "first_update"
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !int 3
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Update domain type (org put)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Update domain type
+    request:
+      url: "{url}/domain/domains/5"
+      method: PUT
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        name: "second_update"
+        code_name: "second_update"
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !int 5
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

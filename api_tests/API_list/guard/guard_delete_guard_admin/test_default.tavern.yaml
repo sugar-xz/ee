@@ -1,0 +1,18 @@
+# Name: test_default.tavern
+test_name: Delete guard_admin
+stages:
+  - type: ref
+    id: login_admin
+  - name: Guard_admin list
+    request:
+      url: "{url}/guard_admin/guard_admins/5"
+      method: DELETE
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

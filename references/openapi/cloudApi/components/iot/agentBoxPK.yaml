@@ -1,0 +1,43 @@
+openapi: 3.0.2
+components:
+  parameters:
+    BoxIDParam:
+      in: path
+      name: id
+      required: true
+      description: Box id
+      schema:
+        type: string
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: 'agentRobotPK.yaml#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  examples:
+    Result:
+      value:
+        id: box_dog_sr_50006
+        version: 160
+        agents:
+          - agent:
+              name:
+                name: box
+                label: null
+              level: 1
+              version: 0.14.3
+              upgradable: true
+              outdated: null
+              upgrading: null
+            latest_agent:
+              name:
+                name: Box
+                label: Turing box
+              level: 1
+              version: 0.14.4
+              system: generic
+            upgrading_agent: null

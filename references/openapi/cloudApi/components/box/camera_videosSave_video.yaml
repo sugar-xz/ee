@@ -1,0 +1,27 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+
+  schemas:
+    Request:
+      type: object
+      required:
+        - camera_id
+        - started_at
+        - ended_at
+      properties:
+        camera_id:
+          type: integer
+          format: int32
+        started_at:
+          type: string
+          format: date-time
+        ended_at:
+          type: string
+          format: date-time

@@ -1,0 +1,71 @@
+# Name: test_default.tavern
+test_name: Register IOS Device
+stages:
+  - type: ref
+    id: login_customer
+  - name: Register IOS Device
+    request: &registration_anchor
+      url: "{url}/device/apns"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        name: Apple iPhone 6s
+        registration_id: aeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeae
+        device_id: ffffffffffffffffffffffffffffffff
+    response:
+      status_code: 201
+      body:
+        ret:
+          name: Apple iPhone 6s
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_201
+
+---
+test_name: Repeat register
+stages:
+  - type: ref
+    id: login_customer
+  - name: Register IOS Device
+    request: *registration_anchor
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Info error to registration
+marks:
+  - parametrize:
+      key:
+        - err_name
+        - err_registration_id
+        - err_device_id
+      vals:
+        - ["", "",""]
+        - ["iPhone", "",""]
+        - ["", "aeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeae",""]
+        - ["", "","ffffffffffffffffffffffffffffffff"]
+        - ["iPhone", "aeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeae21","ffffffffffffffffffffffffffffffff"]
+        - ["iPhone", "aeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeae","ffffffffffffffffffffffffffffffff22"]
+stages:
+  - type: ref
+    id: login_customer
+  - name:  Device error registration
+    request:
+      url: "{url}/device/apns"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        name: "{err_name}"
+        registration_id: "{err_registration_id}"
+        device_id: "{err_device_id}"
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400

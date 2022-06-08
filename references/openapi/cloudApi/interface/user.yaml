@@ -1,0 +1,205 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: User
+    description: User interface
+security:
+  - BasicAuth: []
+
+paths:
+  /user/auth/login:
+    post:
+      tags:
+        - User
+      summary: User login system
+      description: Returns sessionid and csrftoken
+      operationId: getcookies
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../components/auth/auth.yaml#/components/schemas/AuthRequest'
+      responses:
+        200:
+          description: >
+            Successfully authenticated.
+            The session ID is returned in a cookie named `sessionid`and `csrftoken`. You need to include this cookie in subsequent requests.
+          content:
+            application/json:
+              schema:
+                $ref: '../components/user/userAuthLogin.yaml#/components/schemas/LoginResult'
+              examples:
+                response:
+                  $ref: '../components/user/userAuthLogin.yaml#/components/examples/LoginResult'
+
+  /user/auth/register:
+    post:
+      tags:
+        - User
+      summary: User registration
+      description: User registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../components/user/UserAuthRegister.yaml#/components/schemas/RegisterRequest'
+            examples:
+              request:
+                $ref: '../components/user/UserAuthRegister.yaml#/components/examples/RegisterRequest'
+      security: []
+      responses:
+        default:
+          description: Return user id
+          content:
+            application/json:
+              schema:
+                $ref: '../components/user/UserAuthRegister.yaml#/components/schemas/RegisterResult'
+              examples:
+                response:
+                  $ref: '../components/user/UserAuthRegister.yaml#/components/examples/RegisterResult'
+
+  /user/users/me:
+    get:
+      tags:
+        - User
+      summary: View current user
+      description: View current user information
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: '../components/user/userAuthLogin.yaml#/components/schemas/LoginResult'
+              examples:
+                response:
+                  $ref: '../components/user/userAuthLogin.yaml#/components/examples/LoginResult'
+
+  /user/users/{pk}:
+    put:
+      tags:
+        - User
+      summary: Users update their information
+      description: |
+        Perms：
+        * `auth.user`: update
+
+        Condition
+        * Can only modify own information
+      parameters:
+        - $ref: '../components/user/userUsersPK.yaml#/components/parameters/UserIDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../components/user/userUsersPK.yaml#/components/schemas/PutRequest'
+      responses:
+        200:
+          description: >
+            Successfully update.
+          content:
+            application/json:
+              schema:
+                $ref: '../components/user/userAuthLogin.yaml#/components/schemas/LoginResult'
+              examples:
+                response:
+                  $ref: '../components/user/userAuthLogin.yaml#/components/examples/LoginResult'
+
+  /user/auth/change_password:
+    post:
+      tags:
+        - User
+      summary: User change password
+      description:  The current user changes the password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../components/user/userAuthChange_password.yaml#/components/schemas/ChangeRequest'
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: '../components/common.yaml#/components/schemas/Result'
+              examples:
+                request:
+                  $ref: '../components/common.yaml#/components/examples/Result'
+
+  /user/auth/reset_password:
+    post:
+      tags:
+        - User
+      summary: User reset password
+      description:  User reset password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../components/user/userAuthSet_password.yaml#/components/schemas/SetRequest'
+      responses:
+        default:
+          description: Send email to reset password
+          content:
+            application/json:
+              schema:
+                $ref: '../components/common.yaml#/components/schemas/Result'
+              examples:
+                request:
+                  $ref: '../components/common.yaml#/components/examples/Result'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    X_APP:
+      type: apiKey
+      in: header
+      name: X-APP

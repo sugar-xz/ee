@@ -1,0 +1,58 @@
+# Name: test_default.tavern
+test_name: Inspection history
+stages:
+  - type: ref
+    id: login_customer
+  - name: Inspection history
+    request: &request_anchor
+      url: "{url}/inspection/inspections/history"
+      method: GET
+      headers:
+        content-type: application/json
+        Referer: "{Referer}"
+    response: &response_anchor
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Inspection history--target_categories__in
+stages:
+  - type: ref
+    id: login_customer
+  - name: Inspection history
+    request:
+      <<: *request_anchor
+      url: "{url}/inspection/inspections/history?target_categories__in=test"
+    response: *response_anchor
+---
+test_name: Inspection history--target_id
+stages:
+  - type: ref
+    id: login_customer
+  - name: Inspection history
+    request:
+      <<: *request_anchor
+      url: "{url}/inspection/inspections/history?target_id=1"
+    response: *response_anchor
+---
+test_name: Inspection history--map_id
+stages:
+  - type: ref
+    id: login_customer
+  - name: Inspection history
+    request:
+      <<: *request_anchor
+      url: "{url}/inspection/inspections/history?map_id=robot_test_10001.1570763226327"
+    response: *response_anchor
+---
+test_name: Inspection history--route_id
+stages:
+  - type: ref
+    id: login_customer
+  - name: Inspection history
+    request:
+      <<: *request_anchor
+      url: "{url}/inspection/inspections/history?route_id=1"
+    response: *response_anchor

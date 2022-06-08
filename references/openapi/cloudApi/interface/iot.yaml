@@ -1,0 +1,99 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Iot
+    description: Iot related interface
+security:
+  - BasicAuth: []
+
+paths:
+  /agent/robots/{id}:
+    get:
+      tags:
+        - Iot
+      summary: Retrieve robot agent
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/RobotIDParam'
+      responses:
+        200:
+          $ref: '../components/iot/agentRobotPK.yaml#/components/responses/200'
+  /agent/boxes/{id}:
+    get:
+      tags:
+        - Iot
+      summary: Retrieve box agent
+      parameters:
+        - $ref: '../components/iot/agentBoxPK.yaml#/components/parameters/BoxIDParam'
+      responses:
+        200:
+          $ref: '../components/iot/agentBoxPK.yaml#/components/responses/200'
+  /iot/device/get_associated_device:
+    post:
+      tags:
+        - Iot
+      summary: Get associated device
+      requestBody:
+        $ref: '../components/iot/iotDeviceGet_associated_device.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/iot/iotDeviceGet_associated_device.yaml#/components/responses/200'
+  /iot/device/get_min_and_latest_lr:
+    post:
+      tags:
+        - Iot
+      summary: Device get min and latest lr
+      requestBody:
+        $ref: '../components/iot/iotDeviceGrt_min_and_latest_lr.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/iot/iotDeviceGrt_min_and_latest_lr.yaml#/components/responses/200'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    X_APP:
+      type: apiKey
+      in: header
+      name: X-APP

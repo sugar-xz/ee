@@ -1,0 +1,98 @@
+# Name: test_default.tavern
+test_name: Create Snap (Box)
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_initiate
+  - type: ref
+    id: box_authenticate
+  - name: Create Snap (Box)
+    request:
+      url: "{url}/snap/snaps"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        X-APP: "Box/{box_level}/{box_version}"
+        Referer: "{Referer}"
+      json:
+        camera_id: "{camera_id}"
+        type: event
+        timestamp: '2019-09-26T06:17:57.262076Z'
+        file:
+          Key: users/1/cameras/1/events/logo.jpg
+          Bucket: develop-data-turingvideo-com
+          meta:
+            file_size: 1888
+            size:
+              - 640
+              - 360
+            content_type: image/jpeg
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+
+---
+test_name: Create Snap error(Box)
+marks:
+  - parametrize:
+      key:
+        - err_camera_id
+        - err_type
+        - err_timestamp
+        - err_Key
+        - err_Bucket
+        - err_file_size
+        - err_size1
+        - err_size2
+        - err_content_type
+      vals:
+        - ["", "", "", "", "", "", "", "", ""]
+        - ["", event, "2019-09-26T06:17:57.262076Z", "users/1/ts/logo.jpg", "develop-data-turingvideo-com", "1888", "640", "360", "image/jpeg"]
+        - ["{camera_id}", "", "2019-09-26T06:17:57.262076Z", "users/1/ts/logo.jpg", "develop-data-turingvideo-com", "1888", "640", "360", "image/jpeg"]
+        - ["{camera_id}", event, "", "users/1/ts/logo.jpg", "develop-data-turingvideo-com", "1888", "640", "360", "image/jpeg"]
+        - ["{camera_id}", event, "2019-09-26T06:17:57.262076Z", "", "develop-data-turingvideo-com", "1888", "640", "360", "image/jpeg"]
+        - ["{camera_id}", event, "2019-09-26T06:17:57.262076Z", "users/1/ts/logo.jpg", "", "1888", "640", "360", "image/jpeg"]
+        - ["{camera_id}", event, "2019-09-26T06:17:57.262076Z", "users/1/ts/logo.jpg", "develop-data-turingvideo-com", "", "640", "360", "image/jpeg"]
+        - ["{camera_id}", event, "2019-09-26T06:17:57.262076Z", "users/1/ts/logo.jpg", "develop-data-turingvideo-com", "1888", "640", "360", ""]
+        - ["sdsa@1123", event, "2019-09-26T06:17:57.262076Z", "users/1/ts/logo.jpg", "develop-data-turingvideo-com", "1888", "640", "360", "image/jpeg"]
+
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_initiate
+  - type: ref
+    id: box_authenticate
+  - name: Create Snap error(Box)
+    request:
+      url: "{url}/snap/snaps"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        X-APP: "Box/{box_level}/{box_version}"
+        Referer: "{Referer}"
+      json:
+        camera_id: "{err_camera_id}"
+        type: "{err_type}"
+        timestamp: "{err_timestamp}"
+        file:
+          Key: "{err_Key}"
+          Bucket: "{err_Bucket}"
+          meta:
+            file_size: "{err_file_size}"
+            size:
+              - "{err_size1}"
+              - "{err_size2}"
+            content_type: "{err_content_type}"
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+ #   delay_after: 1

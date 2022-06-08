@@ -1,0 +1,236 @@
+openapi: 3.0.2
+
+components:
+  responses:
+    200:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BoxesResult'
+          examples:
+            response:
+              $ref: '#/components/examples/BoxesResult'
+  schemas:
+    BoxesResult:
+      description: View all box information
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/BoxInfo'
+    BoxInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Box id
+        user_id:
+          type: integer
+          description: User id
+          format: int32
+        max_camera_cnt:
+          type: integer
+          description: Maximum number of cameras
+          format: int32
+        camera_cnt:
+          type: integer
+          description: Number of cameras
+          format: int32
+        max_detect_cnt:
+          type: integer
+          description: Maximum number of cameras detected
+          format: int32
+        paid_cnt:
+          type: integer
+          description: Number of paid cameras
+          format: int32
+        created_at:
+          type: string
+          description: Data create time
+          format: date-time
+        updated_at:
+          type: string
+          description: Data update time
+          format: date-time
+        state:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Box status
+              enum:
+                - online
+                - offline
+                - inactive
+            label:
+              type: string
+              description: Box status label
+              enum:
+                - Online
+                - Offline
+                - Inactive
+        scene:
+          type: integer
+          description: State version
+          format: int64
+        sequence:
+          type: integer
+          description: Config version
+          format: int64
+        billing:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Box billing status
+              enum:
+                - disabled
+                - paid
+                - unpaid
+            label:
+              type: string
+              description: Box billing label
+              enum:
+                - Disabled
+                - Paid
+                - Unpaid
+        upload_video_expire:
+          type: integer
+          description: Upload video expiration time in seconds
+          format: int32
+        upload_event_expire:
+          type: integer
+          description: Upload event expiration time in seconds
+          format: int32
+        version:
+          type: integer
+          description:  Box version
+          format: int64
+        type:
+          type: string
+          description: Product type
+        ip_address:
+          type: string
+          description: IP address of the box
+        meta:
+          type: object
+          properties:
+            agent:
+              type: object
+              properties:
+                name:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Box name
+                    label:
+                      type: string
+                      description: Label of the box
+                level:
+                  type: integer
+                  description: Box level
+                version:
+                  type: string
+                  description: Box app version
+                upgradable:
+                  type: boolean
+                  description: Box app version upgrade
+                  enum:
+                    - true
+                    - false
+                outdated:
+                  type: boolean
+                  description: Box app version expired
+                  enum:
+                    - true
+                    - false
+                upgrading:
+                  type: string
+                  description: Box app version upgrading
+            max_camera_cnt:
+              type: integer
+              description: Maximum number of cameras
+              format: int32
+            max_detect_cnt:
+              type: integer
+              description: Maximum number of cameras detected
+              format: int32
+        cameras:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Box's camera id
+              name:
+                type: string
+                description: Box's camera name
+        timezone:
+          type: string
+          description: Box location time zone
+        site:
+          type: integer
+          description: The id of the site that box belongs to
+          format: int64
+
+  examples:
+    BoxesResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 1
+          next: null
+          previous: null
+          results:
+            - id: box_dog_sr_10001
+              user_id: 12
+              max_camera_cnt: 100
+              camera_cnt: 1
+              max_detect_cnt: 100
+              paid_cnt: 0
+              created_at: '2019-06-27T01:46:19Z'
+              updated_at: '2019-09-29T08:12:35Z'
+              state:
+                name: 'online'
+                label: 'Online'
+              scene: 851,
+              sequence: 331,
+              billing:
+                name: 'paid'
+                label: 'Paid'
+              upload_video_expire: 1209600
+              upload_event_expire: 1209600
+              version: 2388
+              type: 'pc_v1'
+              ip_address: '192.168.0.119'
+              meta:
+                agent:
+                  name:
+                    name: Box
+                    label: Turing Box
+                  level: 0
+                  version: '0.14.0pre'
+                  upgradable: null
+                  outdated: null
+                  upgrading: null
+                max_camera_cnt: 100
+                max_detect_cnt: 100
+              cameras:
+                - id: 163
+                  name: 'asdgghh'
+              timezone: 'UTC'
+              site: 2

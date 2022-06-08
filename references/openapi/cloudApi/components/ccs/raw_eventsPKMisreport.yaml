@@ -1,0 +1,43 @@
+openapi: 3.0.2
+components:
+  schemas:
+    response:
+      type: object
+      properties:
+        err:
+          $ref: '../../common.yaml#/components/schemas/response_err'
+        ret:
+          $ref: 'ccs_raw_events.yaml#/components/schemas/raw_event'
+
+  examples:
+    response:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 1
+          uuid: b1a49720-6c71-4a18-9af4-c63754ec1938
+          camera: 1
+          site: 1
+          types: intrude:513
+          mediums:
+            - content_type: image/jpeg
+              size:
+                = 1280
+                - 720
+              file_size: 274343
+              url: https://dev-data-for-apiserver
+            - content_type: text/json
+              file_size: 27
+              url: https://dev-data-for-apiserver
+            - content_type: video/mp4
+              file_size: 2743431
+              url: https://dev-data-for-apiserver
+          started_at: 2020-04-15T07:15:04Z
+          ended_at: 2020-04-15T07:16:04Z
+          mark: misreport
+          created_at: 2020-04-15T07:16:04Z
+          updated_at: 2020-04-15T07:16:04Z
+

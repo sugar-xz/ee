@@ -1,0 +1,126 @@
+# Name: test_default.tavern
+test_name: Create Event (robot)
+stages:
+  - type: ref
+    id: login_customer
+#  - type: ref
+#    id: robot_initiate
+#  - type: ref
+#    id: robot_authenticate
+#  - name: Create Event (robot)
+#    request: &create_robot_event_anchor
+#      url: "{url}/event/events/robot"
+#      method: POST
+#      headers:
+#        content-type: application/json
+#        X-CSRFTOKEN: "{get_csrftoken}"
+#        X-APP: "Robot/{robot_level}/{robot_version}"
+##        Referer: "{Referer}"
+#      json:
+#        robot_id: "{test_robot_id}"
+#        started_at: "2019-10-14T06:00:57.262076Z"
+#        ended_at: "2019-10-14T06:01:57.262076Z"
+#        media:
+#          snapshot:
+#            file:
+#              Key: users/1/cameras/1/events/logo.jpg
+#              Bucket: develop-data-turingvideo-com
+#              meta:
+#                file_size: 1888
+#                size:
+#                  - 640
+#                  - 360
+#                content_type: image/jpeg
+#          bbox:
+#            file:
+#              Key: users/3/cameras/3/events/0dc87e3
+#              Bucket: develop-data-turingvideo-com
+#              meta:
+#                file_size: 1888
+#                size:
+#                  - 640
+#                  - 360
+#                content_type: text/json
+#          videos:
+#            - file:
+#                Key: users/3/cameras/3/events/0dc87e3
+#                Bucket: develop-data-turingvideo-com
+#                meta:
+#                  file_size: 1888
+#                  content_type: video/mp4
+#              started_at: "2019-10-14T06:00:57.262076Z"
+#              ended_at: "2019-10-14T06:02:57.262076Z"
+#        location:
+#          lng: 0.0
+#          lat: 0.0
+#        detected_macs:
+#          - mac_address: 11:22:33:44:55:66
+#            event_type: enter
+#        detection:
+#          camera: front
+#          algos: person:512
+#          threshold: 0.9
+#    response:
+#      status_code: 200
+#      body:
+#        ret:
+#          id: !anyint
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200
+# ##   delay_after: 1
+
+#---
+#test_name: Create Event (detected_macs and detection are null)
+#stages:
+#  - type: ref
+#    id: login_customer
+#  - type: ref
+#    id: robot_initiate
+#  - type: ref
+#    id: robot_authenticate
+#  - name: Create Event (detected_macs and detection are null)
+#    request:
+#      <<: *create_robot_event_anchor
+#      json:
+#        detected_macs: ""
+#        detection: ""
+#    response:
+#      status_code: 400
+#      body:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_400
+# ##   delay_after: 1
+#
+#---
+#test_name: Create Event err (meta is null)
+#stages:
+#  - type: ref
+#    id: login_customer
+#  - type: ref
+#    id: robot_initiate
+#  - type: ref
+#    id: robot_authenticate
+#  - name: Create Event (meta is null)
+#    request:
+#      <<: *create_robot_event_anchor
+#      json:
+#        meta: ""
+#    response:
+#      status_code: 400
+#      body:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_400
+# ##   delay_after: 1
+#---
+#test_name: Create Event err (Don't start robot)
+#stages:
+#  - type: ref
+#    id: login_customer
+#  - name: Create Event (Don't start robot)
+#    request: *create_robot_event_anchor
+#    response:
+#      status_code: 401
+#      body:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_401
+# ##   delay_after: 1

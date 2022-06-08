@@ -1,0 +1,604 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Box
+    description: Box related interface
+security:
+  - BasicAuth: []
+
+paths:
+  /box/boxes:
+    get:
+      tags:
+        - Box
+      summary: View the box info
+      description: |
+        Perms:
+        * `logic.box`: retrieve
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/SiteIDParam'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxes.yaml#/components/responses/200'
+
+  /box/boxes/{box_id}:
+    get:
+      tags:
+        - Box
+      summary: Retrieve a box
+      description: |
+        Perms:
+        * `logic.box`: retrieve
+
+        View the specified box information
+      parameters:
+        - in: path
+          name: box_id
+          required: true
+          description: Box id
+          schema:
+            type: string
+        - $ref: '../components/common.yaml#/components/parameters/SiteIDParam'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesPK.yaml#/components/responses/200'
+
+  /box/boxes/initiate:
+    post:
+      tags:
+        - Box
+      summary: Box initiate
+      description: The Box to start
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/box/boxBoxesInitiate.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesInitiate.yaml#/components/responses/200'
+
+  /box/boxes/authenticate:
+    post:
+      tags:
+        - Box
+      summary: Box Authenticate
+      description: Verify the operation after the box starts
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/box/boxBoxesAuthenticate.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesAuthenticate.yaml#/components/responses/200'
+
+  /box/boxes/debug_login:
+    post:
+      tags:
+        - Box
+      summary: Box Debug Login
+      description: To simulate the box
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/box/boxBoxesDebug_login.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesAuthenticate.yaml#/components/responses/200'
+
+  /box/boxes/claim:
+    post:
+      tags:
+        - Box
+      summary: Claim box
+      description: |
+        Perms:
+        * `logic.box`: claim
+
+        Condition:
+        * Bind the box to the current user name when user_id is null
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/box/boxBoxesClaim.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesClaim.yaml#/components/responses/200'
+
+  /box/boxes/unclaim:
+    post:
+      tags:
+        - Box
+      summary: Unclaim box
+      description: |
+        Perms:
+        * `logic.box`: unclaim
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/box/boxBoxesInitiate.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesClaim.yaml#/components/responses/200'
+
+  /box/boxes/get_token:
+    get:
+      tags:
+        - Box
+      summary: Renewal when token expires or is invalid
+      description: |
+        get_token?name=camera_preview|camera_events|camera_snaps|camera_videos（The initiate and authenticate interface needs to be invoked）
+        * camera_preview for snapshot file of validate_camera,
+        * camera_events for all files (snapshot, video, bbox, etc) of the camera event,
+        * camera_snaps for the files of the (camera) snaps api,
+        * camera_videos for the files of the saved videos}
+      parameters:
+        - $ref: '../components/box/boxBoxesGet_token.yaml#/components/parameters/NameParam'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesGet_token.yaml#/components/responses/200'
+
+  /box/boxes/get_config:
+    get:
+      tags:
+        - Box
+      summary: Get Config
+      description: |
+        Perms:
+        * `logic.box`: retrieve
+
+        if sequence not same, get the camera
+      security:
+        - X_APP: []
+      responses:
+        200:
+          description: |
+            Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: '../components/box/boxBoxesGet_config.yaml#/components/schemas/Result'
+              examples:
+                response:
+                  $ref: '../components/box/boxBoxesGet_config.yaml#/components/examples/Result'
+
+  /box/boxes/different:
+    post:
+      tags:
+        - Box
+      summary: Box box different
+      description: |
+        Perms:
+        * `logic.box`: retrieve
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/box/boxBoxesDifferent.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesDifferent.yaml#/components/responses/200'
+
+  /box/boxes/{box_id}/get_meta:
+    get:
+      tags:
+        - Box
+      summary: Box Get Meta
+      description: |
+        Perms:
+        * `logic.box`: retrieve, meta
+      parameters:
+        - in: path
+          name: box_id
+          required: true
+          description: Box id
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesPKGet_meta.yaml#/components/responses/200'
+
+  /box/boxes/get_stream_token:
+    get:
+      tags:
+        - Box
+      summary: when stream expires or is invalid  (Box only)
+      description: |
+        Perms:
+        * User: Box
+
+        Stream is renewed when it is expired or invalid
+        * The initiate and authenticate interface needs to be invoked
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/CameraIDParam'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesGet_stream_token.yaml#/components/responses/200'
+
+  /box/boxes/update_state:
+    post:
+      tags:
+        - Box
+      summary: Box's camera Update State (Box only)
+      description: |
+        Perms:
+        * User: Box
+
+        Box needs to be started and validated to invoke this interface
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/box/boxBoxesUpdate_state.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesUpdate_state.yaml#/components/responses/200'
+
+  /box/boxes/create_or_update_cameras:
+    post:
+      tags:
+        - Box
+      summary: The Box to create/update camera  (Box only)
+      description: |
+        Perms:
+        * User: Box
+
+        The initiate and authenticate interface needs to be invoked
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/box/boxBoxesCreate_update_camera.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesCreate_update_camera.yaml#/components/responses/200'
+
+  /camera/cameras:
+    get:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Check the camera information under box
+      description: |
+        Perms:
+        * `logic.camera`: retrieve
+
+        Other:
+        - Fill in ids and box_id to query camera information under the specified box
+        - Direct inquiry without any conditions to display all box and camera information under its name
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/IdsParam'
+        - in: query
+          name: box_id
+          description: Box id
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: '../components/box/cameraCameras.yaml#/components/responses/CameraListResult'
+    post:
+      tags:
+        - Box
+        - BoxCamera
+      summary: User add camera
+      description: |
+        Perms:
+        * `logic.camera`: create
+      requestBody:
+        $ref: '../components/box/cameraCameras.yaml#/components/requestBodies/CreateCameraRequest'
+      responses:
+        200:
+          $ref: '../components/box/cameraCameras.yaml#/components/responses/CreateCameraResult'
+
+  /camera/cameras/{camera_id}:
+    get:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Query the camera information
+      description: |
+        Perms:
+        * `logic.camera`: retrieve
+      parameters:
+        - in: path
+          name: camera_id
+          required: true
+          description: Camera id
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          $ref: '../components/box/cameraCameras.yaml#/components/responses/CreateCameraResult'
+    put:
+      tags:
+        - Box
+        - BoxCamera
+      summary: User update camera
+      description: |
+        Perms:
+        * `logic.camera`: update
+      parameters:
+        - in: path
+          name: camera_id
+          required: true
+          description: Camera id
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        $ref: '../components/box/cameraCameras.yaml#/components/requestBodies/CreateCameraRequest'
+      responses:
+        200:
+          $ref: '../components/box/cameraCameras.yaml#/components/responses/CreateCameraResult'
+    delete:
+      tags:
+        - Box
+        - BoxCamera
+      summary: User delete camera
+      description: |
+        Perms:
+        * `logic.camera`: destroy
+      parameters:
+        - in: path
+          name: camera_id
+          required: true
+          description: Camera id
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          $ref: '../components/box/cameraCamerasPK.yaml#/components/responses/DeleteResult'
+
+  /camera/cameras/differences:
+    post:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Viewing camera is different
+      description: |
+        Perms:
+        * `logic.camera`: retrieve
+      requestBody:
+        $ref: '../components/box/cameraCamerasDifferences.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/box/cameraCamerasDifferences.yaml#/components/responses/200'
+
+  /camera_saved_video/camera_saved_videos:
+    get:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Camera video correlation
+      description: |
+        Perms:
+        * `logic.cameravideo`: retrieve
+      parameters:
+        - in: query
+          name: camera_id
+          description: Camera id
+          schema:
+            type: integer
+            format: int32
+      security:
+        - X_APP: []
+      responses:
+        200:
+          $ref: '../components/box/camera_saved_videos.yaml#/components/responses/VideosListResult'
+    post:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Camera video correlation
+      description: |
+        Perms:
+        * `logic.cameravideo`: retrieve
+        * `logic.camera`: save_video
+
+        Condition:
+        * Box needs to be started and validated to invoke this interface
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/box/camera_saved_videos.yaml#/components/requestBodies/CreateRequest'
+      responses:
+        200:
+          $ref: '../components/box/camera_saved_videos.yaml#/components/responses/CreateResult'
+
+  /camera/cameras/saving_video:
+    post:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Box saving video  (Box only)
+      description: |
+        Perms:
+        * User: Box
+
+        Box save video
+        * Box needs to be started and validated to invoke this interface
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/box/cameraCamerasSaving_video.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/box/cameraCamerasSaving_video.yaml#/components/responses/200'
+
+  /camera/cameras/auto_update:
+    post:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Box auto update
+      description: |
+        Perms:
+        * `logic.box`: retrieve
+        * `logic.camera`: update
+
+        Condition:
+        * Box needs to be started and validated to invoke this interface
+      requestBody:
+        $ref: '../components/box/cameraCamerasAuto_update.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/box/cameraCamerasAuto_update.yaml#/components/responses/200'
+
+  /camera_video/camera_videos:
+    get:
+      tags:
+        - Box
+        - BoxCamera
+      summary: List Camera Video
+      description: |
+        Perms:
+        * `logic.cameravideo`: retrieve
+
+        Condition:
+        * Box needs to be started and validated to invoke this interface
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/CameraIdsParam'
+        - $ref: '../components/common.yaml#/components/parameters/StartAtParam'
+        - $ref: '../components/common.yaml#/components/parameters/EndAtParam'
+      responses:
+        200:
+          $ref: '../components/box/camera_videos.yaml#/components/responses/VideoListResult'
+    post:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Create Camera Video
+      description: |
+        Perms:
+        * `logic.cameravideo`: retrieve
+        * `logic.camera`: save_video
+
+        Condition:
+        * Box needs to be started and validated to invoke this interface
+      requestBody:
+        $ref: '../components/box/camera_videos.yaml#/components/requestBodies/CreateVideoRequest'
+      responses:
+        200:
+          $ref: '../components/box/camera_videos.yaml#/components/responses/CreateVideoResult'
+
+  /camera_video/camera_videos/slot:
+    get:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Camera Video Slot
+      description: |
+        Perms:
+        * `logic.cameravideo`: retrieve
+
+        Condition:
+        * Box needs to be started and validated to invoke this interface
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/CameraIdsParam'
+        - $ref: '../components/common.yaml#/components/parameters/StartAtParam'
+        - $ref: '../components/common.yaml#/components/parameters/EndAtParam'
+      responses:
+        200:
+          $ref: '../components/box/camera_videosSlot.yaml#/components/responses/CreateVideoResult'
+
+  /camera_video/camera_videos/save_video:
+    post:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Create Camera Video
+      description: |
+        Perms:
+        * `logic.cameravideo`: retrieve
+        * `logic.camera`: save_video
+
+        Condition:
+        * Box needs to be started and validated to invoke this interface
+        * You need a real live camera
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/box/camera_videosSave_video.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/box/camera_videosSlot.yaml#/components/responses/CreateVideoResult'
+
+  /snap/snaps:
+    post:
+      tags:
+        - Box
+      summary: Create Snap (Box only)
+      description: |
+        Perms:
+        * User: Box
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/box/snapSnaps.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/box/snapSnaps.yaml#/components/responses/200'
+
+  /snap/snaps/slot:
+    get:
+      tags:
+        - Box
+      summary: Snap Slot
+      description: |
+        Perms:
+        * `logic.snap`: retrieve
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/CameraIdsParam'
+        - $ref: '../components/common.yaml#/components/parameters/StartAtParam'
+        - $ref: '../components/common.yaml#/components/parameters/EndAtParam'
+      responses:
+        200:
+          $ref: '../components/box/snapSnaps.yaml#/components/responses/200'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    X_APP:
+      type: apiKey
+      in: header
+      name: X-APP

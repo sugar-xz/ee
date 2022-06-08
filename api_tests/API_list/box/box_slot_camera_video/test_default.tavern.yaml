@@ -1,0 +1,34 @@
+# Name: test_default.tavern
+test_name: List Camera Video
+marks:
+  - parametrize:
+      key:
+        - cameras_id
+        - start_date
+        - end_date
+      vals:
+        - ["", "", ""]
+        - ["{camera_id}", "", ""]
+        - ["", "2019-10-22 06:17:53", "2019-10-24 16:17:53"]
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_initiate
+  - type: ref
+    id: box_authenticate
+  - name: List Camera Video
+    request:
+      url: "{url}/camera_video/camera_videos/slot?started_at__gte=2{start_date}&started_at__lt={end_date}&camera_id={cameras_id}"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+

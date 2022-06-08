@@ -1,0 +1,28 @@
+# Name: test_default.tavern
+test_name:  Create guard monitoring_operator
+stages:
+  - type: ref
+    id: login_guard_admin
+  - name: Create guard monitoring_operator
+    request:
+      url: "{url}/monitoring_operator/monitoring_operators"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        user:
+          username: "monitoring_operator1@turingvideo.net"
+          last_name: ""
+          first_name: ""
+        organization: 2
+        phone_number: 1311111444
+    response:
+      status_code:
+        - 200
+        - 500
+#      status_code: 200
+#      body:
+#        err: !anything
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200

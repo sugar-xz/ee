@@ -1,0 +1,3514 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: turingvideo
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Auth
+    description: Auth server
+  - name: User
+    description: User related interface
+    externalDocs:
+      description: Find out more
+      url: 'https://www.turingvideo.cn/'
+  - name: Box
+    description: Box related interface
+  - name: Robot
+    description: Robot related interface
+  - name: Event
+    description: Event related interface
+  - name: Public
+    description: Public related interface
+  - name: Org
+    description: Org related interface
+  - name: CCS
+    description: CCS related interface
+  - name: Guard
+    description: Guard related interface
+  - name: Map
+    description: Map related interface
+  - name: Iot
+    description: Iot related interface
+  - name: Perm
+    description: Perm related interface
+  - name: Face
+    description: Face related interface
+
+security:
+  - BasicAuth: []
+
+paths:
+  /auth/:
+    post:
+      tags:
+        - Auth
+      summary: Authentication interface
+      requestBody:
+        $ref: 'components/auth/auth.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/auth/auth.yaml#/components/responses/200'
+
+  /device/apns:
+    post:
+      tags:
+        - Auth
+      summary: Register IOS Device
+      description: |
+        * Permission: authenticated
+      requestBody:
+        $ref: 'components/auth/deviceApns.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/auth/deviceApns.yaml#/components/responses/200'
+  /device/gcm:
+    post:
+      tags:
+        - Auth
+      summary: Register Android Device
+      description: |
+        * Permission: authenticated
+      requestBody:
+        $ref: 'components/auth/deviceGcm.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/auth/deviceGcm.yaml#/components/responses/200'
+  # box------
+  /box/boxes:
+    get:
+      tags:
+        - Box
+      summary: View the box info
+      description: |
+        Perms:
+        * `logic.box`: retrieve
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/SiteIDParam'
+      responses:
+        200:
+          $ref: 'components/box/boxBoxes.yaml#/components/responses/200'
+
+  /box/boxes/{box_id}:
+    get:
+      tags:
+        - Box
+      summary: Retrieve a box
+      description: |
+        Perms:
+        * `logic.box`: retrieve
+
+        View the specified box information
+      parameters:
+        - in: path
+          name: box_id
+          required: true
+          description: Box id
+          schema:
+            type: string
+        - $ref: 'components/common.yaml#/components/parameters/SiteIDParam'
+      responses:
+        200:
+          $ref: 'components/box/boxBoxesPK.yaml#/components/responses/200'
+
+  /box/boxes/initiate:
+    post:
+      tags:
+        - Box
+      summary: Box initiate
+      description: The Box to start
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/box/boxBoxesInitiate.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/box/boxBoxesInitiate.yaml#/components/responses/200'
+
+  /box/boxes/authenticate:
+    post:
+      tags:
+        - Box
+      summary: Box Authenticate
+      description: Verify the operation after the box starts
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/box/boxBoxesAuthenticate.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/box/boxBoxesAuthenticate.yaml#/components/responses/200'
+
+  /box/boxes/debug_login:
+    post:
+      tags:
+        - Box
+      summary: Box Debug Login
+      description: To simulate the box
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/box/boxBoxesDebug_login.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/box/boxBoxesAuthenticate.yaml#/components/responses/200'
+
+  /box/boxes/claim:
+    post:
+      tags:
+        - Box
+      summary: Claim box
+      description: |
+        Perms:
+        * `logic.box`: claim
+
+        Condition:
+        * Bind the box to the current user name when user_id is null
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/box/boxBoxesClaim.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/box/boxBoxesClaim.yaml#/components/responses/200'
+
+  /box/boxes/unclaim:
+    post:
+      tags:
+        - Box
+      summary: Unclaim box
+      description: |
+        Perms:
+        * `logic.box`: unclaim
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/box/boxBoxesInitiate.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/box/boxBoxesClaim.yaml#/components/responses/200'
+
+  /box/boxes/get_token:
+    get:
+      tags:
+        - Box
+      summary: Renewal when token expires or is invalid
+      description: |
+        get_token?name=camera_preview|camera_events|camera_snaps|camera_videos（The initiate and authenticate interface needs to be invoked）
+        * camera_preview for snapshot file of validate_camera,
+        * camera_events for all files (snapshot, video, bbox, etc) of the camera event,
+        * camera_snaps for the files of the (camera) snaps api,
+        * camera_videos for the files of the saved videos}
+      parameters:
+        - $ref: 'components/box/boxBoxesGet_token.yaml#/components/parameters/NameParam'
+      responses:
+        200:
+          $ref: 'components/box/boxBoxesGet_token.yaml#/components/responses/200'
+
+  /box/boxes/get_config:
+    get:
+      tags:
+        - Box
+      summary: Get Config
+      description: |
+        Perms:
+        * `logic.box`: retrieve
+
+        if sequence not same, get the camera
+      security:
+        - X_APP: []
+      responses:
+        200:
+          description: |
+            Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: 'components/box/boxBoxesGet_config.yaml#/components/schemas/Result'
+              examples:
+                response:
+                  $ref: 'components/box/boxBoxesGet_config.yaml#/components/examples/Result'
+
+  /box/boxes/different:
+    post:
+      tags:
+        - Box
+      summary: Box box different
+      description: |
+        Perms:
+        * `logic.box`: retrieve
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/box/boxBoxesDifferent.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/box/boxBoxesDifferent.yaml#/components/responses/200'
+
+  /box/boxes/{box_id}/get_meta:
+    get:
+      tags:
+        - Box
+      summary: Box Get Meta
+      description: |
+        Perms:
+        * `logic.box`: retrieve, meta
+      parameters:
+        - in: path
+          name: box_id
+          required: true
+          description: Box id
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: 'components/box/boxBoxesPKGet_meta.yaml#/components/responses/200'
+
+  /box/boxes/get_stream_token:
+    get:
+      tags:
+        - Box
+      summary: when stream expires or is invalid  (Box only)
+      description: |
+        Perms:
+        * User: Box
+
+        Stream is renewed when it is expired or invalid
+        * The initiate and authenticate interface needs to be invoked
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/CameraIDParam'
+      responses:
+        200:
+          $ref: 'components/box/boxBoxesGet_stream_token.yaml#/components/responses/200'
+
+  /box/boxes/update_state:
+    post:
+      tags:
+        - Box
+      summary: Box's camera Update State (Box only)
+      description: |
+        Perms:
+        * User: Box
+
+        Box needs to be started and validated to invoke this interface
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/box/boxBoxesUpdate_state.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/box/boxBoxesUpdate_state.yaml#/components/responses/200'
+
+  /box/boxes/create_or_update_cameras:
+    post:
+      tags:
+        - Box
+      summary: The Box to create/update camera  (Box only)
+      description: |
+        Perms:
+        * User: Box
+
+        The initiate and authenticate interface needs to be invoked
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/box/boxBoxesCreate_update_camera.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/box/boxBoxesCreate_update_camera.yaml#/components/responses/200'
+
+  /camera/cameras:
+    get:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Check the camera information under box
+      description: |
+        Perms:
+        * `logic.camera`: retrieve
+
+        Other:
+        - Fill in ids and box_id to query camera information under the specified box
+        - Direct inquiry without any conditions to display all box and camera information under its name
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/IdsParam'
+        - in: query
+          name: box_id
+          description: Box id
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: 'components/box/cameraCameras.yaml#/components/responses/CameraListResult'
+    post:
+      tags:
+        - Box
+        - BoxCamera
+      summary: User add camera
+      description: |
+        Perms:
+        * `logic.camera`: create
+      requestBody:
+        $ref: 'components/box/cameraCameras.yaml#/components/requestBodies/CreateCameraRequest'
+      responses:
+        200:
+          $ref: 'components/box/cameraCameras.yaml#/components/responses/CreateCameraResult'
+
+  /camera/cameras/{camera_id}:
+    get:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Query the camera information
+      description: |
+        Perms:
+        * `logic.camera`: retrieve
+      parameters:
+        - in: path
+          name: camera_id
+          required: true
+          description: Camera id
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          $ref: 'components/box/cameraCameras.yaml#/components/responses/CreateCameraResult'
+    put:
+      tags:
+        - Box
+        - BoxCamera
+      summary: User update camera
+      description: |
+        Perms:
+        * `logic.camera`: update
+      parameters:
+        - in: path
+          name: camera_id
+          required: true
+          description: Camera id
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        $ref: 'components/box/cameraCameras.yaml#/components/requestBodies/CreateCameraRequest'
+      responses:
+        200:
+          $ref: 'components/box/cameraCameras.yaml#/components/responses/CreateCameraResult'
+    delete:
+      tags:
+        - Box
+        - BoxCamera
+      summary: User delete camera
+      description: |
+        Perms:
+        * `logic.camera`: destroy
+      parameters:
+        - in: path
+          name: camera_id
+          required: true
+          description: Camera id
+          schema:
+            type: integer
+            format: int32
+      responses:
+        200:
+          $ref: 'components/box/cameraCamerasPK.yaml#/components/responses/DeleteResult'
+
+  /camera/cameras/differences:
+    post:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Viewing camera is different
+      description: |
+        Perms:
+        * `logic.camera`: retrieve
+      requestBody:
+        $ref: 'components/box/cameraCamerasDifferences.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/box/cameraCamerasDifferences.yaml#/components/responses/200'
+
+  /camera_saved_video/camera_saved_videos:
+    get:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Camera video correlation
+      description: |
+        Perms:
+        * `logic.cameravideo`: retrieve
+      parameters:
+        - in: query
+          name: camera_id
+          description: Camera id
+          schema:
+            type: integer
+            format: int32
+      security:
+        - X_APP: []
+      responses:
+        200:
+          $ref: 'components/box/camera_saved_videos.yaml#/components/responses/VideosListResult'
+    post:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Camera video correlation
+      description: |
+        Perms:
+        * `logic.cameravideo`: retrieve
+        * `logic.camera`: save_video
+
+        Condition:
+        * Box needs to be started and validated to invoke this interface
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/box/camera_saved_videos.yaml#/components/requestBodies/CreateRequest'
+      responses:
+        200:
+          $ref: 'components/box/camera_saved_videos.yaml#/components/responses/CreateResult'
+
+  /camera/cameras/saving_video:
+    post:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Box saving video  (Box only)
+      description: |
+        Perms:
+        * User: Box
+
+        Box save video
+        * Box needs to be started and validated to invoke this interface
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/box/cameraCamerasSaving_video.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/box/cameraCamerasSaving_video.yaml#/components/responses/200'
+
+  /camera/cameras/auto_update:
+    post:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Box auto update
+      description: |
+        Perms:
+        * `logic.box`: retrieve
+        * `logic.camera`: update
+
+        Condition:
+        * Box needs to be started and validated to invoke this interface
+      requestBody:
+        $ref: 'components/box/cameraCamerasAuto_update.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/box/cameraCamerasAuto_update.yaml#/components/responses/200'
+
+  /camera_video/camera_videos:
+    get:
+      tags:
+        - Box
+        - BoxCamera
+      summary: List Camera Video
+      description: |
+        Perms:
+        * `logic.cameravideo`: retrieve
+
+        Condition:
+        * Box needs to be started and validated to invoke this interface
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/CameraIdsParam'
+        - $ref: 'components/common.yaml#/components/parameters/StartAtParam'
+        - $ref: 'components/common.yaml#/components/parameters/EndAtParam'
+      responses:
+        200:
+          $ref: 'components/box/camera_videos.yaml#/components/responses/VideoListResult'
+    post:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Create Camera Video
+      description: |
+        Perms:
+        * `logic.cameravideo`: retrieve
+        * `logic.camera`: save_video
+
+        Condition:
+        * Box needs to be started and validated to invoke this interface
+      requestBody:
+        $ref: 'components/box/camera_videos.yaml#/components/requestBodies/CreateVideoRequest'
+      responses:
+        200:
+          $ref: 'components/box/camera_videos.yaml#/components/responses/CreateVideoResult'
+
+  /camera_video/camera_videos/slot:
+    get:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Camera Video Slot
+      description: |
+        Perms:
+        * `logic.cameravideo`: retrieve
+
+        Condition:
+        * Box needs to be started and validated to invoke this interface
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/CameraIdsParam'
+        - $ref: 'components/common.yaml#/components/parameters/StartAtParam'
+        - $ref: 'components/common.yaml#/components/parameters/EndAtParam'
+      responses:
+        200:
+          $ref: 'components/box/camera_videosSlot.yaml#/components/responses/CreateVideoResult'
+
+  /camera_video/camera_videos/save_video:
+    post:
+      tags:
+        - Box
+        - BoxCamera
+      summary: Create Camera Video
+      description: |
+        Perms:
+        * `logic.cameravideo`: retrieve
+        * `logic.camera`: save_video
+
+        Condition:
+        * Box needs to be started and validated to invoke this interface
+        * You need a real live camera
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/box/camera_videosSave_video.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/box/camera_videosSlot.yaml#/components/responses/CreateVideoResult'
+
+  /snap/snaps:
+    post:
+      tags:
+        - Box
+      summary: Create Snap (Box only)
+      description: |
+        Perms:
+        * User: Box
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/box/snapSnaps.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/box/snapSnaps.yaml#/components/responses/200'
+
+  /snap/snaps/slot:
+    get:
+      tags:
+        - Box
+      summary: Snap Slot
+      description: |
+        Perms:
+        * `logic.snap`: retrieve
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/CameraIdsParam'
+        - $ref: 'components/common.yaml#/components/parameters/StartAtParam'
+        - $ref: 'components/common.yaml#/components/parameters/EndAtParam'
+      responses:
+        200:
+          $ref: 'components/box/snapSnaps.yaml#/components/responses/200'
+
+  # robot------
+  /robot/robots/initiate:
+    post:
+      tags:
+        - Robot
+      summary: Robot initiate
+      description: Robot to start
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/robot/robotRobotsInitiate.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/robot/robotRobotsInitiate.yaml#/components/responses/200'
+
+  /robot/robots/authenticate:
+    post:
+      tags:
+        - Robot
+      summary: Robot Authenticate
+      description:  Verify the operation after the robot starts
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/robot/robotRobotsAuthenticate.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/robot/robotRobotsAuthenticate.yaml#/components/responses/200'
+
+  /robot/robots/get_config:
+    get:
+      tags:
+        - Robot
+      summary: Get Config
+      description: |
+        Perms:
+        * Robot.retrieve
+
+        Condition:
+        * if sequence not same, perform this operation
+        * Robot needs to be started and validated to invoke this interface
+      responses:
+        200:
+          $ref: 'components/robot/robotRobotsGet_config.yaml#/components/responses/200'
+
+  /robot/robots/get_token:
+    get:
+      tags:
+        - Robot
+      summary: Get Token (Robot only)
+      description: |
+        Perms:
+          * User: Robot
+
+        name:
+          * robot_events for all files (snapshot, video, bbox, etc) of the
+          * robot event,
+          * robot_snaps for the files of the robot_snaps api
+      parameters:
+        - $ref: 'components/robot/robotRobotsGet_token.yaml#/components/parameters/NameParam'
+      responses:
+        200:
+          $ref: 'components/box/boxBoxesGet_token.yaml#/components/responses/200'
+
+  /robot/robots/get_stream_token:
+    get:
+      tags:
+        - Robot
+      summary: Get Stream Token (Robot only)
+      description: |
+        Perms:
+        * User: Robot
+
+        Remember to renew when it expires or invalid
+      parameters:
+        - $ref: 'components/robot/robotRobotsGet_stream_token.yaml#/components/parameters/CameraNameParam'
+      responses:
+        200:
+          $ref: 'components/box/boxBoxesGet_stream_token.yaml#/components/responses/200'
+
+  /robot/robots/get_analytics_token:
+    get:
+      tags:
+        - Robot
+      summary: Get Analytics Token (Robot only)
+      description: |
+        Perms:
+        * User: Robot
+
+        Remember to renew when it expires or invalid
+      parameters:
+        - $ref: 'components/robot/robotRobotsGet_analytics_token.yaml#/components/parameters/NameParam'
+      responses:
+        200:
+          $ref: 'components/robot/robotRobotsGet_analytics_token.yaml#/components/responses/200'
+
+  /robot/robots/update_state:
+    post:
+      tags:
+        - Robot
+      summary: Update State (Robot only)
+      description:  |
+        Perms:
+        * User: Robot
+
+        Use `partial = false` if failed last time
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/robot/robotRobotsUpdate_state.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/robot/robotRobotsUpdate_state.yaml#/components/responses/200'
+
+  /robot/robots/claim:
+    post:
+      tags:
+        - Robot
+      summary: Claim robot
+      description: |
+        Perms:
+        * `logic.robot`: claim
+      requestBody:
+        $ref: 'components/robot/robotRobotsClaim.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/robot/robotRobotsClaim.yaml#/components/responses/200'
+
+  /robot/robots/unclaim:
+    post:
+      tags:
+        - Robot
+      summary: Unclaim robot
+      description: |
+        Perms:
+        * `logic.robot`: uncalim
+      requestBody:
+        $ref: 'components/robot/robotRobotsUnclaim.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/robot/robotRobotsUnclaim.yaml#/components/responses/200'
+
+  /robot/robots:
+    get:
+      tags:
+        - Robot
+      summary: Robot List
+      description: |
+        Perms:
+        * `logic.robot`: retrieve
+      responses:
+        200:
+          $ref: 'components/robot/robotRobots.yaml#/components/responses/200'
+
+  /robot/robots/{id}:
+    get:
+      tags:
+        - Robot
+      summary: Retrieve robot
+      description: |
+        Perms:
+        * `logic.robot`: retrieve
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/RobotIDParam'
+      responses:
+        200:
+          $ref: 'components/robot/robotRobotsPK.yaml#/components/responses/200'
+    put:
+      tags:
+        - Robot
+      summary: Update robot
+      description: |
+        Perms:
+        * `logic.robot`: update
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/RobotIDParam'
+      requestBody:
+        $ref: 'components/robot/robotRobotsPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: 'components/robot/robotRobotsPK.yaml#/components/responses/200'
+
+  /robot/robots/{id}/get_meta:
+    get:
+      tags:
+        - Robot
+      summary: Robot Get Meta
+      description: |
+        Perms:
+        * `logic.robot`: meta
+
+        Condition:
+        * Box needs to be started and validated to invoke this interface
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/RobotIDParam'
+      responses:
+        200:
+          $ref: 'components/robot/robotRobotsPKGet_meta.yaml#/components/responses/Result'
+
+  /robot/robots/differences:
+    post:
+      tags:
+        - Robot
+      summary: Get differences with existing versions
+      description: |
+        Perms:
+        * `logic.robot`: retrieve
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/robot/robotRobotsDifferences.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/robot/robotRobotsDifferences.yaml#/components/responses/200'
+
+  /robot/robots/debug_login:
+    post:
+      tags:
+        - Robot
+      summary: Robot Debug Login
+      description: To simulate the box robot
+      requestBody:
+        $ref: 'components/robot/robotRobotsDebug_login.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/robot/robotRobotsAuthenticate.yaml#/components/responses/200'
+
+  /robot/robots/update_robot_meta:
+    put:
+      tags:
+        - Robot
+      summary: Update Robot Meta (Robot only)
+      description: |
+        Perms:
+        * User: Robot
+
+        Conditions: call once the meta changes
+      requestBody:
+        $ref: 'components/robot/robotRobotsUpdate_robot_meta.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/robot/robotRobotsUpdate_robot_meta.yaml#/components/responses/200'
+
+  /route/routes:
+    post:
+      tags:
+        - Robot
+        - Patrol
+      summary: Create a route
+      description: |
+        Perms:
+        * `logic.route`: create
+      requestBody:
+        $ref: 'components/robot/routeRoutes.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/robot/routeRoutes.yaml#/components/responses/200'
+
+  /route/routes/{route_id}:
+    get:
+      tags:
+        - Robot
+        - Patrol
+      summary: Retrieve robot
+      description: |
+        Perms:
+        * `logic.route`: retrieve
+      parameters:
+        - $ref: 'components/robot/routeRoutes.yaml#/components/parameters/RouteIDParam'
+      responses:
+        200:
+          $ref: 'components/robot/routeRoutes.yaml#/components/responses/200'
+    put:
+      tags:
+        - Robot
+        - Patrol
+      summary: User update robot
+      description: |
+        Perms:
+        * `logic.route`: update
+      parameters:
+        - $ref: 'components/robot/routeRoutes.yaml#/components/parameters/RouteIDParam'
+      requestBody:
+        $ref: 'components/robot/routeRoutes.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/robot/routeRoutes.yaml#/components/responses/200'
+
+  /robot/{id}/patrols:
+    post:
+      tags:
+        - Robot
+        - Patrol
+      summary: Create Patrol
+      description:  |
+        Perms:
+        * `logic.patrol`: create
+
+        Condition:
+        * There needs to be a route
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/RobotIDParam'
+      requestBody:
+        $ref: 'components/robot/robotPKPatrols.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/robot/robotPKPatrols.yaml#/components/responses/200'
+
+  /robot_snap/robot_snaps:
+    get:
+      tags:
+        - Robot
+      summary: View all of robot's snap information
+      description: |
+        Perms:
+        * `logic.robotsnap`: retrieve
+      responses:
+        200:
+          $ref: 'components/robot/robot_snapRobot_snaps.yaml#/components/responses/SnapListResult'
+    post:
+      tags:
+        - Robot
+      summary: Create Robot Snap
+      description: |
+        Perms:
+        * `logic.robotsnap`: retrieve
+      requestBody:
+        $ref: 'components/robot/robot_snapRobot_snaps.yaml#/components/requestBodies/CreateRequest'
+      responses:
+        200:
+          $ref: 'components/robot/robot_snapRobot_snaps.yaml#/components/responses/CreateResult'
+
+  /robot_snap/robot_snaps/{id}:
+    get:
+      tags:
+        - Robot
+      summary: View a snap information
+      description: |
+        Perms:
+        * `logic.robotsnap`: retrieve
+      parameters:
+        - $ref: 'components/robot/robot_snapRobot_snaps.yaml#/components/parameters/SnapIDParam'
+      responses:
+        200:
+          $ref: 'components/robot/robot_snapRobot_snaps.yaml#/components/responses/CreateResult'
+
+  /robot_snap/robot_snaps/slot:
+    get:
+      tags:
+        - Robot
+      summary: Snap slot, View snap info
+      description:  |
+        Perms:
+        * `logic.robotsnap`: retrieve
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/RobotIdsParam'
+        - $ref: 'components/common.yaml#/components/parameters/RobotCameraParam'
+        - $ref: 'components/robot/robot_snapRobot_snapsSlot.yaml#/components/parameters/StartAtParam'
+        - $ref: 'components/robot/robot_snapRobot_snapsSlot.yaml#/components/parameters/EndAtParam'
+        - $ref: 'components/common.yaml#/components/parameters/limitParam'
+        - $ref: 'components/common.yaml#/components/parameters/offsetParam'
+      responses:
+        200:
+          $ref: 'components/robot/robot_snapRobot_snapsSlot.yaml#/components/responses/200'
+
+  /robot_video/robot_videos:
+    get:
+      tags:
+        - Robot
+        - RobotCamera
+      summary: List Robot Video
+      description: |
+        Perms:
+        * `logic.robotvideo`: retrieve
+
+        Condition:
+        * Robot needs to be started and validated to invoke this interface
+        * Query the video stored in the specified camera
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/RobotIdsParam'
+        - $ref: 'components/common.yaml#/components/parameters/StartAtParam'
+        - $ref: 'components/common.yaml#/components/parameters/EndAtParam'
+        - $ref: 'components/common.yaml#/components/parameters/RobotCameraParam'
+        - $ref: 'components/common.yaml#/components/parameters/limitParam'
+        - $ref: 'components/common.yaml#/components/parameters/offsetParam'
+      responses:
+        200:
+          $ref: 'components/robot/robot_videos.yaml#/components/responses/VideoListParam'
+    post:
+      tags:
+        - Robot
+        - RobotCamera
+      summary: Create Robot Video
+      description: |
+        Perms:
+        * `logic.robotvideo`: retrieve
+
+        Condition:
+        * robot needs to be started and validated to invoke this interface
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/robot/robot_videos.yaml#/components/requestBodies/VideoRequest'
+      responses:
+        200:
+          $ref: 'components/robot/robot_videos.yaml#/components/responses/VideoResult'
+
+  /robot_video/robot_videos/save_video:
+    post:
+      tags:
+        - Robot
+        - RobotCamera
+      summary: Save Robot Video
+      description: |
+        Perms:
+        * `logic.robotvideo`: retrieve
+        * `logic.robot`: save_video
+
+        Condition:
+        * robot needs to be started and validated to invoke this interface
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/robot/robot_videosSave_video.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/robot/robot_videosSave_video.yaml#/components/responses/200'
+
+  /robot_video/robot_videos/slot:
+    get:
+      tags:
+        - Robot
+        - RobotCamera
+      summary: Robot Video Slot
+      description: |
+        Perms:
+        * `logic.robotvideo`: retrieve
+
+        Condition:
+        * robot needs to be started and validated to invoke this interface
+        * Query the video stored in the specified camera
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/RobotIdsParam'
+        - $ref: 'components/common.yaml#/components/parameters/RobotCameraParam'
+        - $ref: 'components/common.yaml#/components/parameters/StartAtParam'
+        - $ref: 'components/common.yaml#/components/parameters/EndAtParam'
+        - $ref: 'components/common.yaml#/components/parameters/limitParam'
+        - $ref: 'components/common.yaml#/components/parameters/offsetParam'
+      responses:
+        200:
+          $ref: 'components/robot/robot_videosSlot.yaml#/components/responses/200'
+
+  /robot_saved_video/robot_saved_videos:
+    get:
+      tags:
+        - Robot
+        - RobotCamera
+      summary: List Robot Saved Video
+      description: |
+        Perms:
+        * `logic.robotsavedvideo`: retrieve
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/RobotIdsParam'
+        - $ref: 'components/common.yaml#/components/parameters/RobotCameraParam'
+      responses:
+        200:
+          $ref: 'components/robot/robot_saved_videos.yaml#/components/responses/200'
+
+  /inspection/inspections:
+    get:
+      tags:
+        - Robot
+      summary: Inspection List
+      description: |
+        Perms：
+        * `logic.inspection`: retrieve
+      parameters:
+        - $ref: 'components/robot/inspectionInspections.yaml#/components/parameters/RobotIDParam'
+        - $ref: 'components/robot/inspectionInspections.yaml#/components/parameters/SiteIDParam'
+        - $ref: 'components/robot/inspectionInspections.yaml#/components/parameters/TargetIDParam'
+        - $ref: 'components/robot/inspectionInspections.yaml#/components/parameters/RouteIDParam'
+        - $ref: 'components/robot/inspectionInspections.yaml#/components/parameters/MapIDParam'
+        - $ref: 'components/robot/inspectionInspections.yaml#/components/parameters/VisibleParam'
+        - $ref: 'components/robot/inspectionInspections.yaml#/components/parameters/MediumParam'
+        - $ref: 'components/common.yaml#/components/parameters/limitParam'
+        - $ref: 'components/common.yaml#/components/parameters/offsetParam'
+      responses:
+        200:
+          $ref: 'components/robot/inspectionInspections.yaml#/components/responses/200'
+  /inspection/inspections/{id}:
+    get:
+      tags:
+        - Robot
+      summary: Retrieve Inspection
+      description: |
+        Perms：
+        * `logic.inspection`: retrieve
+      parameters:
+        - $ref: 'components/robot/inspectionInspectionsPK.yaml#/components/parameters/InspectionIDParam'
+      responses:
+        200:
+          $ref: 'components/robot/inspectionInspectionsPK.yaml#/components/responses/200'
+  # patrol------
+  /target/targets:
+    get:
+      tags:
+        - Patrol
+        - Robot
+      summary: Robot target list
+      description: |
+        Perms:
+        * `logic.patrol`: retrieve
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/SiteIDParam'
+        - $ref: 'components/common.yaml#/components/parameters/SerialNoParam'
+        - $ref: 'components/common.yaml#/components/parameters/FloorParam'
+      responses:
+        200:
+          $ref: 'components/patrol/targetTargets.yaml#/components/responses/TargetListResult'
+    post:
+      tags:
+        - Robot
+        - Patrol
+      summary: Create target
+      description: |
+        Perms:
+        * `logic.patrol`: create
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/patrol/targetTargets.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: 'components/patrol/targetTargets.yaml#/components/responses/TargetResult'
+  /target/targets/{id}:
+    put:
+      tags:
+        - Robot
+      summary: Update target
+      description: |
+        Perms:
+        * `logic.patrol`: update
+      security:
+        - X_APP: []
+      parameters:
+        - $ref: 'components/patrol/targetTargetsPK.yaml#/components/parameters/TargetIDParam'
+      requestBody:
+        $ref: 'components/patrol/targetTargetsPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: 'components/patrol/targetTargets.yaml#/components/responses/TargetResult'
+
+  /target/targets/list_categories:
+    get:
+      tags:
+        - Robot
+      summary: Get the classification of all targets on the site
+      description: |
+        Perms:
+        * `logic.patrol`: retrieve
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/SiteIDParam'
+      responses:
+        200:
+          $ref: 'components/patrol/targetTargetsList_categories.yaml#/components/responses/200'
+  /target/targets/list_floors:
+    get:
+      tags:
+        - Robot
+      summary: Get floor list
+      description: |
+        Perms:
+        * `logic.patrol`: retrieve
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/SiteIDParam'
+      responses:
+        200:
+          $ref: 'components/patrol/targetTargetsList_floors.yaml#/components/responses/200'
+  /target/targets/all:
+    get:
+      tags:
+        - Robot
+      summary: Get all categories and floors info
+      description: |
+        Perms:
+        * `logic.patrol`: retrieve
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/SiteIDParam'
+      responses:
+        200:
+          $ref: 'components/patrol/targetTargetsList_all.yaml#/components/responses/200'
+
+  /algo_config/algo_configs:
+    get:
+      tags:
+        - Robot
+      summary: AlgorithmConfig list
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: 'components/patrol/algo_configs.yaml#/components/parameters/TargetIDParam'
+        - $ref: 'components/patrol/algo_configs.yaml#/components/parameters/ActionParam'
+        - $ref: 'components/patrol/algo_configs.yaml#/components/parameters/EnabledParam'
+      responses:
+        200:
+          $ref: 'components/patrol/algo_configs.yaml#/components/responses/ConfigListResult'
+    post:
+      tags:
+        - Robot
+      summary: Create algorithmConfig
+      description: |
+        Perms:
+        * ...
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/patrol/algo_configs.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: 'components/patrol/algo_configs.yaml#/components/responses/ConfigResult'
+  /algo_config/algo_configs/{pk}:
+    patch:
+      tags:
+        - Robot
+      summary: Update algorithmConfig
+      description: |
+        Perms:
+        * ...
+      security:
+        - X_APP: []
+      parameters:
+        - $ref: 'components/patrol/algo_configsPK.yaml#/components/parameters/ConfigIDParam'
+      requestBody:
+        $ref: 'components/patrol/algo_configsPK.yaml#/components/requestBodies/PatchRequest'
+      responses:
+        200:
+          $ref: 'components/patrol/algo_configs.yaml#/components/responses/ConfigResult'
+    delete:
+      tags:
+        - Robot
+      summary: Delete algorithmConfig
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: 'components/patrol/algo_configsPK.yaml#/components/parameters/ConfigIDParam'
+          name: pk
+          description: AlgorithmConfig id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          $ref: 'components/common.yaml#/components/responses/200'
+  /algo_config/algo_configs/enable:
+    post:
+      tags:
+        - Robot
+      summary: Enable algorithmConfig
+      description: |
+        Perms:
+        * ...
+      requestBody:
+        $ref: 'components/patrol/algo_configsEnable.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/patrol/algo_configsEnable.yaml#/components/responses/200'
+  /algo_config/algo_configs/disable:
+    post:
+      tags:
+        - Robot
+      summary: Disable algorithmConfig
+      description: |
+        Perms:
+        * ...
+      requestBody:
+        $ref: 'components/patrol/algo_configsEnable.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/patrol/algo_configsEnable.yaml#/components/responses/200'
+
+  /detection_task/detection_tasks:
+    get:
+      tags:
+        - Robot
+      summary: DetectionTask list
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: 'components/patrol/detection_tasks.yaml#/components/parameters/TargetIDParam'
+        - $ref: 'components/patrol/detection_tasks.yaml#/components/parameters/StatusIDParam'
+        - $ref: 'components/patrol/detection_tasks.yaml#/components/parameters/InspectionIDParam'
+      responses:
+        200:
+          $ref: 'components/patrol/detection_tasks.yaml#/components/responses/200'
+  /detection_task/detection_tasks/batch_results:
+    post:
+      tags:
+        - Robot
+      summary: Update detectionTask
+      description: |
+        Perms:
+        * ...
+      requestBody:
+        $ref: 'components/patrol/detection_tasksBatch_results.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/common.yaml#/components/responses/200'
+  /detection_task/detection_tasks/{id}/review:
+    post:
+      tags:
+        - Robot
+      summary: Update detectionTask config
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: 'components/patrol/detection_tasksPKReview.yaml#/components/parameters/TaskIDParam'
+      requestBody:
+        $ref: 'components/patrol/detection_tasksPKReview.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/common.yaml#/components/responses/200'
+
+  # event-----
+  /event/events:
+    get:
+      tags:
+        - Event
+      summary: View events information
+      description: |
+        Perms：
+        * `logic.event`: retrieve
+
+        Displays current user event information
+        * When using conditional queries, multiple parameters `,` separated
+      parameters:
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/BoxCameraIdParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/RobotIdParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/StartTimeParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/EndTimeParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/RobotCameraNameParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/TypeParam'
+        - $ref: 'components/common.yaml#/components/parameters/limitParam'
+      responses:
+        200:
+          $ref: 'components/event/eventEvents.yaml#/components/responses/EventListResult'
+
+  /event/events/camera:
+    post:
+      tags:
+        - Event
+        - Box
+      summary: Create Event (Box only)
+      description: |
+        Perms：
+        * User: Box
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: 'components/event/eventEventsCamera.yaml#/components/requestBodies/request'
+      responses:
+        200:
+          $ref: 'components/event/eventEventsCamera.yaml#/components/responses/200'
+
+  /event/events/robot:
+    post:
+      tags:
+        - Event
+        - Robot
+      summary: Create Event (Robot only)
+      description:  |
+        Perms：
+        * User: Robot
+      requestBody:
+        $ref: 'components/event/eventEventsRobot.yaml#/components/requestBodies/request'
+      responses:
+        200:
+          $ref: 'components/event/eventEventsRobot.yaml#/components/responses/200'
+
+  /event/events/slot:
+    get:
+      tags:
+        - Event
+      summary: "Event Slot: timeline"
+      description: |
+        Perms：
+        * `logic.event`: retrieve
+
+        When using conditional queries, multiple parameters `,` separated
+      parameters:
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/BoxCameraIdParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/RobotIdParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/EndTimeParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/StartTimeParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/RobotCameraNameParam'
+      responses:
+        200:
+          $ref: 'components/event/eventEventsSlot.yaml#/components/responses/200'
+
+  /event/events/{event_id}:
+    get:
+      tags:
+        - Event
+      summary: View event information
+      description: |
+        Perms：
+        * `logic.event`: retrieve
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/EventIDParam'
+      responses:
+        200:
+          $ref: 'components/event/eventEventsPK.yaml#/components/responses/EventResult'
+    put:
+      tags:
+        - Event
+      summary: Update Event
+      description: |
+        Perms：
+        * `logic.event`: update
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/EventIDParam'
+      requestBody:
+        $ref: 'components/event/eventEventsPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: 'components/event/eventEventsPK.yaml#/components/responses/EventResult'
+    patch:
+      tags:
+        - Event
+      summary: Update Event
+      description: |
+        Perms：
+        * `logic.event`: update
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/EventIDParam'
+      requestBody:
+        $ref: 'components/event/eventEventsPK.yaml#/components/requestBodies/PatchRequest'
+      responses:
+        200:
+          $ref: 'components/event/eventEventsPK.yaml#/components/responses/EventResult'
+    delete:
+      tags:
+        - Event
+      summary: Delete event
+      description: |
+        Perms：
+        * `logic.event`: destory
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/EventIDParam'
+      responses:
+        200:
+          $ref: 'components/event/eventEventsPK.yaml#/components/responses/DeleteResult'
+
+  /event/events/updates:
+    patch:
+      tags:
+        - Event
+      summary: Batch update Event
+      description: |
+        Perms：
+        * `logic.event`: update
+
+        Condition:
+        * Batch update robot or box event
+        * 'caerma_ids' and 'robot_ids' select one
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/RobotIdsParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/BoxCameraIdParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/RobotIdParam'
+      requestBody:
+        $ref: 'components/event/eventEventsPK.yaml#/components/requestBodies/PatchRequest'
+      responses:
+        200:
+          $ref: 'components/event/eventEventsPK.yaml#/components/responses/EventResult'
+
+  /event/events/all:
+    get:
+      tags:
+        - Event
+      summary: View all event information
+      description: |
+        Perms：
+        * `logic.event`: retrieve
+
+        When using conditional queries, multiple parameters `,` separated
+      parameters:
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/BoxCameraIdParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/RobotIdParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/StartTimeParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/EndTimeParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/RobotCameraNameParam'
+        - $ref: 'components/event/eventEvents.yaml#/components/parameters/TypeParam'
+        - $ref: 'components/common.yaml#/components/parameters/limitParam'
+      responses:
+        200:
+          $ref: 'components/event/eventEvents.yaml#/components/responses/EventListResult'
+
+  # ccs------
+  /sample/samples:
+    get:
+      tags:
+        - CCS
+      summary: View all sample info
+      description: |
+        Perms:
+        * `ccs.sample`: retrieve
+      responses:
+        200:
+          $ref: 'components/ccs/sampleSamples.yaml#/components/responses/SampleListResult'
+  /sample/samples/{id}:
+    get:
+      tags:
+        - CCS
+      summary: Retrieve sample
+      description: |
+        Perms:
+        * `ccs.sample`: retrieve
+      parameters:
+        - $ref: 'components/ccs/sampleSamplesPK.yaml#/components/parameters/SampleIDParam'
+      responses:
+        200:
+          $ref: 'components/ccs/sampleSamplesPK.yaml#/components/responses/SampleResult'
+    put:
+      tags:
+        - CCS
+      summary: Update sample
+      description: |
+        Perms:
+        * `ccs.sample`: update
+      parameters:
+        - $ref: 'components/ccs/sampleSamplesPK.yaml#/components/parameters/SampleIDParam'
+      requestBody:
+        $ref: 'components/ccs/sampleSamplesPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: 'components/ccs/sampleSamplesPK.yaml#/components/responses/SampleResult'
+    patch:
+      tags:
+        - CCS
+      summary: Update sample
+      description: |
+        Perms:
+        * `ccs.sample`: update
+      parameters:
+        - $ref: 'components/ccs/sampleSamplesPK.yaml#/components/parameters/SampleIDParam'
+      requestBody:
+        $ref: 'components/ccs/sampleSamplesPK.yaml#/components/requestBodies/PatchRequest'
+      responses:
+        200:
+          $ref: 'components/ccs/sampleSamplesPK.yaml#/components/responses/SampleResult'
+
+  /raw_event/raw_events:
+    get:
+      tags:
+        - CCS
+      summary: View all raw_event info
+      description: |
+        Perms:
+        * `ccs.rawevent`: retrieve
+      responses:
+        200:
+          $ref: 'components/ccs/raw_eventRaw_events.yaml#/components/responses/200'
+
+  /raw_event/raw_events/{pk}:
+    get:
+      tags:
+        - CCS
+      summary: Retrieve raw_event
+      description: |
+        Perms:
+        * `ccs.rawevent`: retrieve
+      parameters:
+        - $ref: 'components/ccs/raw_eventRaw_eventsPK.yaml#/components/parameters/RawEventIDParam'
+      responses:
+        200:
+          $ref: 'components/ccs/raw_eventRaw_eventsPK.yaml#/components/responses/200'
+
+  /raw_event/raw_events/{pk}/misreport:
+    put:
+      tags:
+        - CCS
+      summary: Misreport raw_event
+      description: |
+        Perms:
+        * `ccs.rawevent`: update
+      parameters:
+        - $ref: 'components/ccs/raw_eventRaw_eventsPK.yaml#/components/parameters/RawEventIDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          $ref: 'components/ccs/raw_eventRaw_eventsPK.yaml#/components/responses/200'
+  /raw_event/raw_events/{pk}/verified:
+    put:
+      tags:
+        - CCS
+      summary: Verified raw_event
+      description: |
+        Perms:
+        * `ccs.rawevent`: update
+      parameters:
+        - $ref: 'components/ccs/raw_eventRaw_eventsPK.yaml#/components/parameters/RawEventIDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          $ref: 'components/ccs/raw_eventRaw_eventsPK.yaml#/components/responses/200'
+  /raw_event/raw_events/create_or_update_for_camera:
+    post:
+      tags:
+        - CCS
+      summary: Box creat raw_event (To be confirmed) (Box only)
+      description: |
+        Perms:
+        * User: Box
+      requestBody:
+        $ref: 'components/ccs/raw_eventsCreate_or_update_for_camera.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/ccs/raw_eventRaw_eventsPK.yaml#/components/responses/200'
+
+  # guard------
+  /guard_company/guard_companies:
+    get:
+      tags:
+        - Guard
+      summary: Get guard company list
+      description: |
+        Perms：
+        * `guard.guardcompany`: retrieve
+
+        Condition:
+        * User is system
+      responses:
+        200:
+          $ref: 'components/guard/guard_companies.yaml#/components/responses/CompanyListResult'
+    post:
+      tags:
+        - Guard
+      summary: Create guard company
+      description: |
+        Perms：
+        * `guard.guardcompany`: create
+
+        Condition:
+        * User is system
+      requestBody:
+        $ref: 'components/guard/guard_companies.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: 'components/guard/guard_companies.yaml#/components/responses/PostResult'
+  /guard_company/guard_companies/{id}:
+    get:
+      tags:
+        - Guard
+      summary: Get the specified Guard company information
+      parameters:
+        - $ref: 'components/guard/guard_companies.yaml#/components/parameters/CompanyIDParam'
+      description: |
+        Perms：
+        * `guard.guardcompany`: retrieve
+
+        Condition
+        * User is system
+      responses:
+        200:
+          $ref: 'components/guard/guard_companies.yaml#/components/responses/PostResult'
+    put:
+      tags:
+        - Guard
+      summary: Update guard company
+      parameters:
+        - $ref: 'components/guard/guard_companies.yaml#/components/parameters/CompanyIDParam'
+      description: |
+        Perms：
+        * `guard.guardcompany`: update
+
+        Condition:
+        * User is system
+      requestBody:
+        $ref: 'components/guard/guard_companies.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: 'components/guard/guard_companies.yaml#/components/responses/PostResult'
+    delete:
+      tags:
+        - Guard
+      summary: Delete guard company
+      description: |
+        Perms：
+        * `guard.guardcompany`: destroy
+
+        Condition:
+        * User is system
+      parameters:
+        - $ref: 'components/guard/guard_companies.yaml#/components/parameters/CompanyIDParam'
+      responses:
+        200:
+          $ref: 'components/common.yaml#/components/responses/200'
+
+  /guard_admin/guard_admins:
+    get:
+      tags:
+        - Guard
+      summary: Get guard admins list
+      description: |
+        Perms：
+        * `guard.guardadmin`: retrieve
+
+        Condition
+        * User is system or user's role is guard_admin
+      responses:
+        200:
+          $ref: 'components/guard/guard_admins.yaml#/components/responses/AdminListResult'
+    post:
+      tags:
+        - Guard
+      summary: Create guard admin user
+      description: |
+        Perms：
+        * `guard.guardadmin`: create
+
+        Condition:
+        * User is system
+      requestBody:
+        $ref: 'components/guard/guard_admins.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: 'components/guard/guard_admins.yaml#/components/responses/AdminResult'
+  /guard_admin/guard_admins/{id}:
+    get:
+      tags:
+        - Guard
+      summary: Get the specified Guard admin information
+      parameters:
+        - $ref: 'components/guard/guard_adminsPK.yaml#/components/parameters/AdminIDParam'
+      description: |
+        Perms：
+        * `guard.guardadmin`: retrieve
+
+        Condition
+        * User is system or user's role is guard_admin
+      responses:
+        200:
+          $ref: 'components/guard/guard_admins.yaml#/components/responses/AdminResult'
+    put:
+      tags:
+        - Guard
+      summary: Update guard admin phone_number
+      parameters:
+        - $ref: 'components/guard/guard_adminsPK.yaml#/components/parameters/AdminIDParam'
+      description: |
+        Perms：
+        * guard.guardadmin: update
+
+        Condition:
+        * User is system
+      requestBody:
+        $ref: 'components/guard/guard_adminsPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: 'components/common.yaml#/components/responses/200'
+    delete:
+      tags:
+        - Guard
+      summary: Delete guard admin user
+      description: |
+        Perms：
+        * guard.guardadmin: destroy
+
+        Condition:
+        * User is system
+      parameters:
+        - $ref: 'components/guard/guard_adminsPK.yaml#/components/parameters/AdminIDParam'
+      responses:
+        200:
+          $ref: 'components/common.yaml#/components/responses/200'
+
+  /guard_admin/guard_admins/resend_activate_email:
+    post:
+      tags:
+        - Guard
+      summary: Activation email
+      description: |
+        Perms：
+        * `guard.guardadmin`: send_activate_email
+
+        Condition:
+        * User is system
+      requestBody:
+        $ref: 'components/guard/resend_activate_email.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/guard/resend_activate_email.yaml#/components/responses/200'
+
+  /guard/guards:
+    get:
+      tags:
+        - Guard
+      summary: Get guard list
+      description: |
+        Perms：
+        * `guard.guard`: retrieve
+
+        Condition
+        * User's role is guard_admin or user's role is guard or user's role is monitoring_operator
+      responses:
+        200:
+          $ref: 'components/guard/guard_guards.yaml#/components/responses/GuardListResult'
+    post:
+      tags:
+        - Guard
+      summary: Create guard user
+      description: |
+        Perms：
+        * `guard.guard`: create
+
+        Condition:
+        * User's role is guard_admin or user's role is monitoring_operator
+      requestBody:
+        $ref: 'components/guard/guard_guards.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: 'components/guard/guard_guards.yaml#/components/responses/GuardResult'
+  /guard/guards/{id}:
+    get:
+      tags:
+        - Guard
+      summary: Get the specified Guard information
+      parameters:
+        - $ref: 'components/guard/guard_guardsPK.yaml#/components/parameters/GuardIDParam'
+      description: |
+        Perms：
+        * `guard.guard`: retrieve
+
+        Condition
+        * User's role is guard_admin or user's role is guard or user's role is monitoring_operator
+      responses:
+        200:
+          $ref: 'components/guard/guard_guards.yaml#/components/responses/GuardResult'
+    put:
+      tags:
+        - Guard
+      summary: Update guard phone_number
+      parameters:
+        - $ref: 'components/guard/guard_guardsPK.yaml#/components/parameters/GuardIDParam'
+      description: |
+        Perms：
+        * `guard.guard`: update
+
+        Condition:
+        * User's role is guard and Modify yourself
+      requestBody:
+        $ref: 'components/guard/guard_guardsPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: 'components/guard/guard_guardsPK.yaml#/components/responses/PutResult'
+    delete:
+      tags:
+        - Guard
+      summary: Delete guard user
+      description: |
+        Perms：
+        * `guard.guard`: destroy
+
+        Condition:
+        * User's role is guard_admin or user's role is monitoring_operator
+      parameters:
+        - $ref: 'components/guard/guard_guardsPK.yaml#/components/parameters/GuardIDParam'
+      responses:
+        200:
+          $ref: 'components/common.yaml#/components/responses/200'
+  /guard/guards/resend_activate_email:
+    post:
+      tags:
+        - Guard
+      summary: Activation email
+      description: |
+        Perms：
+        * `guard.guard`: resend_activate_email
+
+        Condition:
+        * User's role is guard_admin or user's role is monitoring_operator
+      requestBody:
+        $ref: 'components/guard/resend_activate_email.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/guard/resend_activate_email.yaml#/components/responses/200'
+
+  /monitoring_operator/monitoring_operators:
+    get:
+      tags:
+        - Guard
+      summary: Get monitoring operator list
+      description: |
+        Perms：
+        * `guard.monitoringoperator`: retrieve
+
+        Condition
+        * User's role is guard_admin or user's role is monitoring_operator
+      responses:
+        200:
+          $ref: 'components/guard/guard_guards.yaml#/components/responses/GuardListResult'
+    post:
+      tags:
+        - Guard
+      summary: Create monitoring operator user
+      description: |
+        Perms：
+        * `guard.monitoringoperator`: create
+
+        Condition:
+        * User's role is guard_admin
+      requestBody:
+        $ref: 'components/guard/guard_guards.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: 'components/guard/guard_guards.yaml#/components/responses/GuardResult'
+  /monitoring_operator/monitoring_operators/resend_activate_email:
+    post:
+      tags:
+        - Guard
+      summary: Activation email
+      description: |
+        Perms：
+        * `guard.monitoringoperator`: send_activate_email
+
+        Condition:
+        * User's role is guard_admin
+      requestBody:
+        $ref: 'components/guard/resend_activate_email.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/guard/resend_activate_email.yaml#/components/responses/200'
+  /monitoring_operator/monitoring_operators/{id}:
+    get:
+      tags:
+        - Guard
+      summary: Get the specified monitoring operator information
+      parameters:
+        - $ref: 'components/guard/guard_guardsPK.yaml#/components/parameters/GuardIDParam'
+      description: |
+        Perms：
+        * `guard.monitoringoperator`: retrieve
+
+        Condition
+        * User's role is guard_admin or user's role is monitoring_operator
+      responses:
+        200:
+          $ref: 'components/guard/guard_guards.yaml#/components/responses/GuardResult'
+    put:
+      tags:
+        - Guard
+      summary: Update monitoring operator phone_number
+      parameters:
+        - $ref: 'components/guard/guard_guardsPK.yaml#/components/parameters/GuardIDParam'
+      description: |
+        Perms：
+        * `guard.monitoringoperator`: update
+
+        Condition:
+        * User's role is monitoring_operator and Modify yourself
+      requestBody:
+        $ref: 'components/guard/guard_guardsPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: 'components/guard/guard_guardsPK.yaml#/components/responses/PutResult'
+    delete:
+      tags:
+        - Guard
+      summary: Delete monitoring operator user
+      description: |
+        Perms：
+        * `guard.monitoringoperator`: destroy
+
+        Condition:
+        * User's role is guard_admin
+      parameters:
+        - $ref: 'components/guard/guard_guardsPK.yaml#/components/parameters/GuardIDParam'
+      responses:
+        200:
+          $ref: 'components/common.yaml#/components/responses/200'
+
+  /new_case/cases:
+    get:
+      tags:
+        - Guard
+      summary: Get guard case related information
+      description: |
+        Perms：
+        * `guard.case`: retrieve
+
+        User condition:
+        * customer
+        * site_manager
+        * monitoring_operator
+      responses:
+        200:
+          $ref: 'components/guard/new_caseCases.yaml#/components/responses/CaseListResult'
+  /new_case/cases/{id}:
+    put:
+      tags:
+        - Guard
+      summary: Update case
+      parameters:
+        - $ref: 'components/guard/new_caseCases.yaml#/components/parameters/GuardCaseIDParam'
+      description: |
+        Perms：
+        * guard.case: update
+
+        User condition
+        * customer
+        * site_manager
+        * monitoring_operator
+      requestBody:
+        $ref: 'components/guard/new_caseCases.yaml#/components/requestBodies/UpdateRequest'
+      responses:
+        200:
+          $ref: 'components/guard/new_caseCases.yaml#/components/responses/CaseResult'
+    patch:
+      tags:
+        - Guard
+      summary: Update case
+      parameters:
+        - $ref: 'components/guard/new_caseCases.yaml#/components/parameters/GuardCaseIDParam'
+      description: |
+        Perms：
+        * guard.case: update
+
+        User condition
+        * customer
+        * site_manager
+        * monitoring_operator
+      requestBody:
+        $ref: 'components/guard/new_caseCases.yaml#/components/requestBodies/UpdateRequest'
+      responses:
+        200:
+          $ref: 'components/guard/new_caseCases.yaml#/components/responses/CaseResult'
+
+  # map------
+  /map_config/map_configs:
+    get:
+      tags:
+        - Map
+      summary: Map config list
+      description: |
+        Perms：
+        * `mapping.mapconfig`: retrieve
+
+        Role condition
+        * site_manager
+        * customer
+      responses:
+        200:
+          $ref: 'components/map/map_configs.yaml#/components/responses/ConfigListResult'
+    post:
+      tags:
+        - Map
+      summary: Create map config
+      description: |
+        Perms：
+        * `mapping.mapconfig`: create
+
+        Role condition
+        * customer
+      requestBody:
+        $ref: 'components/map/map_configs.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: 'components/map/map_configs.yaml#/components/responses/ConfigResult'
+  /map_config/map_configs/{id}:
+    get:
+      tags:
+        - Map
+      summary: Map config
+      description: |
+        Perms：
+        * `mapping.mapconfig`: retrieve
+
+        Role condition
+        * site_manager
+        * customer
+      parameters:
+        - $ref: 'components/map/map_configsPK.yaml#/components/parameters/MapConfigIDParam'
+      responses:
+        200:
+          $ref: 'components/map/map_configs.yaml#/components/responses/ConfigResult'
+    delete:
+      tags:
+        - Map
+      summary: Delete map config
+      description: |
+        Perms：
+        * `mapping.mapconfig`: destroy
+
+        Role condition
+        * customer
+      parameters:
+        - $ref: 'components/map/map_configsPK.yaml#/components/parameters/MapConfigIDParam'
+      responses:
+        200:
+          $ref: 'components/map/map_configsPK.yaml#/components/responses/200'
+
+  /map/maps:
+    get:
+      tags:
+        - Map
+      summary: Map list
+      description: |
+        Perms：
+        * `mapping.map`: retrieve
+
+        Role condition
+        * site_manager
+        * customer
+      responses:
+        200:
+          $ref: 'components/map/map_maps.yaml#/components/responses/MapListResult'
+    post:
+      tags:
+        - Map
+      summary: Create map
+      description: |
+        Perms：
+        * `mapping.map`: create
+
+        Role condition
+        * customer
+        * site_manager
+      requestBody:
+        $ref: 'components/map/map_maps.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: 'components/map/map_maps.yaml#/components/responses/MapResult'
+  /map/maps/{id}:
+    get:
+      tags:
+        - Map
+      summary: Retrieve an map
+      description: |
+        Perms：
+        * `mapping.map`: retrieve
+
+        Role condition
+        * site_manager
+        * customer
+      parameters:
+        - $ref: 'components/map/map_mapsPK.yaml#/components/parameters/MapIDParam'
+      responses:
+        200:
+          $ref: 'components/map/map_maps.yaml#/components/responses/MapResult'
+    delete:
+      tags:
+        - Map
+      summary: Delete map
+      description: |
+        Perms：
+        * `mapping.map`: destroy
+
+        Role condition
+        * site_manager
+        * customer
+      parameters:
+        - $ref: 'components/map/map_mapsPK.yaml#/components/parameters/MapIDParam'
+      responses:
+        200:
+          $ref: 'components/map/map_mapsPK.yaml#/components/responses/200'
+
+  /map/targets:
+    get:
+      tags:
+        - Map
+      summary: Map target list
+      description: |
+        Perms：
+        * `mapping.target`: retrieve
+
+        Role condition
+        * site_manager
+        * customer
+      responses:
+        200:
+          $ref: 'components/map/map_targets.yaml#/components/responses/MapTargetListResult'
+    post:
+      tags:
+        - Map
+      summary: Create map target
+      description: |
+        Perms：
+        * `mapping.target`: create
+
+        Role condition
+        * customer
+        * site_manager
+      requestBody:
+        $ref: 'components/map/map_targets.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: 'components/map/map_targets.yaml#/components/responses/MapTargetResult'
+  /map/targets/{id}:
+    get:
+      tags:
+        - Map
+      summary: Retrieve an map target
+      description: |
+        Perms：
+        * `mapping.target`: retrieve
+
+        Role condition
+        * site_manager
+        * customer
+      parameters:
+        - $ref: 'components/map/map_targetsPK.yaml#/components/parameters/MapTargetIDParam'
+      responses:
+        200:
+          $ref: 'components/map/map_targets.yaml#/components/responses/MapTargetResult'
+    delete:
+        tags:
+          - Map
+        summary: Delete map target
+        description: |
+          Perms：
+          * `mapping.target`: destroy
+
+          Role condition
+          * site_manager
+          * customer
+        parameters:
+          - $ref: 'components/map/map_targetsPK.yaml#/components/parameters/MapTargetIDParam'
+        responses:
+          200:
+            $ref: 'components/map/map_targetsPK.yaml#/components/responses/200'
+
+  /site/sites/{id}/add_map:
+    post:
+      tags:
+        - Map
+        - Site
+      summary: Create site_map
+      description: |
+        Perms：
+        * `logic.site`: add_map
+
+        Role condition
+        * customer
+        * site_manager
+      parameters:
+        - $ref: 'components/map/siteSitesAdd_map.yaml#/components/parameters/SiteIDParam'
+      requestBody:
+        $ref: 'components/map/siteSitesAdd_map.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/map/siteSitesAdd_map.yaml#/components/responses/200'
+  /site/sites/{id}/remove_map:
+    post:
+      tags:
+        - Map
+        - Site
+      summary: Delete site_map
+      description: |
+        Perms：
+        * `logic.site`: remove_map
+
+        Role condition
+        * customer
+        * site_manager
+      parameters:
+        - $ref: 'components/map/siteSitesAdd_map.yaml#/components/parameters/SiteIDParam'
+      requestBody:
+        $ref: 'components/map/siteSitesRemove_map.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/map/siteSitesRemove_map.yaml#/components/responses/200'
+
+  # org------
+  /organization/organizations:
+    get:
+      tags:
+        - Org
+      summary: Get information about all organizations
+      description: |
+        Perms：
+        * `logic.organization`: retrieve
+      responses:
+        200:
+          $ref: 'components/org/organizationOrganizations.yaml#/components/responses/OrgListResult'
+  /organization/organizations/{id}:
+    get:
+      tags:
+        - Org
+      summary: Get information about an organizations
+      description: |
+        Perms：
+        * `logic.organization`: retrieve
+      parameters:
+        - $ref: 'components/org/organizationOrganizations.yaml#/components/parameters/OrgIDParam'
+      responses:
+        200:
+          $ref: 'components/org/organizationOrganizations.yaml#/components/responses/OrgResult'
+    put:
+      tags:
+        - Org
+      summary: Update information about an organizations
+      description: |
+        Perms：
+        * `logic.organization`: update
+      parameters:
+        - $ref: 'components/org/organizationOrganizations.yaml#/components/parameters/OrgIDParam'
+      requestBody:
+        $ref: 'components/org/organizationOrganizations.yaml#/components/requestBodies/OrgRequest'
+      responses:
+        200:
+          $ref: 'components/org/organizationOrganizations.yaml#/components/responses/OrgResult'
+
+  /domain_type/domain_types:
+    get:
+      tags:
+        - Org
+      summary: Get org domain types list
+      description: |
+        Perms:
+        * `org.domaintype`: retrieve
+      responses:
+        200:
+          $ref: 'components/org/domain_types.yaml#/components/responses/DomainTypeListResult'
+    post:
+      tags:
+        - Org
+      summary: Create domain type
+      description: |
+        Perms:
+        * `org.domaintype`: create
+        * `org.domaintype`: [retrieve，update] `parent_id`
+      requestBody:
+        $ref: 'components/org/domain_types.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: 'components/org/domain_types.yaml#/components/responses/DomainTypeResult'
+  /domain_type/domain_types/{id}:
+    get:
+      tags:
+        - Org
+      summary: Retrieve org domain types
+      parameters:
+        - $ref: 'components/org/domain_typesPK.yaml#/components/parameters/DomainTypeIDParam'
+      description: |
+        Perms:
+        * `org.domaintype`: retrieve
+      responses:
+        200:
+          $ref: 'components/org/domain_types.yaml#/components/responses/DomainTypeResult'
+    put:
+      tags:
+        - Org
+      summary: Update org domain types
+      parameters:
+        - $ref: 'components/org/domain_typesPK.yaml#/components/parameters/DomainTypeIDParam'
+      description: |
+        Perms:
+        * `org.domaintype`: update
+      requestBody:
+        $ref: 'components/org/domain_typesPK.yaml#/components/requestBodies/UpdateRequest'
+      responses:
+        200:
+          $ref: 'components/org/domain_types.yaml#/components/responses/DomainTypeResult'
+    patch:
+      tags:
+        - Org
+      summary: Update org domain types
+      parameters:
+        - $ref: 'components/org/domain_typesPK.yaml#/components/parameters/DomainTypeIDParam'
+      description: |
+        Perms:
+        * `org.domaintype`: update
+      requestBody:
+        $ref: 'components/org/domain_typesPK.yaml#/components/requestBodies/UpdateRequest'
+      responses:
+        200:
+          $ref: 'components/org/domain_types.yaml#/components/responses/DomainTypeResult'
+    delete:
+      tags:
+        - Org
+      summary: Delete org domain types
+      parameters:
+        - $ref: 'components/org/domain_typesPK.yaml#/components/parameters/DomainTypeIDParam'
+      description: |
+        Perms:
+        * `org.domaintype`: destroy
+      responses:
+        200:
+          $ref: 'components/org/domain_typesPK.yaml#/components/responses/DeleteResult'
+
+  /domain/domains:
+    get:
+      tags:
+        - Org
+      summary: Get org domain list
+      description: |
+        Perms:
+        * `org.domain`: retrieve
+      responses:
+        200:
+          $ref: 'components/org/domains.yaml#/components/responses/DomainListResult'
+    post:
+      tags:
+        - Org
+      summary: Create domain types
+      description: |
+        Perms:
+        * `org.domain`: create
+        * `org.domain`: assign_child: domain_type
+      requestBody:
+        $ref: 'components/org/domains.yaml#/components/requestBodies/DomainRequest'
+      responses:
+        200:
+          $ref: 'components/org/domains.yaml#/components/responses/DomainResult'
+  /domain/domains/{id}:
+    get:
+      tags:
+        - Org
+      summary: Retrieve org domain
+      parameters:
+        - $ref: 'components/org/domainsPK.yaml#/components/parameters/DomainIDParam'
+      description: |
+        Perms:
+        * `org.domain`: retrieve
+      responses:
+        200:
+          $ref: 'components/org/domains.yaml#/components/responses/DomainResult'
+    put:
+      tags:
+        - Org
+      summary: Update org domain
+      parameters:
+        - $ref: 'components/org/domainsPK.yaml#/components/parameters/DomainIDParam'
+      description: |
+        Perms:
+        * `org.domain`: update
+      requestBody:
+        $ref: 'components/org/domainsPK.yaml#/components/requestBodies/UpdateRequest'
+      responses:
+        200:
+          $ref: 'components/org/domains.yaml#/components/responses/DomainResult'
+    patch:
+      tags:
+        - Org
+      summary: Update org domain
+      parameters:
+        - $ref: 'components/org/domainsPK.yaml#/components/parameters/DomainIDParam'
+      description: |
+        Perms:
+        * `org.domain`: update
+      requestBody:
+        $ref: 'components/org/domainsPK.yaml#/components/requestBodies/UpdateRequest'
+      responses:
+        200:
+          $ref: 'components/org/domains.yaml#/components/responses/DomainResult'
+    delete:
+      tags:
+        - Org
+      summary: Delete org domain
+      parameters:
+        - $ref: 'components/org/domainsPK.yaml#/components/parameters/DomainIDParam'
+      description: |
+        Perms:
+        * `org.domain`: destroy
+      responses:
+        200:
+          $ref: 'components/org/domainsPK.yaml#/components/responses/DeleteResult'
+  /domain/domains/{id}/attach_user:
+    post:
+      tags:
+        - Org
+      summary: Create org domain user
+      parameters:
+        - $ref: 'components/org/domainsPK.yaml#/components/parameters/DomainIDParam'
+      description: |
+        Perms:
+        * `org.domain`: attach_user `domain_id`
+        * `auth.user`: attach_domain `user_id`
+        * `org.domaintype`: attach `domain_type_id`
+
+        Condition:
+        * Domain and user must be in the same organization.
+      requestBody:
+        $ref: 'components/org/domainsPKAttach_user.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/org/domainsPKAttach_user.yaml#/components/responses/200'
+  /domain/domains/{id}/set_map:
+    post:
+      tags:
+        - Org
+        - Map
+      summary: Associate domain and map
+      parameters:
+        - $ref: 'components/org/domainsPK.yaml#/components/parameters/DomainIDParam'
+      description: |
+        Perms:
+        * `org.domain`: set_map
+      requestBody:
+        $ref: 'components/org/domainsPKSet_map.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/org/domainsPKSet_map.yaml#/components/responses/200'
+  /domain/domains/{id}/unset_map:
+    post:
+      tags:
+        - Org
+        - Map
+      summary: Disassociate domain map
+      parameters:
+        - $ref: 'components/org/domainsPK.yaml#/components/parameters/DomainIDParam'
+      description: |
+        Perms:
+        * `org.domain`: unset_map
+      requestBody:
+        $ref: 'components/org/domainsPKSet_map.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/org/domainsPKSet_map.yaml#/components/responses/200'
+
+  /domain/domains/bind_site:
+    post:
+      tags:
+        - Org
+      summary: Create domain and user association
+      description: |
+        Perms:
+        * ...
+      requestBody:
+        $ref: 'components/org/domainsBind_site.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/org/domainsBind_site.yaml#/components/responses/200'
+
+  /domain/domains/set_user_in_charge:
+    post:
+      tags:
+        - Org
+      summary: Designated domain person in charge
+      description: |
+        Perms:
+        * ...
+      requestBody:
+        $ref: 'components/org/domainsSet_user_in_charge.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/org/domainsSet_user_in_charge.yaml#/components/responses/200'
+
+  /user_node/user_nodes:
+    get:
+      tags:
+        - Org
+      summary: Get user nodes list
+      description: |
+        Perms:
+        * `org.usernode`: retrieve
+      responses:
+        200:
+          $ref: 'components/org/user_nodes.yaml#/components/responses/200'
+
+  /user_node/user_nodes/{id}:
+    get:
+      tags:
+        - Org
+      summary: Retrieve user node
+      parameters:
+        - $ref: 'components/org/user_nodesPK.yaml#/components/parameters/UserNoteIDParam'
+      description: |
+        Perms:
+        * `org.usernode`: retrieve
+      responses:
+        200:
+          $ref: 'components/org/user_nodesPK.yaml#/components/responses/200'
+
+  /user_node/user_nodes/create_user_roles:
+    post:
+      tags:
+        - Org
+      summary: Org create user role and user node
+      description: |
+        Perms:
+        * `org.usernode`: create:
+        * `org.usernode`: assign_child
+
+        Condition:
+        * Only child user roles can be created
+      requestBody:
+        $ref: 'components/org/user_nodesCreate_user_roles.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/org/user_nodesPK.yaml#/components/responses/200'
+
+  /user_node/user_nodes/{id}/edit_user_roles:
+    post:
+      tags:
+        - Org
+      summary: Org update user node
+      parameters:
+        - $ref: 'components/org/user_nodesPK.yaml#/components/parameters/UserNoteIDParam'
+      description: |
+        Perms:
+        * `org.usernode`: update: pk
+      requestBody:
+        $ref: 'components/org/user_nodesPKEdit_user_roles.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/org/user_nodesPK.yaml#/components/responses/200'
+
+  /user_node/user_nodes/{id}/remove_user:
+    post:
+      tags:
+        - Org
+      summary: Org remove user node
+      parameters:
+        - $ref: 'components/org/user_nodesPK.yaml#/components/parameters/UserNoteIDParam'
+      description: |
+        Perms:
+        * `org.usernode`: destroy
+
+        Condition:
+        * Disable is true when user_node exists when calling the interface, and modify the auth_user table is_active field to false
+      requestBody:
+        $ref: 'components/org/user_nodesPKRemove_user.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/org/user_nodesPKRemove_user.yaml#/components/responses/200'
+
+  /user_node/user_nodes/{id}/change_parent:
+    post:
+      tags:
+        - Org
+      summary: Org change user_node parent id
+      parameters:
+        - $ref: 'components/org/user_nodesPK.yaml#/components/parameters/UserNoteIDParam'
+      description: |
+        Perms:
+        * `org.usernode`: update
+        * `org.usernode`: assign_child
+      requestBody:
+        $ref: 'components/org/user_nodesPKChange_parent.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/org/user_nodesPK.yaml#/components/responses/200'
+
+  /org/validate_get_organization:
+    post:
+      tags:
+        - Org
+      summary: Retrieve organization and validate view
+      description: |
+        Perms:
+        * `logic.organization`: retrieve
+        * `logic.organization`: update
+      requestBody:
+        $ref: 'components/org/orgValidate_get_organization.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/org/orgValidate_get_organization.yaml#/components/responses/200'
+
+  # perm------
+  /perm/role_policy/get_queryset_sql:
+    post:
+      tags:
+        - Perm
+      summary: Get queryset sql
+      security:
+        - Authorization: []
+      requestBody:
+        $ref: 'components/perm/get_queryset_sql.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/perm/get_queryset_sql.yaml#/components/responses/200'
+
+  /perm/role_policy/validate_conditions:
+    post:
+      tags:
+        - Perm
+      summary: Check conditions
+      security:
+        - Authorization: []
+      requestBody:
+        $ref: 'components/perm/validate_conditions.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/perm/validate_conditions.yaml#/components/responses/200'
+
+  /perm/validate_resource_scope:
+    post:
+      tags:
+        - Perm
+      summary: Validate Resource Scope
+      description: |
+        Resource Scope:
+        * 'expression : MODEL'
+        * 'expression : expression / FILTER'
+        * 'expression : expression :: NAME : MODEL'
+        * 'expression : expression / NAME PARAM'
+
+        Examples:
+        * org.domain
+        * logic.site/Q(id__in=[17, 18])
+        * logic.site/Q(id__in=[17, 18])::site:logic.box
+        * logic.box/Q(user_id={user_id})
+        * logic.camera/Q(box__site__managements__site_manager={user_id})
+        * logic.robotvideo/Q(robot__user__customer__guard_company_id__monitoring_operator_org={user_id})
+        * org.domainuser/Q(user_id={user_id}, domain__domain_type__code_name='business')::domain_users:org.domain/get_descendants()/Q(domain_type__code_name='site')::domain:logic.site::site:logic.robot
+      requestBody:
+        $ref: 'components/perm/validate_resource_scope.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/perm/validate_resource_scope.yaml#/components/responses/200'
+
+  /perm/validate_cross_join:
+    post:
+      tags:
+        - Perm
+      summary: Validate Cross Join
+      description: Validate Cross Join
+      requestBody:
+        $ref: 'components/perm/validate_cross_join.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/perm/validate_cross_join.yaml#/components/responses/200'
+
+  # public----
+  /web/meta/get_agent:
+    get:
+      tags:
+        - Public
+      summary: Get Agent Meta
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/ProductTypeParam'
+      responses:
+        200:
+          $ref: 'components/public/webMetaGet_agent.yaml#/components/responses/200'
+        400:
+          $ref: 'components/public/webMetaGet_agent.yaml#/components/responses/400'
+
+  /web/meta/get_global:
+    get:
+      tags:
+        - Public
+      summary: Get Global Config
+      description: Get global configuration information
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: 'components/public/webMetaGet_global.yaml#/components/schemas/GlobalResult'
+              examples:
+                response:
+                  $ref: 'components/public/webMetaGet_global.yaml#/components/examples/GlobalResult'
+
+  /web/meta/get_timezones:
+    get:
+      tags:
+        - Public
+      summary: Get Timezones
+      description: Get time zone information
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: 'components/public/webMetaGet_timezones.yaml#/components/schemas/TimezonesResult'
+              examples:
+                response:
+                  $ref: 'components/public/webMetaGet_timezones.yaml#/components/examples/TimezonesResult'
+
+  /web/meta/all_event_types:
+    get:
+      tags:
+        - Public
+      summary: Get all event types
+      description: |
+        * Permissions: Customer
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: 'components/public/webMetaAll_event_type.yaml#/components/schemas/AlgoTypeResult'
+              examples:
+                response:
+                  $ref: 'components/public/webMetaAll_event_type.yaml#/components/examples/AlgoTypeResult'
+
+  /manual_cleanup_task/manual_cleanup_tasks:
+    get:
+      tags:
+        - Public
+      summary: View all manual cleanup task information
+      description: |
+        Perms：
+        * `logic.manualcleanuptask`: retrieve
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: 'components/public/manual_cleanup_task.yaml#/components/schemas/TaskListResult'
+              examples:
+                response:
+                  $ref: 'components/public/manual_cleanup_task.yaml#/components/examples/TaskListResult'
+    post:
+      tags:
+        - Public
+      summary: Create a manual cleanup task
+      description: |
+        Perms：
+        * `logic.manualcleanuptask`: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/public/manual_cleanup_task.yaml#/components/schemas/TaskRequest'
+            examples:
+              ParamIsNull:
+                $ref: 'components/public/manual_cleanup_task.yaml#/components/examples/ParamIsNull'
+              TaskRequest:
+                $ref: 'components/public/manual_cleanup_task.yaml#/components/examples/TaskResult'
+
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: 'components/public/manual_cleanup_task.yaml#/components/schemas/TaskResult'
+              examples:
+                response:
+                  $ref: 'components/public/manual_cleanup_task.yaml#/components/examples/TaskResult'
+
+  /manual_cleanup_task/manual_cleanup_tasks/{pk}:
+    get:
+      tags:
+        - Public
+      summary: View all manual cleanup task information
+      description: |
+        Perms：
+        * `logic.manualcleanuptask`: retrieve
+      parameters:
+        - in: path
+          name: pk
+          required: true
+          description: Manual cleanup task id
+          schema:
+            type: integer
+            format: int32
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: 'components/public/manual_cleanup_task.yaml#/components/schemas/TaskResult'
+              examples:
+                response:
+                  $ref: 'components/public/manual_cleanup_task.yaml#/components/examples/TaskResult'
+
+  #user------
+  /user/auth/login:
+    post:
+      tags:
+        - User
+      summary: User login system
+      description: Returns sessionid and csrftoken
+      operationId: getcookies
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'components/auth/auth.yaml#/components/schemas/AuthRequest'
+      responses:
+        200:
+          description: >
+            Successfully authenticated.
+            The session ID is returned in a cookie named `sessionid`and `csrftoken`. You need to include this cookie in subsequent requests.
+          content:
+            application/json:
+              schema:
+                $ref: 'components/user/userAuthLogin.yaml#/components/schemas/LoginResult'
+              examples:
+                response:
+                  $ref: 'components/user/userAuthLogin.yaml#/components/examples/LoginResult'
+
+  /user/auth/register:
+    post:
+      tags:
+        - User
+      summary: User registration
+      description: User registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'components/user/UserAuthRegister.yaml#/components/schemas/RegisterRequest'
+            examples:
+              request:
+                $ref: 'components/user/UserAuthRegister.yaml#/components/examples/RegisterRequest'
+      security: []
+      responses:
+        default:
+          description: Return user id
+          content:
+            application/json:
+              schema:
+                $ref: 'components/user/UserAuthRegister.yaml#/components/schemas/RegisterResult'
+              examples:
+                response:
+                  $ref: 'components/user/UserAuthRegister.yaml#/components/examples/RegisterResult'
+
+  /user/users/me:
+    get:
+      tags:
+        - User
+      summary: View current user
+      description: View current user information
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: 'components/user/userAuthLogin.yaml#/components/schemas/LoginResult'
+              examples:
+                response:
+                  $ref: 'components/user/userAuthLogin.yaml#/components/examples/LoginResult'
+
+  /user/users/{pk}:
+    put:
+      tags:
+        - User
+      summary: Users update their information
+      description: |
+        Perms：
+        * `auth.user`: update
+
+        Condition
+        * Can only modify own information
+      parameters:
+        - $ref: 'components/user/userUsersPK.yaml#/components/parameters/UserIDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'components/user/userUsersPK.yaml#/components/schemas/PutRequest'
+      responses:
+        200:
+          description: >
+            Successfully update.
+          content:
+            application/json:
+              schema:
+                $ref: 'components/user/userAuthLogin.yaml#/components/schemas/LoginResult'
+              examples:
+                response:
+                  $ref: 'components/user/userAuthLogin.yaml#/components/examples/LoginResult'
+
+  /user/auth/change_password:
+    post:
+      tags:
+        - User
+      summary: User change password
+      description:  The current user changes the password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'components/user/userAuthChange_password.yaml#/components/schemas/ChangeRequest'
+      responses:
+        default:
+          description: Content returned after successful request
+          content:
+            application/json:
+              schema:
+                $ref: 'components/common.yaml#/components/schemas/Result'
+              examples:
+                request:
+                  $ref: 'components/common.yaml#/components/examples/Result'
+
+  /user/auth/reset_password:
+    post:
+      tags:
+        - User
+      summary: User reset password
+      description:  User reset password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'components/user/userAuthSet_password.yaml#/components/schemas/SetRequest'
+      responses:
+        default:
+          description: Send email to reset password
+          content:
+            application/json:
+              schema:
+                $ref: 'components/common.yaml#/components/schemas/Result'
+              examples:
+                request:
+                  $ref: 'components/common.yaml#/components/examples/Result'
+
+  # iot------
+  /agent/robots/{id}:
+    get:
+      tags:
+        - Iot
+      summary: Retrieve robot agent
+      parameters:
+        - $ref: 'components/common.yaml#/components/parameters/RobotIDParam'
+      responses:
+        200:
+          $ref: 'components/iot/agentRobotPK.yaml#/components/responses/200'
+  /agent/boxes/{id}:
+    get:
+      tags:
+        - Iot
+      summary: Retrieve box agent
+      parameters:
+        - $ref: 'components/iot/agentBoxPK.yaml#/components/parameters/BoxIDParam'
+      responses:
+        200:
+          $ref: 'components/iot/agentBoxPK.yaml#/components/responses/200'
+  /iot/device/get_associated_device:
+    post:
+      tags:
+        - Iot
+      summary: Get associated device
+      requestBody:
+        $ref: 'components/iot/iotDeviceGet_associated_device.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/iot/iotDeviceGet_associated_device.yaml#/components/responses/200'
+  /iot/device/get_min_and_latest_lr:
+    post:
+      tags:
+        - Iot
+      summary: Device get min and latest lr
+      requestBody:
+        $ref: 'components/iot/iotDeviceGrt_min_and_latest_lr.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/iot/iotDeviceGrt_min_and_latest_lr.yaml#/components/responses/200'
+  # face------
+  /face/libs:
+    get:
+      tags:
+        - Face
+      summary: View face lib list
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: 'components/face/faceLibs.yaml#/components/parameters/OrgIDParam'
+      responses:
+        200:
+          $ref: 'components/face/faceLibs.yaml#/components/responses/FaceLibResult'
+    post:
+      tags:
+        - Face
+      summary: Create face lib
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      requestBody:
+        $ref: 'components/face/faceLibs.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: 'components/face/faceLibs.yaml#/components/responses/LibResult'
+  /face/libs/{id}:
+    get:
+      tags:
+        - Face
+      summary: View the specified Face Lib
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: 'components/face/faceLibsID.yaml#/components/parameters/LibIDParam'
+      responses:
+        200:
+          $ref: 'components/face/faceLibs.yaml#/components/responses/LibResult'
+    put:
+      tags:
+        - Face
+      summary: Update the specified Face Lib
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      requestBody:
+        $ref: 'components/face/faceLibsID.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: 'components/face/faceLibs.yaml#/components/responses/LibResult'
+    delete:
+      tags:
+        - Face
+      summary: Delete the specified Face Lib
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: 'components/face/faceLibsID.yaml#/components/parameters/LibIDParam'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200'
+
+  /face/faces:
+    get:
+      tags:
+        - Face
+      summary: View face detection list
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: 'components/face/faceFaces.yaml#/components/parameters/LibIDParam'
+        - $ref: 'components/face/faceFaces.yaml#/components/parameters/LibOrgIDParam'
+      responses:
+        200:
+          $ref: 'components/face/faceFaces.yaml#/components/responses/FaceListResult'
+    post:
+      tags:
+        - Face
+      summary: Create face detection
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      requestBody:
+        $ref: 'components/face/faceFaces.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: 'components/face/faceFaces.yaml#/components/responses/FaceResult'
+
+  /face/faces/{id}:
+    get:
+      tags:
+        - Face
+      summary: View the specified face detection
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: 'components/face/faceFaces.yaml#/components/parameters/FaceIDParam'
+      responses:
+        200:
+          $ref: 'components/face/faceFaces.yaml#/components/responses/FaceResult'
+    delete:
+      tags:
+        - Face
+      summary: Delete the specified Face Lib
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: 'components/face/faceFaces.yaml#/components/parameters/FaceIDParam'
+      responses:
+        200:
+          $ref: 'components/common.yaml#/components/responses/200'
+
+  /face/tracking_objects:
+    get:
+      tags:
+        - Face
+      summary: View  detection tracking objects
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: 'components/face/faceTracking_objects.yaml#/components/parameters/OrgIDParam'
+        - $ref: 'components/face/faceTracking_objects.yaml#/components/parameters/SerialNoParam'
+        - $ref: 'components/face/faceTracking_objects.yaml#/components/parameters/NameParam'
+      responses:
+        200:
+          $ref: 'components/face/faceTracking_objects.yaml#/components/responses/TrackListResult'
+    post:
+      tags:
+        - Face
+      summary: Create face detection tracking
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      requestBody:
+        $ref: 'components/face/faceTracking_objects.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: 'components/face/faceTracking_objects.yaml#/components/responses/TrackResult'
+
+  /face/tracking_objects/{id}:
+    get:
+      tags:
+        - Face
+      summary: View the specified tracking objects
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: 'components/face/faceTracking_objects.yaml#/components/parameters/TrackIDParam'
+      responses:
+        200:
+          $ref: 'components/face/faceTracking_objects.yaml#/components/responses/TrackResult'
+    delete:
+      tags:
+        - Face
+      summary: Delete the specified tracking objects
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: 'components/face/faceTracking_objects.yaml#/components/parameters/TrackIDParam'
+      responses:
+        200:
+          $ref: 'components/common.yaml#/components/responses/200'
+
+  /face/tracking_objects/merge:
+    post:
+      tags:
+        - Face
+      summary: Tracking objects merge
+      description: |
+        Perms:
+        * ...
+      requestBody:
+        $ref: 'components/face/faceTracking_objectsMerge.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/face/faceTracking_objectsMerge.yaml#/components/responses/MergeResult'
+
+  /face/tracking_objects/{id}/add_face:
+    post:
+      tags:
+        - Face
+      summary: Modify S3 information
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: 'components/face/faceTracking_objects.yaml#/components/parameters/TrackIDParam'
+      requestBody:
+        $ref: 'components/face/faceTracking_objectsIDAdd_face.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/face/faceTracking_objects.yaml#/components/responses/TrackResult'
+
+  /face/tracking_objects/{id}/enable:
+    post:
+      tags:
+        - Face
+      summary: Enabled tracking
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: 'components/face/faceTracking_objects.yaml#/components/parameters/TrackIDParam'
+      requestBody:
+        $ref: 'components/face/faceTracking_objects.yaml#/components/requestBodies/EnableDisable'
+      responses:
+        200:
+          $ref: 'components/face/faceTracking_objects.yaml#/components/responses/TrackResult'
+
+  /face/tracking_objects/{id}/disable:
+    post:
+      tags:
+        - Face
+      summary: Disabled tracking
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: 'components/face/faceTracking_objects.yaml#/components/parameters/TrackIDParam'
+      requestBody:
+        $ref: 'components/face/faceTracking_objects.yaml#/components/requestBodies/EnableDisable'
+      responses:
+        200:
+          $ref: 'components/face/faceTracking_objects.yaml#/components/responses/TrackResult'
+
+  /face/tracking_objects/{id}/list_faces:
+    get:
+      tags:
+        - Face
+      summary: Tracking objects list of The same id
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: 'components/face/faceTracking_objects.yaml#/components/parameters/TrackIDParam'
+      responses:
+        200:
+          $ref: 'components/face/faceTracking_objectsIDList_faces.yaml#/components/responses/200'
+
+  /face/tracking_objects/{id}/remove_faces:
+    post:
+      tags:
+        - Face
+      summary: Delete faces
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: 'components/face/faceTracking_objects.yaml#/components/parameters/TrackIDParam'
+      requestBody:
+        $ref: 'components/face/faceTracking_objectsIDRemove_faces.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'components/face/faceTracking_objectsIDRemove_faces.yaml#/components/responses/200'
+
+  /face/tracking_records:
+    get:
+      tags:
+        - Face
+      summary: View face detection track record list
+      description: |
+        The query criteria `started_at` and `ended_at` can only be selected one at a time
+
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/TrackIDParam'
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/StartAtParam'
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/StartAtParam2'
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/StartAtParam3'
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/StartAtParam4'
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/EndAtParam'
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/EndAtParam2'
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/EndAtParam3'
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/EndAtParam4'
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/CameraIDParam'
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/SiteIDParam'
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/OrgIDParam'
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/EventIDParam'
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/SerialNoParam'
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/NameParam'
+      responses:
+        200:
+          $ref: 'components/face/faceTracking_records.yaml#/components/responses/200'
+  /face/tracking_records/{id}:
+    get:
+      tags:
+        - Face
+      summary: View the specified track record
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/RecordIDParam'
+      responses:
+        200:
+          $ref: 'components/face/faceTracking_records.yaml#/components/responses/RecordResult'
+    delete:
+      tags:
+        - Face
+      summary: Delete the specified track record
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      parameters:
+        - $ref: 'components/face/faceTracking_records.yaml#/components/parameters/RecordIDParam'
+      responses:
+        200:
+          $ref: 'components/common.yaml#/components/responses/200'
+  /face/settings:
+    get:
+      tags:
+        - Face
+      summary: Gets the temperature detection Settings
+      description: |
+        Notice:
+        * `Settings` creation requires `Enable Face Detection` to be checked in `Organization`
+        * To close you need to uncheck `Enable Face Detection` in `Organization`
+
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      responses:
+        200:
+          $ref: 'components/face/faceSettings.yaml#/components/responses/200'
+    put:
+      tags:
+        - Face
+      summary: Modify the temperature detection Settings
+      description: |
+        Perms:
+        * ...
+
+        Face interface reports an error when err['code']=-1
+      requestBody:
+        $ref: 'components/face/faceSettings.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: 'components/face/faceSettings.yaml#/components/responses/200'
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    X_APP:
+      type: apiKey
+      in: header
+      name: X-APP

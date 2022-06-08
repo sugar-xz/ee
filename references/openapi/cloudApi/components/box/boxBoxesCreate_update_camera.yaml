@@ -1,0 +1,602 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/CreateRequest'
+              - $ref: '#/components/schemas/UpdateRequest'
+          examples:
+            Create:
+              $ref: '#/components/examples/CreateRequest'
+            Update:
+              $ref: '#/components/examples/UpdateRequest'
+  responses:
+    200:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            Create:
+              $ref: '#/components/examples/Result'
+
+  schemas:
+    CreateRequest:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            description: Camera name
+          raw_address:
+            type: string
+            description: Raw IP address of the camera
+          type:
+            type: string
+            description: Algorithm product type
+          notifies:
+            type: string
+            description: Notify the configuration
+          username:
+            type: string
+            description: User name of the camera
+          password:
+            type: string
+            description: Camera password
+          detect_params:
+            type: object
+            properties:
+              threshold:
+                type: number
+                description: Camera detection parameter
+          mode:
+            type: string
+            description: Camera state
+            enum:
+              - on
+              - off
+              - schedule
+          uri:
+            type: string
+            description: Camera uri video streaming
+          hd_uri:
+            type: string
+            description: Camera hd_uri video streaming
+          default_params:
+            type: object
+            properties:
+              param:
+                type: string
+                description: Custom parameter
+          rules:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Detection rule name
+                mode:
+                  type: string
+                  description: Camera detects the rule state
+                  enum:
+                    - on
+                    - off
+                    - schedule
+                algo:
+                  type: string
+                  description: Detection algorithm（rule2.0）
+                schedule:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      description: Camera rule type
+                    time_slots:
+                      type: array
+                      items:
+                        type: string
+                        description: Period of rule type time
+                params_base:
+                  type: string
+                  description: Fill in the key value for default_params
+                params:
+                  type: object
+                  properties:
+                    param:
+                      type: string
+                      description: Custom parameter
+          updated_at:
+            type: string
+            description: Data update time
+            format: date-time
+          upload_video_enabled:
+            type: boolean
+            description: Upload video or not
+            enum:
+              - true
+              - false
+          location:
+            type: string
+            description: Camera location
+          note:
+            type: object
+            description: Note info
+          should_push:
+            type: boolean
+            description: Should push events to backend
+            enum:
+              - true
+              - false
+          state:
+            type: string
+            description: Camera status
+            enum:
+              - process
+              - ready
+              - running
+              - offline
+          brand:
+            type: string
+            enum:
+              - hikivision
+              - fdt
+              - dahua
+              - axis
+              - wansview
+    UpdateRequest:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: Camera id
+            format: int32
+          name:
+            type: string
+            description: Camera name
+          raw_address:
+            type: string
+            description: Raw IP address of the camera
+          mac_address:
+            type: string
+            description: IP address of the camera
+          type:
+            type: string
+            description: Algorithm product type
+          notifies:
+            type: string
+            description: Notify the configuration
+          username:
+            type: string
+            description: User name of the camera
+          password:
+            type: string
+            description: Camera password
+          detect_params:
+            type: object
+            properties:
+              threshold:
+                type: number
+                description: Camera detection parameter
+          mode:
+            type: string
+            description: Camera state
+            enum:
+              - on
+              - off
+              - schedule
+          uri:
+            type: string
+            description: Camera uri video streaming
+          hd_uri:
+            type: string
+            description: Camera hd_uri video streaming
+          rules:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: Rule name
+                  format: int32
+                name:
+                  type: string
+                  description: Detection rule name
+                mode:
+                  type: string
+                  description: Camera detects the rule state
+                  enum:
+                    - on
+                    - off
+                    - schedule
+                algo:
+                  type: string
+                  description: Detection algorithm（rule2.0）
+                schedule:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      description: Camera rule type
+                    time_slots:
+                      type: array
+                      items:
+                        type: string
+                        description: Period of rule type time
+                params_base:
+                  type: string
+                  description: Fill in the key value for default_params
+                params:
+                  type: object
+                  properties:
+                    param:
+                      type: string
+                      description: Custom parameter
+          updated_at:
+            type: string
+            description: Data update time
+            format: date-time
+          upload_video_enabled:
+            type: boolean
+            description: Upload video or not
+            enum:
+              - true
+              - false
+          location:
+            type: string
+            description: Camera location
+          note:
+            type: object
+            description: Note info
+          should_push:
+            type: boolean
+            description: Should push events to backend
+            enum:
+              - true
+              - false
+          state:
+            type: string
+            description: Camera status
+            enum:
+              - process
+              - ready
+              - running
+              - offline
+          brand:
+            type: string
+            enum:
+              - hikivision
+              - fdt
+              - dahua
+              - axis
+              - wansview
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                created:
+                  type: boolean
+                  description: Create camera
+                  enum:
+                    - true
+                    - false
+                updated:
+                  type: boolean
+                  description: Update camera
+                  enum:
+                    - true
+                    - false
+                cameras:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: Camera id
+                        format: int32
+                      name:
+                        type: string
+                        description: Camera name
+                      raw_address:
+                        type: string
+                        description: Raw IP address of the camera
+                      mac_address:
+                        type: string
+                        description: IP address of the camera
+                      type:
+                        type: string
+                        description: Algorithm product type
+                      notifies:
+                        type: string
+                        description: Notify the configuration
+                      username:
+                        type: string
+                        description: User name of the camera
+                      password:
+                        type: string
+                        description: Camera password
+                      detect_params:
+                        type: object
+                        properties:
+                          threshold:
+                            type: number
+                            format: float
+                            description: Camera detection parameter
+                      mode:
+                        type: string
+                        description: Camera state
+                        enum:
+                          - on
+                          - off
+                          - schedule
+                      uri:
+                        type: string
+                        description: Camera uri video streaming
+                      hd_uri:
+                        type: string
+                        description: Camera hd_uri video streaming
+                      rules:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              description: Detection rule name
+                            mode:
+                              type: string
+                              description: Camera detects the rule state
+                              enum:
+                                - on
+                                - off
+                                - schedule
+                            id:
+                              type: integer
+                              description: Rule id
+                            start_at:
+                              type: integer
+                              description: Algorithm detects the start time
+                              format: int32
+                            end_at:
+                              type: integer
+                              description: Algorithm detects the end time
+                              format: int32
+                            algos:
+                              type: string
+                              description: Detection algorithm（rule1.0）
+                            algo:
+                              type: string
+                              description: Detection algorithm（rule2.0）
+                            region:
+                              type: string
+                              description: Detection range
+                            schedule:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                  description: Camera rule type
+                                time_slots:
+                                  type: array
+                                  items:
+                                    type: string
+                                    description: Period of rule type time
+                            params_base:
+                              type: string
+                              description: Fill in the key value for default_params
+                            params:
+                              type: object
+                              properties:
+                                param:
+                                  type: string
+                                  description: Custom parameter
+                            unique_id:
+                              type: string
+                              description: Rule unique id
+                      upload_video_enabled:
+                        type: boolean
+                        description: Upload video or not
+                        enum:
+                          - true
+                          - false
+                      location:
+                        type: string
+                        description: Camera location
+                      note:
+                        type: object
+                        description: Note info
+                      should_push:
+                        type: boolean
+                        description: Should push events to backend
+                        enum:
+                          - true
+                          - false
+                      updated_at:
+                        type: string
+                        description: Data update time
+                        format: date-time
+                      default_params:
+                        type: object
+                        properties:
+                          param:
+                            type: string
+                            description: Custom parameter
+                      state:
+                        type: string
+                        description: Camera status
+                        enum:
+                          - process
+                          - ready
+                          - running
+                          - offline
+                      brand:
+                        type: string
+                        enum:
+                          - hikivision
+                          - fdt
+                          - dahua
+                          - axis
+                          - wansview
+                      snapshot:
+                        type: object
+                        properties:
+                          url:
+                            type: string
+                            description: Snapshot url path
+                      user_id:
+                        type: integer
+                        description: User id
+                        format: int32
+                      version:
+                        type: integer
+                        description: Camera version
+                        format: int64
+
+  examples:
+    CreateRequest:
+      value:
+        - name: camera_name
+          raw_address: 3c:ef:8c:31:df:32
+          type: ""
+          notifies: ""
+          username: admin
+          password: 123456q
+          detect_params:
+            threshold: '0.800000011920929'
+          mode: 'on'
+          uri: rtsp://192.168.1.101/cam/realmonitor?channel=6&subtype=1
+          hd_uri: rtsp://192.168.1.101/cam/realmonitor?channel=6&subtype=0
+          default_params:
+            Key:
+              test: 123
+          rules:
+            - mode: 'schedule'
+              schedule:
+                type: daily
+                time_slots:
+                  - - 1070
+                    - 1220
+              name: test
+              params_base: base
+              params:
+                a: b124
+          updated_at: 2019-09-16 11:25:17
+          upload_video_enabled: true
+          location: null
+          note:
+            {}
+          should_push: true
+          state: offline
+          brand: ""
+
+    UpdateRequest:
+      value:
+        - id: 237
+          name: camera_name
+          raw_address: 3c:ef:8c:31:df:32
+          mac_address: 3c:ef:8c:31:df:32
+          type: ""
+          notifies: ""
+          username: admin
+          password: 123456q
+          detect_params:
+            threshold: '0.800000011920929'
+          mode: 'off'
+          uri: rtsp://192.168.1.101/cam/realmonitor?channel=6&subtype=1
+          hd_uri: rtsp://192.168.1.101/cam/realmonitor?channel=6&subtype=0
+          rules:
+            - id: 14
+              mode: 'on'
+              start_at: 0
+              end_at: 0
+              algos: person
+              region: ""
+              name: Default Rule
+              params:
+                {}
+            - id: 13
+              mode: on
+              start_at: 0
+              end_at: 0
+              algos: person
+              region: ""
+              name: Default Rule
+              params: {}
+          updated_at: 2019-09-26 11:25:17
+          upload_video_enabled: true
+          location: null
+          note:
+            {}
+          should_push: true
+          state: offline
+          brand: ""
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          created: true
+          updated: false
+          cameras:
+            - id: 237
+              name: test1211
+              raw_address: 3c:ef:8c:31:df:32
+              type: ""
+              notifies: ""
+              username: admin
+              password: q1234567
+              detect_params:
+                threshold: 0.800000011920929
+              mode: on
+              uri: rtsp://192.168.1.101/cam/realmonitor?channel=6&subtype=1
+              hd_uri: rtsp://192.168.1.101/cam/realmonitor?channel=6&subtype=0
+              rules:
+                - name: zawu
+                  mode: on
+                  start_at: 0
+                  end_at: 0
+                  region: ""
+                  algos: ""
+                  algo: zawu
+                  schedule:
+                    type: daily
+                    time_slots:
+                      - - 1070
+                        - 1220
+                  params_base: base
+                  params:
+                    a: b124
+                  unique_id: "46c29c48-f29e-411c-8cf3-b46d567a1bc0"
+              upload_video_enabled: true
+              location: null
+              note: {}
+              should_push: true
+              updated_at: 2019-09-30T03:44:53Z
+              default_params:
+                Key:
+                  test: 1234
+              state: process
+              snapshot:
+                url: ""
+              user_id: 12
+              brand: ""
+              version: 0
+              mac_address: 3c:ef:8c:31:df:32

@@ -1,0 +1,201 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description: Query videos created by robot
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      required:
+        - camera_id
+        - started_at
+        - ended_at
+      properties:
+        camera_id:
+          type: string
+          format: int64
+          description: Camera id
+        snapshot:
+          type: object
+          properties:
+            Key:
+              type: string
+              description: Store file name
+            Bucket:
+              type: string
+              description: Store path
+            meta:
+              type: object
+              properties:
+                file_size:
+                  type: integer
+                  format: int32
+                  description: Image file size
+                size:
+                  type: array
+                  items:
+                    type: string
+                    description: File length and width
+        video:
+          type: object
+          properties:
+            Key:
+              type: string
+              description: Store file name
+            Bucket:
+              type: string
+              description: Store path
+            mete:
+              type: object
+              properties:
+                file_size:
+                  type: integer
+                  format: int32
+                  description: Store file size
+                size:
+                  type: array
+                  items:
+                    type: string
+                    description: File length and width
+        started_at:
+          type: string
+          format: date-time
+          description: Save the create time of the video
+        ended_at:
+          type: string
+          format: date-time
+          description: Save the end time of the video
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  description: Event id
+                camera_id:
+                  type: string
+                  format: int64
+                  description: Camera id
+                snapshot:
+                  type: object
+                  properties:
+                    file_size:
+                      type: integer
+                      format: int32
+                      description: Store file size
+                    size:
+                      type: array
+                      items:
+                        type: string
+                        description: File length and width
+                    Key:
+                      type: string
+                      description: Store file name
+                    Bucket:
+                      type: string
+                      description: Store path
+                    content_type:
+                      type: string
+                    url:
+                      type: string
+                video:
+                  type: object
+                  properties:
+                    file_size:
+                      type: integer
+                      format: int32
+                      description: Store file size
+                    size:
+                      type: array
+                      items:
+                        type: string
+                        description: File length and width
+                    Key:
+                      type: string
+                      description: Store file name
+                    Bucket:
+                      type: string
+                      description: Store path
+                    content_type:
+                      type: string
+                    url:
+                      type: string
+                started_at:
+                  type: string
+                  format: date-time
+                  description: Save the create time of the video
+                ended_at:
+                  type: string
+                  format: date-time
+                  description: Save the end time of the video
+
+  examples:
+    Request:
+      value:
+        camera_id: 1
+        snapshot:
+          Key: users/1/cameras/1/events/logo.jpg
+          Bucket: dev-turingvideo-com
+          meta:
+            file_size: 1123
+            size:
+              - 600,369
+        video:
+          Key: users/1/cameras/1/events/logo.jpg
+          Bucket: dev-turingvideo-com
+          meta:
+            file_size: 4123
+            size:
+              - 600,369
+        started_at: "2019-09-27 06:15:31+00"
+        ended_at: "2019-09-27 06:15:31+00"
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 1
+          camera_id: 1
+          snapshot:
+            Key: users/1/cameras/1/events/logo.jpg
+            Bucket: dev-turingvideo-com
+            content_type: image/jpeg
+            file_size: 1123
+            size:
+              - 600,369
+            url: https://devs-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/1/cameras/1/events/logo.jpg?X-Amz-AlC-SHA256&X-Amz-Credential=AKIA3ADBRQCSDF
+          video:
+            Key: users/1/cameras/1/events/logo.jpg
+            Bucket: dev-turingvideo-com
+            content_type: image/jpeg
+            file_size: 1123
+            size:
+              - 600,369
+            url: https://devs-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/1/cameras/1/events/logo.jpg?X-Amz-AlC-SHA256&X-Amz-Credential=AKIA3ADBRQCSDF
+          started_at: "2019-09-27 06:15:31+00"
+          ended_at: "2019-09-27 06:15:31+00"

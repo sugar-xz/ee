@@ -1,0 +1,79 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      required:
+        - resource_type
+        - user_id
+        - actions
+      properties:
+        resource_type:
+          type: string
+          description: Resource type
+        user_id:
+          type: integer
+          format: int32
+          description: User id
+        actions:
+          type: string
+          description: Code_name of the action you can take on ResourceType. For example, retrieve, create, update, destroy, etc
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                resource_type:
+                  type: string
+                  description: Resource type
+                user_id:
+                  type: integer
+                  format: int32
+                  description: User id
+                sql:
+                  type: string
+                  description: Query sql
+
+  examples:
+    Request:
+      value:
+        resource_type: logic.site
+        user_id: 1
+        actions:
+          - update
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          resource_type: logic.site
+          user_id: 1
+          sql: "SELECT (t._actions) AS \"_actions\",\"auth_user\".\"username\", \"auth_user\".\"timezone\" FROM \"auth_user\" "

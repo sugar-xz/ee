@@ -1,0 +1,17 @@
+# Name: test_default.tavern
+test_name: Guard_admin list
+stages:
+  - type: ref
+    id: login_admin
+  - name: Guard_admin list
+    request:
+      url: "{url}/guard_admin/guard_admins"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

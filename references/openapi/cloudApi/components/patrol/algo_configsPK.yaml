@@ -1,0 +1,63 @@
+openapi: 3.0.2
+components:
+  parameters:
+    ConfigIDParam:
+      in: path
+      name: pk
+      description: AlgorithmConfig id
+      required: true
+      schema:
+        type: integer
+  requestBodies:
+    PatchRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PatchRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PatchRequest'
+  schemas:
+    PatchRequest:
+      type: object
+      properties:
+        algo_id:
+          type: integer
+          format: int32
+          description:
+            Algorithm id
+
+            * When modifying thresholds, you need to pass in algo_id
+        params:
+          type: string
+          description: Algorithm parameter information
+        thresholds:
+          type: string
+          description: Algorithm parameter information
+        schedules:
+          type: string
+          description: Daily scheduling information
+        enabled:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Whether to enable
+        fetch_tasks_count:
+          type: integer
+          format: int32
+          description: The number of historical tasks required by the algorithm service
+
+  examples:
+    PatchRequest:
+      value:
+        algo_id: 4
+        params: {}
+        thresholds: {}
+        schedules:
+          -
+            - 1070
+            - 1220
+        enabled: True
+        fetch_tasks_count: 0

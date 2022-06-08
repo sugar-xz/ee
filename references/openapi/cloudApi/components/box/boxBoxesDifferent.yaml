@@ -1,0 +1,114 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      properties:
+        boxes:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Box id
+              version:
+                type: integer
+                description: Box version
+                format: int32
+
+    Result:
+      description: View boxes information
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                updates:
+                  type: array
+                  items:
+                    $ref: 'boxBoxes.yaml#/components/schemas/BoxInfo'
+                deletes:
+                  type: array
+                  items:
+                    type: string
+
+  examples:
+    Request:
+      value:
+        boxes:
+          - id: 0
+            version: 1
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          updates:
+            - id: box_dog_sr_10001
+              user_id: 12
+              max_camera_cnt: 100
+              camera_cnt: 1
+              max_detect_cnt: 100
+              paid_cnt: 0
+              created_at: '2019-06-27T01:46:19Z'
+              updated_at: '2019-09-29T08:12:35Z'
+              state:
+                name: 'online'
+                label: 'Online'
+              scene: 851,
+              sequence: 331,
+              billing:
+                name: 'paid'
+                label: 'Paid'
+              upload_video_expire: 1209600
+              upload_event_expire: 1209600
+              version: 2388
+              type: 'pc_v1'
+              ip_address: '192.168.0.119'
+              meta:
+                agent:
+                  name:
+                    name: Box
+                    label: Turing Box
+                  level: 0
+                  version: '0.14.0pre'
+                  upgradable: null
+                  outdated: null
+                  upgrading: null
+                max_camera_cnt: 100
+                max_detect_cnt: 100
+              cameras:
+                - id: 163
+                  name: 'asdgghh'
+              timezone: 'UTC'
+              site: 2
+          deletes:
+            -

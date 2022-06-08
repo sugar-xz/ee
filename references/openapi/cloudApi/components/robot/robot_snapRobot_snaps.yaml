@@ -1,0 +1,214 @@
+openapi: 3.0.2
+components:
+  parameters:
+    SnapIDParam:
+      in: path
+      name: id
+      required: true
+      description: Snap ID
+      schema:
+        type: integer
+        format: int64
+  requestBodies:
+    CreateRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/CreateRequest'
+  responses:
+    SnapListResult:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SnapListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/SnapListResult'
+    CreateResult:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateResult'
+          examples:
+            response:
+              $ref: '#/components/examples/CreateResult'
+  schemas:
+    CreateRequest:
+      type: object
+      required:
+        - timestamp
+        - file
+      properties:
+        camera:
+          type: string
+          description: Robot camera name
+        type:
+          type: string
+          description: Snaps type
+        timestamp:
+          type: string
+          format: date-time
+          description: Snaps time
+        file:
+          type: object
+          required:
+            - meta
+            - Key
+            - Bucket
+          properties:
+            Key:
+              type: string
+              description: Store file name
+            Bucket:
+              type: string
+              description: Video path
+            meta:
+              type: object
+              required:
+                - file_size
+                - content_type
+              properties:
+                file_size:
+                  type: integer
+                  format: int32
+                  description: Video file size
+                content_type:
+                  type: string
+                  description: File content type
+        should_update_snapshot:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Whether to update the snapshot
+
+    CreateResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/SnapInfo'
+    SnapInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Robot snap id
+        robot_id:
+          type: string
+          description: Robot id
+        camera:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Robot camera name
+            lablel:
+              type: string
+              description: Robot camera name label
+        type:
+          type: string
+          enum:
+            - view
+            - event
+          description: Snaps type
+        timestamp:
+          type: string
+          format: date-time
+        file:
+          type: object
+          properties:
+            file_size:
+              type: integer
+              format: int32
+              description: File size
+            content_type:
+              type: string
+              description: File content type
+            url:
+              type: string
+              description: File url path
+
+    SnapListResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                next:
+                  type: string
+                  description: Url of next page
+                previous:
+                  type: string
+                  description: Url of previous page
+                results:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SnapInfo'
+
+  examples:
+    CreateRequest:
+      value:
+        camera: front
+        type: event
+        timestamp: "2019-09-26T06:17:57Z"
+        file:
+          Key: "users/1/cameras/1/events/logo.jpg"
+          Bucket: "develop-data-turingvideo-com"
+          meta:
+            file_size: 8888
+            content_type: "image/jpeg"
+        should_update_snapshot: true
+
+    CreateResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 88
+          robot_id: robot_dog_sr_20002
+          camera:
+            name: front
+            lablel: Front camera
+          timestamp: "2019-09-26T06:17:57Z"
+          file:
+            file_size: 8888
+            content_type: "image/jpeg"
+            url: "https://develop-data-turingvideo-com.s3.cn-norws4585edc98bfc46"
+          type: event
+
+    SnapListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          next: null
+          previous: null
+          results:
+            - id: 88
+              robot_id: robot_dog_sr_20002
+              camera:
+                name: front
+                lablel: Front camera
+              timestamp: "2019-09-26T06:17:57Z"
+              file:
+                file_size: 8888
+                content_type: "image/jpeg"
+                url: "https://develop-data-turingvideo-com.s3.cn-norws4_reque6"
+              type: event

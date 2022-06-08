@@ -1,0 +1,25 @@
+# Name: test_default.tavern
+test_name: Get Config:(if sequence not same, get the camera)
+stages:
+  - type: ref
+    id: box_initiate
+  - type: ref
+    id: box_authenticate
+  - name: Get Config:(if sequence not same, get the camera)
+    request:
+      url: "{url}/box/boxes/get_config"
+      method: GET
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          sequence: !anyint
+          config: !anything
+            cameras: !anything
+            box: !anything
+              user_id: !anyint
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

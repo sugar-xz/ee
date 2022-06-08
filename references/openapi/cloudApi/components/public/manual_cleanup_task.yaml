@@ -1,0 +1,191 @@
+openapi: 3.0.2
+
+components:
+  schemas:
+    TaskRequest:
+      type: object
+      description: The following values are not filled
+        in the corresponding values in the default use logic_organization
+      properties:
+        events_expire:
+          type: integer
+          format: int32
+          description: Events expire time
+        videos_expire:
+          type: integer
+          format: int32
+          description: Videos expire time
+        snaps_expire:
+          type: integer
+          format: int32
+          description: Snaps expire time
+        saved_videos_expire:
+          type: integer
+          format: int32
+          description: Saved_videos expire time
+        robot_assets_expire:
+          type: integer
+          format: int32
+          description: Robot_assets expire time
+        analytics_robot_logs_expire:
+          type: integer
+          format: int32
+          description: Analytics_robot_logs expire time
+        analytics_robot_lidar_expire:
+          type: integer
+          format: int32
+          description: Analytics_robot_lidar expire time
+        camera_preview_expire:
+          type: integer
+          format: int32
+          description: Camera_preview expire time
+        camera_samples_expire:
+          type: integer
+          format: int32
+          description: Camera_samples expire time
+    TaskListResult:
+      description: View all manual cleanup task information
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/TaskInfo'
+    TaskResult:
+      description: View the information of Manual cleanup task
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/TaskInfo'
+    TaskInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Manual cleanup task id
+          format: int32
+        started_at:
+          type: string
+          format: date-time
+          description: Task start time
+        ended_at:
+          type: string
+          format: date-time
+          description: Task end time
+        status:
+          type: string
+          description: Task status
+          enum:
+            - created
+            - running
+            - ended
+        result:
+          type: string
+          description: Task result
+          enum:
+            - Success
+            - Fail
+        params:
+          type: object
+          properties:
+            events_expire:
+              type: integer
+              format: int32
+              description: Events expire time
+            videos_expire:
+              type: integer
+              format: int32
+              description: Videos expire time
+            snaps_expire:
+              type: integer
+              format: int32
+              description: Snaps expire time
+            saved_videos_expire:
+              type: integer
+              format: int32
+              description: Saved_videos expire time
+            robot_assets_expire:
+              type: integer
+              format: int32
+              description: Robot_assets expire time
+            analytics_robot_logs_expire:
+              type: integer
+              format: int32
+              description: Analytics_robot_logs expire time
+            analytics_robot_lidar_expire:
+              type: integer
+              format: int32
+              description: Analytics_robot_lidar expire time
+            camera_preview_expire:
+              type: integer
+              format: int32
+              description: Camera_preview expire time
+            camera_samples_expire:
+              type: integer
+              format: int32
+              description: Camera_samples expire time
+
+  examples:
+    ParamIsNull:
+      value:
+        {}
+    TaskRequest:
+      value:
+        events_expire: 0
+        videos_expire: 0
+        snaps_expire: 0
+        saved_videos_expire: 0
+        robot_assets_expire: 0
+        analytics_robot_logs_expire: 0
+        analytics_robot_lidar_expire: 0
+        camera_preview_expire: 0
+        camera_samples_expire: 0
+    TaskListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 1
+          next: null
+          previous: null
+          results:
+            - id: 1
+              started_at: '2020-05-21T09:12:05Z'
+              ended_at: null
+              status: created
+              result: ''
+              params:
+                events_expire: 0
+                videos_expire: 0
+                snaps_expire: 0
+                saved_videos_expire: 0
+                robot_assets_expire: 0
+                analytics_robot_logs_expire: 0
+                analytics_robot_lidar_expire: 0
+                camera_preview_expire: 0
+                camera_samples_expire: 0
+
+    TaskResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+            - id: 1
+              started_at: '2020-05-21T09:12:05Z'
+              ended_at: null
+              status: ended
+              result: 'Success'
+              params: {}

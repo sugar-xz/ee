@@ -1,0 +1,26 @@
+openapi: 3.0.2
+
+components:
+  schemas:
+    GlobalResult:
+      description: View by Algorithm product type
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                version:
+                  type: integer
+                  format: int32
+
+  examples:
+    GlobalResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          version: 0

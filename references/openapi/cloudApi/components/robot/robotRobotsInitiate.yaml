@@ -1,0 +1,63 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Robot id
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              description: Content returned by request (JSON type)
+              properties:
+                id:
+                  type: string
+                  description: Robot id
+                challenge:
+                  type: string
+
+
+  examples:
+    Request:
+      value:
+        id: robot_dog_sr_20002
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: robot_dog_sr_20002
+          challenge: "fAeaEQlYUiGbgDfDVdIQSeQY1xwQZA6fnpCKoMTLoSXZuJ0vymiQ7xus="

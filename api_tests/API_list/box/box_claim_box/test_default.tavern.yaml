@@ -1,0 +1,63 @@
+# Name: test_default.tavern
+test_name: Claim box
+stages:
+  - type: ref
+    id: login_customer
+  - &unclaim_box_anthor
+    name: unclaim box
+    request:
+      url: "{url}/box/boxes/unclaim"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+      json:
+        id: "{claim_box_id}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+  - name: claim box
+    request: &claim_box_anthor
+      url: "{url}/box/boxes/claim"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+      json:
+        id: "{claim_box_id}"
+        signature: "chelsLzm+vaOLY/BL89/smLjmC2xvv01JPeowQq5XJM="
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Claim box error
+marks:
+  - parametrize:
+      key:
+        - err_id
+        - err_signature
+      vals:
+        - ["box_dog_sr_50002222", "HC3DIkha0jn0WCsrXX0007lygG3sT943nJBsPELBpi8="]
+        - ["box_dog_sr_50001", "HC3DIkha0jn0WCsrXX0007lygG3sT943nJBsPELBpi8="]
+        - ["box_dog_sr_50002", "Hs3DIkha0jn0WCsrXX0007lygG3sT943nJBsPELBpi8="]
+stages:
+  - type: ref
+    id: login_customer
+  - *unclaim_box_anthor
+  - name: Claim box
+    request:
+      <<: *claim_box_anthor
+      json:
+        id: "{err_id}"
+        signature: "{err_signature}"
+    response:
+      status_code: 409
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_409

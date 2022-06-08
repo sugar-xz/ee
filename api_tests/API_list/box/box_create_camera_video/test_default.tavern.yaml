@@ -1,0 +1,36 @@
+# Name: test_default.tavern
+test_name: Create Camera Video
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_initiate
+  - type: ref
+    id: box_authenticate
+  - name: Create Camera Video
+    request:
+      url: "{url}/camera_video/camera_videos"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        camera_id: "{camera_id}"
+        started_at: "2017-10-19T06:00:57.262076Z"
+        ended_at: "2017-10-19T06:01:57.262076Z"
+        video:
+          meta:
+            file_size: 1000
+            content_type: "video/mp4"
+          Key: "users/3/cameras/3/videos/8d40608c-9090-4e5a-98f4-26415058b487"
+          Bucket: "develop-data-turingvideo-com"
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !anyint
+          camera_id: !int "{camera_id}"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1

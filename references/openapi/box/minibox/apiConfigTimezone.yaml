@@ -1,0 +1,66 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PostRequest'
+  responses:
+    TimezoneResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TimezoneResult'
+          examples:
+            response:
+              $ref: '#/components/examples/TimezoneResult'
+    PostResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TimezoneResult'
+          examples:
+            response:
+              $ref: '#/components/examples/PostResult'
+  schemas:
+    TimezoneResult:
+      allOf:
+        - $ref: 'common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                timezone:
+                  type: string
+                  description: Current timezone
+
+    PostRequest:
+      type: object
+      properties:
+        timezone:
+          type: string
+          description: Current timezone
+
+  examples:
+    PostRequest:
+      value:
+        timezone: America/Los_Angeles
+    TimezoneResult:
+      value:
+        code: 0
+        msg: ok
+        data:
+          timezone: Asia/Shanghai
+    PostResult:
+      value:
+        code: 0
+        msg: ok
+        data: null

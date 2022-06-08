@@ -1,0 +1,99 @@
+openapi: 3.0.2
+components:
+  parameters:
+    SiteIDParam:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+        format: int64
+      description: Site id
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      required:
+        - map_id
+        - name
+        - index
+      properties:
+        site_id:
+          type: integer
+          format: int64
+          description: Site id
+        map_id:
+          type: integer
+          format: int32
+          description: Map id
+        name:
+          type: string
+          description: Site_map name
+        index:
+          type: integer
+          format: int32
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int32
+                  description: Site_map id
+                site_id:
+                  type: integer
+                  format: int64
+                  description: Site id
+                map_id:
+                  type: integer
+                  format: int32
+                  description: Map id
+                name:
+                  type: string
+                  description: Site_map name
+                index:
+                  type: integer
+                  format: int32
+
+  examples:
+    Request:
+      value:
+        site_id: 1
+        map_id: 1
+        name: test
+        index: 0
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 1
+          site_id: 1
+          map_id: 1
+          name: test
+          index: 0

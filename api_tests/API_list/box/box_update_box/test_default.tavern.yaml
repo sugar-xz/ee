@@ -1,0 +1,51 @@
+# Name: test_default.tavern
+test_name: Update box
+marks:
+  - parametrize:
+      key: err_timezone
+      vals:
+        - ""
+        - "utc"
+        - "UTC"
+stages:
+  - type: ref
+    id: login_customer
+  - name: Update box
+    request:
+      url: "{url}/box/boxes/{test_box_id}"
+      method: PUT
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+      json:
+        timezone: "{err_timezone}"
+    response:
+      status_code:
+        - 200
+        - 503
+ #   delay_after: 1
+
+---
+test_name: Update box error
+marks:
+  - parametrize:
+      key: err_timezone
+      vals:
+        - "12312"
+        - "utcqweq"
+        - "sadsada"
+stages:
+  - type: ref
+    id: login_customer
+  - name: Update box error
+    request:
+      url: "{url}/box/boxes/{test_box_id}"
+      method: PUT
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+      json:
+        timezone: "{err_timezone}"
+    response:
+      status_code: 400
+ #   delay_after: 1

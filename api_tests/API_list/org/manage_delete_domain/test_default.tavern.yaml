@@ -1,0 +1,17 @@
+# Name: test_default.tavern
+test_name: Delete domain type (org put)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Delete domain type
+    request:
+      url: "{url}/domain/domains/4"
+      method: DELETE
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

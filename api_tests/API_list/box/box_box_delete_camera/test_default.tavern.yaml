@@ -1,0 +1,74 @@
+# Name: test_default.tavern
+test_name: Box delete camera
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_debug_login
+  - name: Delete camera
+    request:
+      url: "{url}/box/boxes/delete_cameras"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        - id: "{delete_camera_id}"
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_camera_delete
+---
+test_name: Abnormally delete camera
+marks:
+  - parametrize:
+      key: err_id
+      vals:
+        - ￥%…………#￥
+        - ""
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_debug_login
+  - name: Delete a camera with an empty id
+    request:
+      url: "{url}/box/boxes/delete_cameras"
+      method: POST
+      headers: &headers_anchor
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      cookies:
+        - sessionid
+        - csrftoken
+      json:
+        - id: "{err_id}"
+    response:
+      status_code: 400
+ #   delay_after: 1
+---
+test_name: Delete non-existent camera
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_debug_login
+  - name: Delete the camera whose id does not exist
+    request:
+      url: "{url}/box/boxes/delete_cameras"
+      method: POST
+      headers: *headers_anchor
+      cookies:
+        - sessionid
+        - csrftoken
+      json:
+        - id: "12345678912345"
+    response:
+      status_code: 200
+      body:
+        ret:
+          deleting: false

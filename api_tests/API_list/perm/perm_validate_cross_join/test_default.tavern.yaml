@@ -1,0 +1,94 @@
+# Name: test_default.tavern
+test_name: Validate Cross Join (perm)
+marks:
+  - parametrize:
+      key:
+        - resource_type
+        - user_id
+        - actions
+      vals:
+        - [auth.user, 1, update]
+        - [auth.user, 1, create]
+        - [auth.user, 1, retrieve]
+        - [auth.user, 1, destroy]
+stages:
+  - type: ref
+    id: login_admin
+  - name: Validate Cross Join
+    request:
+      url: "{url}/perm/validate_cross_join"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        resource_type: "{resource_type}"
+        user_id: "{user_id}"
+        actions: "{actions}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Validate Cross Join err(perm)
+marks:
+  - parametrize:
+      key:
+        - resource_type
+        - user_id
+        - actions
+      vals:
+        - [auth.user, "", ""]
+        - [auth.user, 1, updatesss]
+stages:
+  - type: ref
+    id: login_admin
+  - name: Validate Cross Join
+    request:
+      url: "{url}/perm/validate_cross_join"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        resource_type: "{resource_type}"
+        user_id: "{user_id}"
+        actions: "{actions}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          error: !!str "You have no permission. (permission)"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Validate Cross Join err(perm)
+marks:
+  - parametrize:
+      key:
+        - resource_type
+        - user_id
+        - actions
+      vals:
+        - ["", "", ""]
+        - [auth.users, 1, update]
+stages:
+  - type: ref
+    id: login_admin
+  - name: Validate Cross Join
+    request:
+      url: "{url}/perm/validate_cross_join"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        resource_type: "{resource_type}"
+        user_id: "{user_id}"
+        actions: "{actions}"
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400

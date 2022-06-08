@@ -1,0 +1,168 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+
+  schemas:
+    Request:
+      type: object
+      properties:
+        scene:
+          type: integer
+          format: int32
+          description: Scene id
+        state:
+          type: object
+          properties:
+            cameras:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Camera id
+                    format: int32
+                  snapshot:
+                    type: object
+                    properties:
+                      Key:
+                        type: string
+                        description: Store file name
+                      Bucket:
+                        type: string
+                        description: Store path
+                      meta:
+                        type: object
+                        properties:
+                          file_size:
+                            type: integer
+                            description: Image file size
+                            format: int32
+                          size:
+                            type: array
+                            items:
+                              type: string
+                              description: Picture length and width
+                          content_type:
+                            type: string
+                            description: Picture content type
+                  state:
+                    type: string
+                    description: Camera state
+                    enum:
+                      - process
+                      - ready
+                      - running
+                      - offline
+        partial:
+          type: boolean
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                scene:
+                  type: integer
+                  description: Scene id
+                  format: int32
+                state:
+                  type: object
+                  properties:
+                    cameras:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            description: Camera id
+                            format: int32
+                          snapshot:
+                            type: object
+                            properties:
+                              file_size:
+                                type: integer
+                                description: Image file size
+                              size:
+                                type: array
+                                items:
+                                  type: string
+                                  description: Picture length and width
+                              content_type:
+                                type: string
+                                description: Picture content type
+                              url:
+                                type: string
+                                description: Store url
+                          state:
+                            type: string
+                            description: Camera state
+                            enum:
+                              - process
+                              - ready
+                              - running
+                              - offline
+
+  examples:
+    Request:
+      value:
+        scene: 0
+        state:
+          cameras:
+            - id: 1
+              snapshot:
+                Key: key
+                Bucket: develop-data-turingvideo-com
+                meta:
+                  file_size: 1888
+                  size:
+                    - 640
+                    - 360
+                  content_type: image/jpeg
+              state: ready
+        partial: false
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          scene: 0
+          state:
+            cameras:
+              - id: 1
+                snapshot:
+                  file_size: 1888
+                  size:
+                    - 640
+                    - 360
+                  content_type: image/jpeg
+                  url: www.baidu.com
+                state: ready

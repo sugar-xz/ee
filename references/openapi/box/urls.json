@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Minibox",
+    "url": "box/minibox.yaml"
+  },
+  {
+    "name": "Superbox",
+    "url": "box/superbox.yaml"
+  }
+]

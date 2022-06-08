@@ -1,0 +1,73 @@
+# Name: test_default.tavern
+test_name: Box update camera & box更新camera
+stages:
+  - type: ref
+    id: login_customer
+  - id: box_debug_login
+    name: The test needs debug_login to make the browser simulate BOX
+    request:
+      url: "{url}/box/boxes/debug_login"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        id: "{claim_box_id}"
+        type: "{box_type}"
+        ip_address: "{box_ip_address}"
+        challenge: "challenge"
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: "{claim_box_id}"
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+  - name: Updata camera
+    request:
+      url: "{url}/box/boxes/create_or_update_cameras"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        - id: "{update_camera_id}"
+          name: test_update
+          raw_address: 3c:ef:6c:13:dd:75
+          mac_address: 3c:ef:6c:13:dd:75
+          type: ""
+          notifies: ""
+          username: admin
+          password: ww123456
+          detect_params:
+            threshold: '0.800000011920929'
+          mode: 'off'
+          uri: rtsp://192.168.1.101/cam/realmonitor?channel=6&subtype=1
+          hd_uri: rtsp://192.168.1.101/cam/realmonitor?channel=6&subtype=0
+          rules:
+            - id: 8
+              mode: 'on'
+              start_at: 0
+              end_at: 0
+              algo: person:0  # rule 2.0
+#              algos: person  # rule 1.0
+              region: ""
+              name: Default Rule
+              params:
+                {}
+          updated_at: "2019-09-17 11:25:17"
+          upload_video_enabled: true
+          location: null
+          note:
+            {}
+          should_push: true
+          state: offline
+          brand: ""
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1

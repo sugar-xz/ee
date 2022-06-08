@@ -1,0 +1,46 @@
+# Name: test_default.tavern
+test_name: Update State box
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_initiate
+  - type: ref
+    id: box_authenticate
+  - name: Update State box
+    request:
+      url: "{url}/box/boxes/update_state"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        X-APP: "Box/{box_level}/{box_version}"
+        Referer: "{Referer}"
+      json:
+        scene: 0
+        state:
+          cameras:
+            - id: "{camera_id}"
+              snapshot:
+                Key: key
+                Bucket: develop-data-turingvideo-com
+                meta:
+                  file_size: 1888
+                  size:
+                    - 640
+                    - 360
+                  content_type: image/jpeg
+              state: ready
+        partial: false
+    response:
+      status_code: 200
+      body:
+        ret:
+          scene: 0
+          state:
+            cameras:
+              - id: !int "{camera_id}"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+

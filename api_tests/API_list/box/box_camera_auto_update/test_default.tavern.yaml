@@ -1,0 +1,63 @@
+# Name: test_default.tavern
+test_name: Box auto update
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_initiate
+  - type: ref
+    id: box_authenticate
+  - name: box auto update
+    request:
+      url: "{url}/camera/cameras/auto_update"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        camera_id: "{camera_id}"
+        host: "{camera_host}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+---
+test_name: Box auto update
+marks:
+  - parametrize:
+      key:
+        - err_camera_id
+        - err_host
+      vals:
+        - ["", ""]
+        - ["{camera_id}", ""]
+        - ["", "{camera_host}"]
+        - ["123abc", "{camera_host}"]
+        - ["{camera_id}", "192.168.1.1.1"]
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_initiate
+  - type: ref
+    id: box_authenticate
+  - name: box auto update
+    request:
+      url: "{url}/camera/cameras/auto_update"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        camera_id: "{err_camera_id}"
+        host: "{err_host}"
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+ #   delay_after: 1

@@ -1,0 +1,81 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      properties:
+        scope:
+          type: string
+          description: A resource scope is an expression that returns a set of queries for a resource type
+        user_id:
+          type: integer
+          format: int32
+          description: User id
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                total:
+                  type: integer
+                  format: int32
+                  description: Total number of instances
+                model:
+                  type: string
+                  description: Resource type
+                qs:
+                  type: string
+                  description: Resource instances
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      pk:
+                        type: integer
+                        format: int32
+                        description: User id
+
+  examples:
+    Request:
+      value:
+        scope: logic.box/Q(user_id={user_id}
+        user_id: 1
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          total: 1
+          model: logic.box
+          qs: "<AlgorithmQuerySet [<Box: box_dog_sr_50006>]>"
+          data:
+            - pk: 1

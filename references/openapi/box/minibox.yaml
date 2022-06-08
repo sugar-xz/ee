@@ -1,0 +1,260 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{domain}:{port}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'http'
+      domain:
+        default: localhost.turingvideo.cn
+      port:
+        default: '8080'
+
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: MiniBox API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Config
+  - name: Camera
+  - name: Event
+
+paths:
+  /api/config/t:
+    get:
+      tags:
+        - Config
+      summary: Get Temperature unit
+      description: Get temperature unit for outputting event data.
+      responses:
+        200:
+          $ref: 'minibox/apiConfigT.yaml#/components/responses/UnitResult'
+    post:
+      tags:
+        - Config
+      summary: Set Temperature unit
+      description: Set temperature unit for outputting event data.
+      requestBody:
+        $ref: 'minibox/apiConfigT.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'minibox/apiConfigT.yaml#/components/responses/PostResult'
+
+  /api/config/timezone:
+    get:
+      tags:
+        - Config
+      summary: Get current timezone
+      description: Get current timezone from this minibox
+      responses:
+        200:
+          $ref: 'minibox/apiConfigTimezone.yaml#/components/responses/TimezoneResult'
+    post:
+      tags:
+        - Config
+      summary: Set current timezone
+      description: Set current timezone from this minibox
+      requestBody:
+        $ref: 'minibox/apiConfigTimezone.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'minibox/apiConfigTimezone.yaml#/components/responses/PostResult'
+  /api/config/timezones:
+    get:
+      tags:
+        - Config
+      summary: Get all timezones
+      description: Get all supportted timezones from this minibox
+      responses:
+        200:
+          $ref: 'minibox/apiConfigTimezones.yaml#/components/responses/200'
+  /api/config/event_saved_time:
+    get:
+      tags:
+        - Config
+      summary: Get event saved hours
+      description: |
+        * Get hours event will be saved.
+        * Don't save event locally when event_saved_hours is 0.
+        * If event_saved_hours is large then 0, remove expired events every minute.
+      responses:
+        200:
+          $ref: 'minibox/apiConfigEvent_saved_days.yaml#/components/responses/200'
+    post:
+      tags:
+        - Config
+      summary: Set event saved hours
+      description: |
+        * Set hours event will be saved locally. 0 by default which means no events will be saved locally.
+        * one event can be saevd one year(8760 hours) at maximum.
+        * The action cleanning up events will be done every minute.
+      requestBody:
+        $ref: 'minibox/apiConfigEvent_saved_days.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'minibox/apiConfigEvent_saved_days.yaml#/components/responses/PostResult'
+  /api/config/upload:
+    get:
+      tags:
+        - Config
+      summary: Get upload config
+      description: Get configs for uploading event
+      responses:
+        200:
+          $ref: 'minibox/apiConfigUpload.yaml#/components/responses/200'
+    post:
+      tags:
+        - Config
+      summary: Set upload config
+      description: Set configs for uploading event
+      requestBody:
+        $ref: 'minibox/apiConfigUpload.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'minibox/apiConfigUpload.yaml#/components/responses/PostResult'
+
+  /api/cameras:
+    get:
+      tags:
+        - Camera
+      summary: Get all the camera information
+      description: List basic informations for all camera
+      responses:
+        200:
+          $ref: 'minibox/apiCameras.yaml#/components/responses/200'
+  /api/cameras/{sn}:
+    get:
+      tags:
+        - Camera
+      summary: Get a camera information
+      description: Get detail information for a camera
+      parameters:
+        - $ref: 'minibox/common.yaml#/components/parameters/SnParam'
+      responses:
+        200:
+          $ref: 'minibox/apiCamerasSn.yaml#/components/responses/200'
+  /api/cameras/{sn}/settings:
+    get:
+      tags:
+        - Camera
+      summary: Get settings for a camera
+      description: Get settings information for a camera
+      parameters:
+        - $ref: 'minibox/common.yaml#/components/parameters/SnParam'
+      responses:
+        200:
+          $ref: 'minibox/apiCamerasSnSettings.yaml#/components/responses/200'
+    post:
+      tags:
+        - Camera
+      summary: Set settings for a camera
+      description: Modify settings for a camera. Must request as a whole
+      parameters:
+        - $ref: 'minibox/common.yaml#/components/parameters/SnParam'
+      requestBody:
+        $ref: 'minibox/apiCamerasSnSettings.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'minibox/apiCamerasSnSettings.yaml#/components/responses/PostResult'
+  /api/cameras/[sn]/volume:
+    get:
+      tags:
+        - Camera
+      summary: Get volume for this camera
+      description: Get volume for this camera
+      parameters:
+        - $ref: 'minibox/common.yaml#/components/parameters/SnParam'
+      responses:
+        200:
+          $ref: 'minibox/apiCamerasSnVolume.yaml#/components/responses/200'
+    post:
+      tags:
+        - Camera
+      summary: Set volume for this camera
+      description: |
+        Set volume for this camera value: [0, 100]
+      parameters:
+        - $ref: 'minibox/common.yaml#/components/parameters/SnParam'
+      requestBody:
+        $ref: 'minibox/apiCamerasSnVolume.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: 'minibox/apiCamerasSnVolume.yaml#/components/responses/PostResult'
+  ws:[ip]/api/cameras/[sn]/realtime:
+    get:
+      tags:
+        - Camera
+      summary: Real-time view camera
+      description: |
+        Get tempearture information and person picture in time
+        * websocket interface（Cannot be called here）
+      parameters:
+        - $ref: 'minibox/common.yaml#/components/parameters/SnParam'
+      responses:
+        200:
+          $ref: 'minibox/apiCamerasSnRealtime.yaml#/components/responses/200'
+  /api/events:
+    get:
+      tags:
+        - Event
+      summary: View all alarm events
+      description: View all alarm events information
+      responses:
+        200:
+          $ref: 'minibox/apiEvents.yaml#/components/responses/200'
+    delete:
+      tags:
+        - Event
+      summary: Delete event by parameters （Pass at least one parameter）
+      description: Delete events and pictures by parameters
+      parameters:
+        - $ref: 'minibox/apiEvents.yaml#/components/parameters/StParam'
+        - $ref: 'minibox/apiEvents.yaml#/components/parameters/EtParam'
+        - $ref: 'minibox/apiEvents.yaml#/components/parameters/SnParam'
+      responses:
+        200:
+          $ref: 'minibox/apiEvents.yaml#/components/responses/DeleteResult'
+  /api/events/{id}:
+    get:
+      tags:
+        - Event
+      summary: View an event
+      description: View an event information
+      parameters:
+        - $ref: 'minibox/common.yaml#/components/parameters/EventIDParam'
+      responses:
+        200:
+          $ref: 'minibox/apiEventsID.yaml#/components/responses/200'
+    delete:
+      tags:
+        - Event
+      summary: Delete specified event
+      description: Delete this event and picture
+      parameters:
+        - $ref: 'minibox/common.yaml#/components/parameters/EventIDParam'
+      responses:
+        200:
+          $ref: 'minibox/apiEventsID.yaml#/components/responses/DeleteResult'
+  /api/events/{id}/pic:
+    get:
+      tags:
+        - Event
+      summary: View an event
+      description: View an event information
+      parameters:
+        - $ref: 'minibox/common.yaml#/components/parameters/EventIDParam'
+      responses:
+        200:
+          description:  Content returned after successful request
+          content:
+            application/json:
+              schema:
+                type: string
+                description: This is a picture

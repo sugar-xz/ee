@@ -1,0 +1,70 @@
+openapi: 3.0.2
+components:
+  parameters:
+    DomainIDParam:
+      in: path
+      name: id
+      required: true
+      description: Domain id
+      schema:
+        type: integer
+        format: int 32
+  requestBodies:
+    UpdateRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/UpdateRequest'
+  responses:
+    DeleteResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeleteResult'
+          examples:
+            response:
+              $ref: '#/components/examples/DeleteResult'
+  schemas:
+    UpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Domain name
+        code_name:
+          type: string
+          description: Domain code name
+
+    DeleteResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                pk:
+                  type: integer
+                  format: int32
+                  description: Domain id
+
+  examples:
+    UpdateRequest:
+      value:
+        name: org_domain
+        code_name: org
+
+    DeleteResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          pk: 5
+

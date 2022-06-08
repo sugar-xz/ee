@@ -1,0 +1,244 @@
+openapi: 3.0.2
+components:
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                sequence:
+                  type: integer
+                config:
+                  type: object
+                  properties:
+                    robot:
+                      type: object
+                      properties:
+                        user_id:
+                          type: integer
+                          format: in32
+                          description: User id
+                        timezone:
+                          type: string
+                          description: Time zone
+                        upload_video_enabled:
+                          type: boolean
+                          enum:
+                            - true
+                            - false
+                          description: Upload video or not
+                        detect_params:
+                          type: object
+                          properties:
+                            algos:
+                              type: string
+                              description: Detection algorithm, allow multiple delimiters ","
+                            threshold:
+                              type: number
+                              format: float
+                              description: Camera detection parameter
+                            auto_speak_enabled:
+                              type: boolean
+                              enum:
+                                - true
+                                - false
+                              description: Automatic Speak enabled
+                            detect_enabled:
+                              type: boolean
+                              enum:
+                                - true
+                                - false
+                              description: Enable the detection
+                        patrol_params:
+                          type: object
+                          description: Patrol parameter configuration
+                          properties:
+                            radius:
+                              type: number
+                              format: float
+                              description: Patrol the radius
+                            speed:
+                              type: number
+                              format: float
+                              description: Patrol speed
+                        mac_params:
+                          type: object
+                          properties:
+                            detect_macs:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  mac_address:
+                                    type: string
+                                    description: Robot mac address
+                                  name:
+                                    type: string
+                                    description: Robot mac address name
+                                  vendor:
+                                    type: string
+                                    description: Robot mac vendor
+                                  type:
+                                    type: object
+                                    properties:
+                                      name:
+                                        type: string
+                                        enum:
+                                          - restricted
+                                          - favored
+                                      label:
+                                        type: string
+                                        enum:
+                                          - Restricted
+                                          - Favored
+                            auto_speak_enabled:
+                              type: boolean
+                              enum:
+                                - true
+                                - false
+                              description: Automatic Speak enabled
+                        auto_speak:
+                          type: string
+                          description: The detection status
+                        site:
+                          type: integer
+                          format: int64
+                          description: The id of the site that robot belongs to
+                        should_push:
+                          type: boolean
+                          enum:
+                            - true
+                            - false
+                          description: Should push events to backend
+                    tasks:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            format: int64
+                            description: Task id
+                          robot_id:
+                            type: string
+                            description: Robot id
+                          route_id:
+                            type: integer
+                            format: int64
+                            description: Route id
+                          name:
+                            type: string
+                            description: Task name
+                          mode:
+                            type: string
+                            enum:
+                              - on
+                              - off
+                              - schedule
+                            description: Task state
+                          start_at:
+                            type: integer
+                            format: int32
+                            description: Task start time
+                          end_at:
+                            type: integer
+                            format: int32
+                            description: Task end time
+                          route:
+                            type: object
+                            properties:
+                              version:
+                                type: integer
+                                description: Route version
+                              id:
+                                type: integer
+                                format: int64
+                                description: Route id
+                              name:
+                                type: string
+                                description: Route name
+                              points:
+                                type: string
+                                description: Route points
+                              checkpoints:
+                                type: string
+                                description: Route check points
+                          created_at:
+                            type: string
+                            format: date-time
+                            description: Data create time
+                          updated_at:
+                            type: string
+                            format: date-time
+                            description: Data update time
+                          version:
+                            type: integer
+                            format: int64
+                            description: Route version
+                          type:
+                            type: string
+                            enum:
+                              - task
+                              - patrol
+                            description: Route type
+
+  examples:
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          sequence: 7
+          config:
+            robot:
+              user_id: 12
+              timezone: UTC
+              upload_video_enabled: true
+              detect_params:
+                algos: person
+                threshold: 0.6
+                auto_speak_enabled: true
+                detect_enabled: true
+              patrol_params:
+                  radius: 4
+                  speed: 0.35
+              mac_params:
+                detect_macs:
+                  -
+                auto_speak_enabled: true
+              auto_speak: default
+              should_push: true
+            tasks:
+              - id: 1
+                robot_id: robot_test_10001
+                route_id: 1
+                name: patrol1
+                mode: on
+                start_at: 0
+                end_at: 0
+                route:
+                  version: 0
+                  id: 1
+                  name: route_test1
+                  points: point1
+                  checkpoints: checkpoints
+                created_at: '2019-11-07T10:19:09Z'
+                updated_at: '2019-11-07T10:19:09Z'
+                version: 0
+                type: patrol

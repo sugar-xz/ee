@@ -1,0 +1,62 @@
+[
+  {
+    "name": "All",
+    "url": "cloudApi/cloud_api.yaml"
+  },
+  {
+    "name": "User",
+    "url": "cloudApi/interface/user.yaml"
+  },
+  {
+    "name": "Auth",
+    "url": "cloudApi/interface/auth.yaml"
+  },
+  {
+    "name": "Box",
+    "url": "cloudApi/interface/box.yaml"
+  },
+  {
+    "name": "Robot",
+    "url": "cloudApi/interface/robot.yaml"
+  },
+  {
+    "name": "Patrol",
+    "url": "cloudApi/interface/patrol.yaml"
+  },
+  {
+    "name": "CCS",
+    "url": "cloudApi/interface/ccs.yaml"
+  },
+  {
+    "name": "Public",
+    "url": "cloudApi/interface/public.yaml"
+  },
+  {
+    "name": "Map",
+    "url": "cloudApi/interface/map.yaml"
+  },
+  {
+    "name": "Perm",
+    "url": "cloudApi/interface/perm.yaml"
+  },
+  {
+    "name": "Guard",
+    "url": "cloudApi/interface/guard.yaml"
+  },
+  {
+    "name": "Iot",
+    "url": "cloudApi/interface/iot.yaml"
+  },
+  {
+    "name": "Org",
+    "url": "cloudApi/interface/org.yaml"
+  },
+  {
+    "name": "Face",
+    "url": "cloudApi/interface/face.yaml"
+  },
+  {
+    "name": "Midway",
+    "url": "cloudApi/interface/midway.yaml"
+  }
+]

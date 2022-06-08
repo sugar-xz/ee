@@ -1,0 +1,20 @@
+# Name: test_default.tavern
+test_name: Get user org list (org)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Get user org list
+    request:
+      url: "{url}/user_node/user_nodes"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+        ret:
+          count: !anyint
+          results: !anything

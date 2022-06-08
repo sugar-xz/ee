@@ -1,0 +1,180 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    PostRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PostRequest'
+  responses:
+    DomainTypeListResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainTypeListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/DomainTypeListResult'
+    DomainTypeResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DomainTypeResult'
+          examples:
+            response:
+              $ref: '#/components/examples/DomainTypeResult'
+  schemas:
+    PostRequest:
+      type: object
+      required:
+        - "code_name"
+        - "name"
+      properties:
+        name:
+          type: string
+          description: Domain type name
+        code_name:
+          type: string
+          description: Domain type code name
+        is_leaf:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Domain type is a child
+        parent_id:
+          type: integer
+          format: int32
+          description: Domain type parent id. Required if code_name is not root.
+
+    DomainTypeResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/DomainTypeInfo'
+    DomainTypeListResult:
+      description: Org domain type list
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/DomainTypeInfo'
+
+    DomainTypeInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Domain types id
+        organization:
+          type: integer
+          format: int32
+          description: Organization id
+        tree_id:
+          type: integer
+          format: int32
+          description: Django-mptt domain-type tree id
+        level:
+          type: integer
+          format: int32
+          description: Django-mptt domain-type level
+        lft:
+          type: integer
+          format: int32
+          description: The left border of django-mptt domain-type
+        rght:
+          type: integer
+          format: int32
+          description: The right border of django-mptt domain-type
+        name:
+          type: string
+          description: Domain type name
+        code_name:
+          type: string
+          description: Domain type code name
+        is_leaf:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Domain type is a child
+        parent_id:
+          type: integer
+          format: int32
+          description: Domain type parent id
+
+  examples:
+    PostRequest:
+      value:
+        name: org_test
+        code_name: org
+        is_leaf: true
+        parent_id: 3
+
+    DomainTypeListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 3
+          next: null
+          previous: null
+          results:
+            - id: 3
+              organization: 4
+              tree_id: 1
+              level: 0
+              lft: 1
+              rght: 4
+              name: domain_type_sugar
+              code_name: root
+              is_leaf: false
+              parent_id: null
+            - id: 5
+              organization: 4
+              tree_id: 1
+              level: 1
+              lft: 2
+              rght: 3
+              name: org_test
+              code_name: org
+              is_leaf: true
+              parent_id: 3
+
+    DomainTypeResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 5
+          organization: 4
+          tree_id: 1
+          level: 1
+          lft: 2
+          rght: 3
+          name: org_test
+          code_name: org
+          is_leaf: true
+          parent_id: 3
+

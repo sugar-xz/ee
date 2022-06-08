@@ -1,0 +1,96 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/IOSRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/IOSRequest'
+  responses:
+    200:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/IOSResult'
+          examples:
+            response:
+              $ref: '#/components/examples/IOSResult'
+  schemas:
+    IOSRequest:
+      type: object
+      required:
+        - registration_id
+        - device_id
+      properties:
+        name:
+          type: string
+          description: Device name
+        registration_id:
+          type: string
+          description: IOS phone registration id
+        device_id:
+          type: string
+          description: IOS UUID
+          format: uuid
+        application_id:
+          type: string
+    IOSResult:
+      description: Result of authentication
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: Device id
+                name:
+                  type: string
+                  description: Device name
+                application_id:
+                  type: string
+                registration_id:
+                  type: string
+                  description: IOS iphone registration id
+                device_id:
+                  type: string
+                  description: IOS UUID
+                active:
+                  type: boolean
+                  enum:
+                    - true
+                    - false
+                date_created:
+                  type: string
+                  format: date-time
+
+  examples:
+    IOSRequest:
+      value:
+        name: Apple iPhone 6s
+        registration_id: aeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeae
+        device_id: ffffffffffffffffffffffffffffffff
+#        application_id: XXXXXXXXXXXXXXXXXXXX
+
+    IOSResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 22
+          name: Apple iPhone 6s
+          registration_id: aeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeaeae
+          device_id: ffffffffffffffffffffffffffffffff
+          application_id: null
+          active: true
+          date_created: '2019-11-21T06:43:02Z'

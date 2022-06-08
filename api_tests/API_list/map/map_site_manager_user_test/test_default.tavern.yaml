@@ -1,0 +1,149 @@
+## Name: test_default.tavern
+test_name: Map (site_manager)
+stages:
+  - type: ref
+    id: login_site_manager
+  - name: Create map
+    request:
+      url: "{url}/map/maps"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        map_config_id: 1
+        center_point:
+          lat: 32.0571355
+          lng: 118.77807341
+        initial_zoom: 7
+        min_zoom: 2
+        max_zoom: 6
+        data:
+          tavern: site_manager
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !anyint
+      save:
+        body:
+          site_manager_map_id: ret.id
+  - name: Maps list
+    request:
+      url: "{url}/map/maps"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+        ret:
+          count: !anyint
+          results: !anything
+            - id: !anyint
+  - name: Add site map
+    request:
+      url: "{url}/site/sites/1/add_map"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        map_id: "{site_manager_map_id}"
+        name: site_manager_test
+        index: 1
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !anyint
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+  - name: Create target
+    request:
+      url: "{url}/map/targets"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        target_type: point
+        name: tavern_point
+        point:
+          lat: 32.0572354
+          lng: 118.77807441
+        auto_threshold: 1
+        camera_id: 4
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !anyint
+      save:
+        body:
+          site_manager_target_id: ret.id
+  - name: Target list
+    request:
+      url: "{url}/map/targets"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+        ret:
+          count: !anyint
+          results: !anything
+            - id: !anyint
+  - name: Map add target
+    request:
+      url: "{url}/map/maps/{site_manager_map_id}/add_target"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        target_id: "{site_manager_target_id}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !anyint
+          map_id: !int "{site_manager_map_id}"
+          target_id: !int "{site_manager_target_id}"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+  - name: Delete map
+    request:
+      url: "{url}/map/maps/{site_manager_map_id}"
+      method: DELETE
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !int "{site_manager_map_id}"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+  - name: Delete target
+    request:
+      url: "{url}/map/targets/{site_manager_target_id}"
+      method: DELETE
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !int "{site_manager_target_id}"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

@@ -1,0 +1,48 @@
+# Name: test_default.tavern
+test_name: Get all event types
+stages:
+  - type: ref
+    id: login_customer
+  - name: Get all event types
+    request:
+      url: "{url}/web/meta/all_event_types"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name:  method error
+stages:
+  - type: ref
+    id: login_customer
+  - name: Request method error
+    request:
+      url: "{url}/web/meta/all_event_types"
+      method: POST
+      headers:
+        content-type: application/json
+    response:
+      status_code: 403
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_403
+
+---
+test_name: No cookie to view the monitored info & 未登录查看监控版本信息
+stages:
+  - name: No cookie to request
+    request:
+      url: "{url}/web/meta/all_event_types"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 401
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_401

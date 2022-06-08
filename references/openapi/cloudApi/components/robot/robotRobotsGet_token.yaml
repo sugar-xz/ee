@@ -1,0 +1,16 @@
+openapi: 3.0.2
+components:
+  parameters:
+    NameParam:
+      in: query
+      name: name
+      required: true
+      description: name=robot_events|robot_snaps|robot_videos|robot_inspections
+      schema:
+        type: string
+        enum:
+          - robot_events
+          - robot_snaps
+          - robot_videos
+          - robot_inspections
+

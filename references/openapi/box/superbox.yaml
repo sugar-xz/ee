@@ -1,0 +1,4425 @@
+swagger: '2.0'
+info:
+  title: API
+  description: ''
+  version: ''
+host: '127.0.0.1:8000'
+schemes:
+  - http
+paths:
+  '/api/{version}/algorithms':
+    get:
+      operationId: algorithms_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/algorithms/upload':
+    post:
+      operationId: algorithms_upload
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: algo_file
+          required: true
+          in: formData
+          description: ''
+          type: string
+      consumes:
+        - application/x-www-form-urlencoded
+      tags:
+        - api
+  '/api/{version}/camera/cameras':
+    get:
+      operationId: camera_cameras_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: camera_cameras_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/camera/cameras/algorithms':
+    get:
+      operationId: camera_cameras_algorithms
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/camera/cameras/all_disable_sampling':
+    post:
+      operationId: camera_cameras_all_disable_sampling
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/camera/cameras/all_enable_sampling':
+    post:
+      operationId: camera_cameras_all_enable_sampling
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/camera/cameras/get_all':
+    get:
+      operationId: camera_cameras_get_all
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/camera/cameras/mode':
+    post:
+      operationId: camera_cameras_mode
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/camera/cameras/restart_all':
+    post:
+      operationId: camera_cameras_restart_all
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/camera/cameras/{id}':
+    get:
+      operationId: camera_cameras_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+      tags:
+        - api
+    put:
+      operationId: camera_cameras_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+    patch:
+      operationId: camera_cameras_partial_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+      consumes:
+        - application/json
+      tags:
+        - api
+    delete:
+      operationId: camera_cameras_delete
+      responses:
+        '204':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+      tags:
+        - api
+  '/api/{version}/camera/cameras/{id}/disable_sampling':
+    post:
+      operationId: camera_cameras_disable_sampling
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/camera/cameras/{id}/enable_sampling':
+    post:
+      operationId: camera_cameras_enable_sampling
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/camera/cameras/{id}/snapshot':
+    post:
+      operationId: camera_cameras_snapshot
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/camera/cameras/{id}/start_stream':
+    post:
+      operationId: camera_cameras_start_stream
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/cameras':
+    get:
+      operationId: cameras_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: cameras_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/cameras/algorithms':
+    get:
+      operationId: cameras_algorithms
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/cameras/all_disable_sampling':
+    post:
+      operationId: cameras_all_disable_sampling
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/cameras/all_enable_sampling':
+    post:
+      operationId: cameras_all_enable_sampling
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/cameras/get_all':
+    get:
+      operationId: cameras_get_all
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/cameras/mode':
+    post:
+      operationId: cameras_mode
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/cameras/restart_all':
+    post:
+      operationId: cameras_restart_all
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/cameras/{id}':
+    get:
+      operationId: cameras_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+      tags:
+        - api
+    put:
+      operationId: cameras_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+    patch:
+      operationId: cameras_partial_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+      consumes:
+        - application/json
+      tags:
+        - api
+    delete:
+      operationId: cameras_delete
+      responses:
+        '204':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+      tags:
+        - api
+  '/api/{version}/cameras/{id}/disable_sampling':
+    post:
+      operationId: cameras_disable_sampling
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/cameras/{id}/enable_sampling':
+    post:
+      operationId: cameras_enable_sampling
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/cameras/{id}/snapshot':
+    post:
+      operationId: cameras_snapshot
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/cameras/{id}/start_stream':
+    post:
+      operationId: cameras_start_stream
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this camera.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              uri:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              detect_params:
+                description: ''
+                type: object
+              default_params:
+                description: ''
+                type: object
+              rules:
+                description: ''
+                type: array
+                items:
+                  type: string
+              should_push:
+                description: ''
+                type: boolean
+              config_params:
+                description: ''
+                type: object
+              sampling:
+                description: ''
+                type: boolean
+            required:
+              - name
+              - uri
+              - rules
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/event/events':
+    get:
+      operationId: event_events_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: event_events_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera_id:
+                description: ''
+                type: integer
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              mediums:
+                description: ''
+                type: array
+                items:
+                  type: string
+              types:
+                description: ''
+                type: string
+              obj_types:
+                description: ''
+                type: object
+              uuid:
+                description: ''
+                type: string
+              status:
+                description: ''
+                type: string
+              remark:
+                description: ''
+                type: string
+              should_push:
+                description: ''
+                type: boolean
+              metadata:
+                description: ''
+                type: object
+            required:
+              - camera_id
+              - started_at
+              - ended_at
+              - mediums
+              - types
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/event/events/all_event_types':
+    get:
+      operationId: event_events_all_event_types
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/event/events/delete_all':
+    post:
+      operationId: event_events_delete_all
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera_id:
+                description: ''
+                type: integer
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              mediums:
+                description: ''
+                type: array
+                items:
+                  type: string
+              types:
+                description: ''
+                type: string
+              obj_types:
+                description: ''
+                type: object
+              uuid:
+                description: ''
+                type: string
+              status:
+                description: ''
+                type: string
+              remark:
+                description: ''
+                type: string
+              should_push:
+                description: ''
+                type: boolean
+              metadata:
+                description: ''
+                type: object
+            required:
+              - camera_id
+              - started_at
+              - ended_at
+              - mediums
+              - types
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/event/events/retrieve_ids':
+    get:
+      operationId: event_events_retrieve_ids
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/event/events/retrieves':
+    get:
+      operationId: event_events_retrieves
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/event/events/unmarked':
+    get:
+      operationId: event_events_unmarked
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/event/events/{id}':
+    get:
+      operationId: event_events_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this event.
+          type: integer
+      tags:
+        - api
+    put:
+      operationId: event_events_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this event.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera_id:
+                description: ''
+                type: integer
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              mediums:
+                description: ''
+                type: array
+                items:
+                  type: string
+              types:
+                description: ''
+                type: string
+              obj_types:
+                description: ''
+                type: object
+              uuid:
+                description: ''
+                type: string
+              status:
+                description: ''
+                type: string
+              remark:
+                description: ''
+                type: string
+              should_push:
+                description: ''
+                type: boolean
+              metadata:
+                description: ''
+                type: object
+            required:
+              - camera_id
+              - started_at
+              - ended_at
+              - mediums
+              - types
+      consumes:
+        - application/json
+      tags:
+        - api
+    patch:
+      operationId: event_events_partial_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this event.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera_id:
+                description: ''
+                type: integer
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              mediums:
+                description: ''
+                type: array
+                items:
+                  type: string
+              types:
+                description: ''
+                type: string
+              obj_types:
+                description: ''
+                type: object
+              uuid:
+                description: ''
+                type: string
+              status:
+                description: ''
+                type: string
+              remark:
+                description: ''
+                type: string
+              should_push:
+                description: ''
+                type: boolean
+              metadata:
+                description: ''
+                type: object
+      consumes:
+        - application/json
+      tags:
+        - api
+    delete:
+      operationId: event_events_delete
+      responses:
+        '204':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this event.
+          type: integer
+      tags:
+        - api
+  '/api/{version}/event/events/{id}/close_event':
+    post:
+      operationId: event_events_close_event
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this event.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera_id:
+                description: ''
+                type: integer
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              mediums:
+                description: ''
+                type: array
+                items:
+                  type: string
+              types:
+                description: ''
+                type: string
+              obj_types:
+                description: ''
+                type: object
+              uuid:
+                description: ''
+                type: string
+              status:
+                description: ''
+                type: string
+              remark:
+                description: ''
+                type: string
+              should_push:
+                description: ''
+                type: boolean
+              metadata:
+                description: ''
+                type: object
+            required:
+              - camera_id
+              - started_at
+              - ended_at
+              - mediums
+              - types
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/event/events/{id}/push_event':
+    post:
+      operationId: event_events_push_event
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this event.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera_id:
+                description: ''
+                type: integer
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              mediums:
+                description: ''
+                type: array
+                items:
+                  type: string
+              types:
+                description: ''
+                type: string
+              obj_types:
+                description: ''
+                type: object
+              uuid:
+                description: ''
+                type: string
+              status:
+                description: ''
+                type: string
+              remark:
+                description: ''
+                type: string
+              should_push:
+                description: ''
+                type: boolean
+              metadata:
+                description: ''
+                type: object
+            required:
+              - camera_id
+              - started_at
+              - ended_at
+              - mediums
+              - types
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/events':
+    get:
+      operationId: events_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: events_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera_id:
+                description: ''
+                type: integer
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              mediums:
+                description: ''
+                type: array
+                items:
+                  type: string
+              types:
+                description: ''
+                type: string
+              obj_types:
+                description: ''
+                type: object
+              uuid:
+                description: ''
+                type: string
+              status:
+                description: ''
+                type: string
+              remark:
+                description: ''
+                type: string
+              should_push:
+                description: ''
+                type: boolean
+              metadata:
+                description: ''
+                type: object
+            required:
+              - camera_id
+              - started_at
+              - ended_at
+              - mediums
+              - types
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/events/all_event_types':
+    get:
+      operationId: events_all_event_types
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/events/delete_all':
+    post:
+      operationId: events_delete_all
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera_id:
+                description: ''
+                type: integer
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              mediums:
+                description: ''
+                type: array
+                items:
+                  type: string
+              types:
+                description: ''
+                type: string
+              obj_types:
+                description: ''
+                type: object
+              uuid:
+                description: ''
+                type: string
+              status:
+                description: ''
+                type: string
+              remark:
+                description: ''
+                type: string
+              should_push:
+                description: ''
+                type: boolean
+              metadata:
+                description: ''
+                type: object
+            required:
+              - camera_id
+              - started_at
+              - ended_at
+              - mediums
+              - types
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/events/retrieve_ids':
+    get:
+      operationId: events_retrieve_ids
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/events/retrieves':
+    get:
+      operationId: events_retrieves
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/events/unmarked':
+    get:
+      operationId: events_unmarked
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/events/{id}':
+    get:
+      operationId: events_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this event.
+          type: integer
+      tags:
+        - api
+    put:
+      operationId: events_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this event.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera_id:
+                description: ''
+                type: integer
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              mediums:
+                description: ''
+                type: array
+                items:
+                  type: string
+              types:
+                description: ''
+                type: string
+              obj_types:
+                description: ''
+                type: object
+              uuid:
+                description: ''
+                type: string
+              status:
+                description: ''
+                type: string
+              remark:
+                description: ''
+                type: string
+              should_push:
+                description: ''
+                type: boolean
+              metadata:
+                description: ''
+                type: object
+            required:
+              - camera_id
+              - started_at
+              - ended_at
+              - mediums
+              - types
+      consumes:
+        - application/json
+      tags:
+        - api
+    patch:
+      operationId: events_partial_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this event.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera_id:
+                description: ''
+                type: integer
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              mediums:
+                description: ''
+                type: array
+                items:
+                  type: string
+              types:
+                description: ''
+                type: string
+              obj_types:
+                description: ''
+                type: object
+              uuid:
+                description: ''
+                type: string
+              status:
+                description: ''
+                type: string
+              remark:
+                description: ''
+                type: string
+              should_push:
+                description: ''
+                type: boolean
+              metadata:
+                description: ''
+                type: object
+      consumes:
+        - application/json
+      tags:
+        - api
+    delete:
+      operationId: events_delete
+      responses:
+        '204':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this event.
+          type: integer
+      tags:
+        - api
+  '/api/{version}/events/{id}/close_event':
+    post:
+      operationId: events_close_event
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this event.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera_id:
+                description: ''
+                type: integer
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              mediums:
+                description: ''
+                type: array
+                items:
+                  type: string
+              types:
+                description: ''
+                type: string
+              obj_types:
+                description: ''
+                type: object
+              uuid:
+                description: ''
+                type: string
+              status:
+                description: ''
+                type: string
+              remark:
+                description: ''
+                type: string
+              should_push:
+                description: ''
+                type: boolean
+              metadata:
+                description: ''
+                type: object
+            required:
+              - camera_id
+              - started_at
+              - ended_at
+              - mediums
+              - types
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/events/{id}/push_event':
+    post:
+      operationId: events_push_event
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this event.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera_id:
+                description: ''
+                type: integer
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              mediums:
+                description: ''
+                type: array
+                items:
+                  type: string
+              types:
+                description: ''
+                type: string
+              obj_types:
+                description: ''
+                type: object
+              uuid:
+                description: ''
+                type: string
+              status:
+                description: ''
+                type: string
+              remark:
+                description: ''
+                type: string
+              should_push:
+                description: ''
+                type: boolean
+              metadata:
+                description: ''
+                type: object
+            required:
+              - camera_id
+              - started_at
+              - ended_at
+              - mediums
+              - types
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/medium/mediums':
+    get:
+      operationId: medium_mediums_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: medium_mediums_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              file:
+                description: ''
+                type: string
+              event_id:
+                description: ''
+                type: integer
+            required:
+              - name
+              - file
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/medium/mediums/{id}':
+    get:
+      operationId: medium_mediums_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this medium.
+          type: integer
+      tags:
+        - api
+    put:
+      operationId: medium_mediums_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this medium.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              file:
+                description: ''
+                type: string
+              event_id:
+                description: ''
+                type: integer
+            required:
+              - name
+              - file
+      consumes:
+        - application/json
+      tags:
+        - api
+    patch:
+      operationId: medium_mediums_partial_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this medium.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              file:
+                description: ''
+                type: string
+              event_id:
+                description: ''
+                type: integer
+      consumes:
+        - application/json
+      tags:
+        - api
+    delete:
+      operationId: medium_mediums_delete
+      responses:
+        '204':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this medium.
+          type: integer
+      tags:
+        - api
+  '/api/{version}/mediums':
+    get:
+      operationId: mediums_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: mediums_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              file:
+                description: ''
+                type: string
+              event_id:
+                description: ''
+                type: integer
+            required:
+              - name
+              - file
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/mediums/{id}':
+    get:
+      operationId: mediums_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this medium.
+          type: integer
+      tags:
+        - api
+    put:
+      operationId: mediums_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this medium.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              file:
+                description: ''
+                type: string
+              event_id:
+                description: ''
+                type: integer
+            required:
+              - name
+              - file
+      consumes:
+        - application/json
+      tags:
+        - api
+    patch:
+      operationId: mediums_partial_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this medium.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                description: ''
+                type: string
+              file:
+                description: ''
+                type: string
+              event_id:
+                description: ''
+                type: integer
+      consumes:
+        - application/json
+      tags:
+        - api
+    delete:
+      operationId: mediums_delete
+      responses:
+        '204':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this medium.
+          type: integer
+      tags:
+        - api
+  '/api/{version}/rule/rules':
+    get:
+      operationId: rule_rules_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: rule_rules_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera:
+                description: ''
+                type: integer
+              name:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              algo:
+                description: ''
+                type: string
+              params:
+                description: ''
+                type: object
+              params_base:
+                description: ''
+                type: string
+              schedule:
+                description: ''
+                type: object
+            required:
+              - camera
+              - name
+              - mode
+              - algo
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/rule/rules/{id}':
+    get:
+      operationId: rule_rules_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this rule.
+          type: integer
+      tags:
+        - api
+    put:
+      operationId: rule_rules_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this rule.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera:
+                description: ''
+                type: integer
+              name:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              algo:
+                description: ''
+                type: string
+              params:
+                description: ''
+                type: object
+              params_base:
+                description: ''
+                type: string
+              schedule:
+                description: ''
+                type: object
+            required:
+              - camera
+              - name
+              - mode
+              - algo
+      consumes:
+        - application/json
+      tags:
+        - api
+    patch:
+      operationId: rule_rules_partial_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this rule.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera:
+                description: ''
+                type: integer
+              name:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              algo:
+                description: ''
+                type: string
+              params:
+                description: ''
+                type: object
+              params_base:
+                description: ''
+                type: string
+              schedule:
+                description: ''
+                type: object
+      consumes:
+        - application/json
+      tags:
+        - api
+    delete:
+      operationId: rule_rules_delete
+      responses:
+        '204':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this rule.
+          type: integer
+      tags:
+        - api
+  '/api/{version}/rules':
+    get:
+      operationId: rules_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: rules_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera:
+                description: ''
+                type: integer
+              name:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              algo:
+                description: ''
+                type: string
+              params:
+                description: ''
+                type: object
+              params_base:
+                description: ''
+                type: string
+              schedule:
+                description: ''
+                type: object
+            required:
+              - camera
+              - name
+              - mode
+              - algo
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/rules/{id}':
+    get:
+      operationId: rules_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this rule.
+          type: integer
+      tags:
+        - api
+    put:
+      operationId: rules_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this rule.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera:
+                description: ''
+                type: integer
+              name:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              algo:
+                description: ''
+                type: string
+              params:
+                description: ''
+                type: object
+              params_base:
+                description: ''
+                type: string
+              schedule:
+                description: ''
+                type: object
+            required:
+              - camera
+              - name
+              - mode
+              - algo
+      consumes:
+        - application/json
+      tags:
+        - api
+    patch:
+      operationId: rules_partial_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this rule.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              camera:
+                description: ''
+                type: integer
+              name:
+                description: ''
+                type: string
+              mode:
+                description: ''
+                type: string
+              algo:
+                description: ''
+                type: string
+              params:
+                description: ''
+                type: object
+              params_base:
+                description: ''
+                type: string
+              schedule:
+                description: ''
+                type: object
+      consumes:
+        - application/json
+      tags:
+        - api
+    delete:
+      operationId: rules_delete
+      responses:
+        '204':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this rule.
+          type: integer
+      tags:
+        - api
+  '/api/{version}/sample/samples':
+    get:
+      operationId: sample_samples_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: sample_samples_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              id:
+                description: ''
+                type: string
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              notified_cloud:
+                description: ''
+                type: boolean
+              notified_cloud_at:
+                description: ''
+                type: string
+              expired:
+                description: ''
+                type: integer
+              file_count:
+                description: ''
+                type: integer
+              types:
+                description: ''
+                type: string
+              types_at:
+                description: ''
+                type: string
+              notified_guardian:
+                description: ''
+                type: boolean
+              notified_guardian_at:
+                description: ''
+                type: string
+              event_at:
+                description: ''
+                type: string
+              camera_id:
+                description: ''
+                type: integer
+            required:
+              - id
+              - started_at
+              - ended_at
+              - expired
+              - file_count
+              - camera_id
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/sample/samples/{id}':
+    get:
+      operationId: sample_samples_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A UUID string identifying this sample.
+          type: string
+      tags:
+        - api
+    put:
+      operationId: sample_samples_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A UUID string identifying this sample.
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              id:
+                description: ''
+                type: string
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              notified_cloud:
+                description: ''
+                type: boolean
+              notified_cloud_at:
+                description: ''
+                type: string
+              expired:
+                description: ''
+                type: integer
+              file_count:
+                description: ''
+                type: integer
+              types:
+                description: ''
+                type: string
+              types_at:
+                description: ''
+                type: string
+              notified_guardian:
+                description: ''
+                type: boolean
+              notified_guardian_at:
+                description: ''
+                type: string
+              event_at:
+                description: ''
+                type: string
+              camera_id:
+                description: ''
+                type: integer
+            required:
+              - id
+              - started_at
+              - ended_at
+              - expired
+              - file_count
+              - camera_id
+      consumes:
+        - application/json
+      tags:
+        - api
+    patch:
+      operationId: sample_samples_partial_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A UUID string identifying this sample.
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              id:
+                description: ''
+                type: string
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              notified_cloud:
+                description: ''
+                type: boolean
+              notified_cloud_at:
+                description: ''
+                type: string
+              expired:
+                description: ''
+                type: integer
+              file_count:
+                description: ''
+                type: integer
+              types:
+                description: ''
+                type: string
+              types_at:
+                description: ''
+                type: string
+              notified_guardian:
+                description: ''
+                type: boolean
+              notified_guardian_at:
+                description: ''
+                type: string
+              event_at:
+                description: ''
+                type: string
+              camera_id:
+                description: ''
+                type: integer
+      consumes:
+        - application/json
+      tags:
+        - api
+    delete:
+      operationId: sample_samples_delete
+      responses:
+        '204':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A UUID string identifying this sample.
+          type: string
+      tags:
+        - api
+  '/api/{version}/sample/samples/{id}/upload_file':
+    post:
+      operationId: sample_samples_upload_file
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A UUID string identifying this sample.
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              path:
+                description: ''
+                type: string
+              content_type:
+                description: ''
+                type: string
+              s3_data:
+                description: ''
+                type: object
+              uploaded_at:
+                description: ''
+                type: string
+              file_deleted:
+                description: ''
+                type: boolean
+              sample:
+                description: ''
+                type: string
+            required:
+              - path
+              - content_type
+              - sample
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/samples':
+    get:
+      operationId: samples_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: samples_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              id:
+                description: ''
+                type: string
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              notified_cloud:
+                description: ''
+                type: boolean
+              notified_cloud_at:
+                description: ''
+                type: string
+              expired:
+                description: ''
+                type: integer
+              file_count:
+                description: ''
+                type: integer
+              types:
+                description: ''
+                type: string
+              types_at:
+                description: ''
+                type: string
+              notified_guardian:
+                description: ''
+                type: boolean
+              notified_guardian_at:
+                description: ''
+                type: string
+              event_at:
+                description: ''
+                type: string
+              camera_id:
+                description: ''
+                type: integer
+            required:
+              - id
+              - started_at
+              - ended_at
+              - expired
+              - file_count
+              - camera_id
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/samples/{id}':
+    get:
+      operationId: samples_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A UUID string identifying this sample.
+          type: string
+      tags:
+        - api
+    put:
+      operationId: samples_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A UUID string identifying this sample.
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              id:
+                description: ''
+                type: string
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              notified_cloud:
+                description: ''
+                type: boolean
+              notified_cloud_at:
+                description: ''
+                type: string
+              expired:
+                description: ''
+                type: integer
+              file_count:
+                description: ''
+                type: integer
+              types:
+                description: ''
+                type: string
+              types_at:
+                description: ''
+                type: string
+              notified_guardian:
+                description: ''
+                type: boolean
+              notified_guardian_at:
+                description: ''
+                type: string
+              event_at:
+                description: ''
+                type: string
+              camera_id:
+                description: ''
+                type: integer
+            required:
+              - id
+              - started_at
+              - ended_at
+              - expired
+              - file_count
+              - camera_id
+      consumes:
+        - application/json
+      tags:
+        - api
+    patch:
+      operationId: samples_partial_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A UUID string identifying this sample.
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              id:
+                description: ''
+                type: string
+              started_at:
+                description: ''
+                type: string
+              ended_at:
+                description: ''
+                type: string
+              notified_cloud:
+                description: ''
+                type: boolean
+              notified_cloud_at:
+                description: ''
+                type: string
+              expired:
+                description: ''
+                type: integer
+              file_count:
+                description: ''
+                type: integer
+              types:
+                description: ''
+                type: string
+              types_at:
+                description: ''
+                type: string
+              notified_guardian:
+                description: ''
+                type: boolean
+              notified_guardian_at:
+                description: ''
+                type: string
+              event_at:
+                description: ''
+                type: string
+              camera_id:
+                description: ''
+                type: integer
+      consumes:
+        - application/json
+      tags:
+        - api
+    delete:
+      operationId: samples_delete
+      responses:
+        '204':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A UUID string identifying this sample.
+          type: string
+      tags:
+        - api
+  '/api/{version}/samples/{id}/upload_file':
+    post:
+      operationId: samples_upload_file
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A UUID string identifying this sample.
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              path:
+                description: ''
+                type: string
+              content_type:
+                description: ''
+                type: string
+              s3_data:
+                description: ''
+                type: object
+              uploaded_at:
+                description: ''
+                type: string
+              file_deleted:
+                description: ''
+                type: boolean
+              sample:
+                description: ''
+                type: string
+            required:
+              - path
+              - content_type
+              - sample
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/setting':
+    get:
+      operationId: setting_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: setting_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              value:
+                description: ''
+                type: string
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/setting/item':
+    get:
+      operationId: setting_item_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: setting_item_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              value:
+                description: ''
+                type: string
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/setting/set':
+    post:
+      operationId: setting_set
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              value:
+                description: ''
+                type: string
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/setting/{id}':
+    get:
+      operationId: setting_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this setting.
+          type: integer
+      tags:
+        - api
+    put:
+      operationId: setting_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this setting.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              value:
+                description: ''
+                type: string
+      consumes:
+        - application/json
+      tags:
+        - api
+    patch:
+      operationId: setting_partial_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this setting.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              value:
+                description: ''
+                type: string
+      consumes:
+        - application/json
+      tags:
+        - api
+    delete:
+      operationId: setting_delete
+      responses:
+        '204':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this setting.
+          type: integer
+      tags:
+        - api
+  '/api/{version}/settings':
+    get:
+      operationId: settings_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: settings_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              value:
+                description: ''
+                type: string
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/settings/item':
+    get:
+      operationId: settings_item_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: settings_item_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              value:
+                description: ''
+                type: string
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/settings/set':
+    post:
+      operationId: settings_set
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              value:
+                description: ''
+                type: string
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/settings/{id}':
+    get:
+      operationId: settings_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this setting.
+          type: integer
+      tags:
+        - api
+    put:
+      operationId: settings_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this setting.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              value:
+                description: ''
+                type: string
+      consumes:
+        - application/json
+      tags:
+        - api
+    patch:
+      operationId: settings_partial_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this setting.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              value:
+                description: ''
+                type: string
+      consumes:
+        - application/json
+      tags:
+        - api
+    delete:
+      operationId: settings_delete
+      responses:
+        '204':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this setting.
+          type: integer
+      tags:
+        - api
+  '/api/{version}/webhook/webhooks':
+    get:
+      operationId: webhook_webhooks_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: webhook_webhooks_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              types:
+                description: ''
+                type: string
+              url:
+                description: ''
+                type: string
+            required:
+              - url
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/webhook/webhooks/echo':
+    post:
+      operationId: webhook_webhooks_echo
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/webhook/webhooks/{id}':
+    get:
+      operationId: webhook_webhooks_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this webhook.
+          type: integer
+      tags:
+        - api
+    put:
+      operationId: webhook_webhooks_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this webhook.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              types:
+                description: ''
+                type: string
+              url:
+                description: ''
+                type: string
+            required:
+              - url
+      consumes:
+        - application/json
+      tags:
+        - api
+    patch:
+      operationId: webhook_webhooks_partial_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this webhook.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              types:
+                description: ''
+                type: string
+              url:
+                description: ''
+                type: string
+      consumes:
+        - application/json
+      tags:
+        - api
+    delete:
+      operationId: webhook_webhooks_delete
+      responses:
+        '204':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this webhook.
+          type: integer
+      tags:
+        - api
+  '/api/{version}/webhooks':
+    get:
+      operationId: webhooks_list
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+    post:
+      operationId: webhooks_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              types:
+                description: ''
+                type: string
+              url:
+                description: ''
+                type: string
+            required:
+              - url
+      consumes:
+        - application/json
+      tags:
+        - api
+  '/api/{version}/webhooks/echo':
+    post:
+      operationId: webhooks_echo
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+  '/api/{version}/webhooks/{id}':
+    get:
+      operationId: webhooks_read
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this webhook.
+          type: integer
+      tags:
+        - api
+    put:
+      operationId: webhooks_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this webhook.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              types:
+                description: ''
+                type: string
+              url:
+                description: ''
+                type: string
+            required:
+              - url
+      consumes:
+        - application/json
+      tags:
+        - api
+    patch:
+      operationId: webhooks_partial_update
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this webhook.
+          type: integer
+        - name: data
+          in: body
+          schema:
+            type: object
+            properties:
+              types:
+                description: ''
+                type: string
+              url:
+                description: ''
+                type: string
+      consumes:
+        - application/json
+      tags:
+        - api
+    delete:
+      operationId: webhooks_delete
+      responses:
+        '204':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+        - name: id
+          required: true
+          in: path
+          description: A unique integer value identifying this webhook.
+          type: integer
+      tags:
+        - api
+  '/api/{version}/winner/events/close':
+    post:
+      operationId: winner_events_close_create
+      responses:
+        '201':
+          description: ''
+      parameters:
+        - name: version
+          required: true
+          in: path
+          description: ''
+          type: string
+      tags:
+        - api
+securityDefinitions:
+  basic:
+    type: basic

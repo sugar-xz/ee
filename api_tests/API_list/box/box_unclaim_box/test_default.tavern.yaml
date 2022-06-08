@@ -1,0 +1,67 @@
+# Name: test_default.tavern
+test_name: Unclaim box
+marks:
+  - parametrize:
+      key: err_unclaim_id
+      vals:
+        - "12312"
+        - "sadjaj2sad"
+        - "萨达撒"
+        - "{claim_box_id}"
+stages:
+  - type: ref
+    id: login_customer
+  - name: unclaim box
+    request:
+      url: "{url}/box/boxes/unclaim"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+      json:
+        id: "{err_unclaim_id}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Claim box
+stages:
+  - type: ref
+    id: login_customer
+  - name: claim box
+    request:
+      url: "{url}/box/boxes/claim"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+      json:
+        id: "{claim_box_id}"
+        signature: "chelsLzm+vaOLY/BL89/smLjmC2xvv01JPeowQq5XJM="
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Unclaim box err
+stages:
+  - type: ref
+    id: login_customer
+  - name: unclaim box
+    request:
+      url: "{url}/box/boxes/unclaim"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+      json:
+        id: ""
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400

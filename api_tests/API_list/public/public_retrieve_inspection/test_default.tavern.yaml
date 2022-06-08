@@ -1,0 +1,45 @@
+# Name: test_default.tavern
+test_name: Retrueve inspection
+stages:
+  - type: ref
+    id: login_customer
+  - name: Retrueve inspection
+    request:
+      url: "{url}/inspection/inspections/1"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code:
+        - 200
+        - 404
+#      body:
+#        ret:
+#          id: !int 1
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200
+#    delay_after: 1
+
+---
+test_name: Retrueve inspection err
+marks:
+  - parametrize:
+      key: err_id
+      vals:
+        - 1111111
+        - "@#$%%^"
+stages:
+  - type: ref
+    id: login_customer
+  - name: Retrueve inspection err
+    request:
+      url: "{url}/inspection/inspections/{err_id}"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 404
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_404
+ #   delay_after: 1

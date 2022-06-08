@@ -1,0 +1,207 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    VideoRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VideoRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/VideoRequest'
+  responses:
+    VideoListParam:
+      description: Query videos created by robot
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VideoListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/VideoListResult'
+    VideoResult:
+      description: Query videos created by robot
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VideoResult'
+          examples:
+            response:
+              $ref: '#/components/examples/VideoResult'
+  schemas:
+    VideoListResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                next:
+                  type: string
+                  description: The next page
+                previous:
+                  type: string
+                  description: The previous page
+                results:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/VideoInfo'
+    VideoResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/VideoInfo'
+    VideoRequest:
+      type: object
+      required:
+        - video
+        - started_at
+        - ended_at
+      properties:
+        camera:
+          type: string
+          description: Robot camera name
+        video:
+          type: object
+          required:
+            - meta
+            - Key
+            - Bucket
+          properties:
+            Key:
+              type: string
+              description: Store file name
+            Bucket:
+              type: string
+              description: Store path
+            mete:
+              type: object
+              required:
+                - file_size
+                - content_type
+              properties:
+                file_size:
+                  type: integer
+                  foramt: int32
+                  description: Video file size
+                size:
+                  type: array
+                  items:
+                    type: string
+                    description: Video length and width
+                content_type:
+                  type: string
+                  description: File content type
+        started_at:
+          type: string
+          format: date-time
+          description: Saved video create time
+        ended_at:
+          type: string
+          format: date-time
+          description: Saved video end time
+
+    VideoInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Robot video id
+        robot_id:
+          type: string
+          description: Robot id
+        camera:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Robot camera name
+            lablel:
+              type: string
+              description: Robot camera name label
+        video:
+          type: object
+          properties:
+            file_size:
+              type: integer
+              format: int32
+              description: Video file size
+            content_type:
+              type: string
+              description: File content type
+            url:
+              type: string
+              description: Video url path
+        started_at:
+          type: string
+          format: date-time
+          description: Saved video create time
+        ended_at:
+          type: string
+          format: date-time
+          description: Saved video end time
+        size:
+          type: integer
+          format: int32
+          description: Video file size
+
+  examples:
+    VideoListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          next: null
+          previous: null
+          results:
+            - id: 11
+              robot_id: robot_dog_sr_20002
+              camera:
+                name: front
+                lablel: Front camera
+              video:
+                content_type: video/mp4
+                file_size: 1123
+                url: https://devs-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/1/cameras/1/events/logo.jpg?X-Amz-AlC-SHA256&X-Amz-Credential=AKIA3ADBRQCSDF
+              started_at: "2019-09-27 06:15:31+00"
+              ended_at: "2019-09-27 06:15:31+00"
+              size: 1123
+
+    VideoRequest:
+      value:
+        camera: front
+        video:
+          Key: users/1/cameras/1/events/logo.jpg
+          Bucket: dev-turingvideo-com
+          meta:
+            file_size: 4123
+            content_type: video/mp4
+        started_at: "2019-09-27 06:15:31+00"
+        ended_at: "2019-09-27 06:15:31+00"
+    VideoResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 11
+          robot_id: robot_dog_sr_20002
+          camera:
+            name: front
+            lablel: Front camera
+          video:
+            content_type: video/mp4
+            file_size: 1123
+            url: https://devs-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/1/cameras/1/events/logo.jpg?X-Amz-AlC-SHA256&X-Amz-Credential=AKIA3ADBRQCSDF
+          started_at: "2019-09-27 06:15:31+00"
+          ended_at: "2019-09-27 06:15:31+00"
+          size: 1123

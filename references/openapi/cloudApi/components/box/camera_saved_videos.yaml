@@ -1,0 +1,333 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    CreateRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/CreateRequest'
+  responses:
+    VideosListResult:
+      description: Query for the video saved by the specified camera
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VideosListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/VideosListResult'
+    CreateResult:
+      description: Create box's camera video
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateResult'
+          examples:
+            response:
+              $ref: '#/components/examples/CreateResult'
+  schemas:
+    VideosListResult:
+      description: Paged list of videos
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/VideoInfo'
+    VideoInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Camera video id
+          format: int32
+        camera:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Camera id
+              format: int32
+            name:
+              type: string
+              description: Camera name
+        started_at:
+          type: string
+          description: Saved video create time
+          format: date-time
+        ended_at:
+          type: string
+          description: Saved video end time
+          format: date-time
+        snapshot:
+          type: object
+          properties:
+            file_size:
+              type: integer
+              description: snapshot file size
+              format: int32
+            size:
+              type: array
+              items:
+                type: string
+                description: snapshot length and width
+            content_type:
+              type: string
+              description: Choose according to File content type
+              enum:
+                - video/mp4
+                - text/json
+                - image/jpeg
+            url:
+              type: string
+              description: Video url path
+        video:
+          type: object
+          properties:
+            file_size:
+              type: integer
+              description: Video file size
+              format: int32
+            size:
+              type: array
+              items:
+                type: string
+                description: Video length and width
+            content_type:
+              type: string
+              description: Choose according to File content type
+              enum:
+                - video/mp4
+                - text/json
+                - image/jpeg
+            url:
+              type: string
+              description: Video url path
+
+    CreateRequest:
+      type: object
+      properties:
+        camera_id:
+          type: integer
+          description: Camera id
+          format: int32
+        snapshot:
+          type: object
+          properties:
+            Key:
+              type: string
+              description: Store file name
+            Bucket:
+              type: string
+              description: Store path
+            mete:
+              type: object
+              properties:
+                file_size:
+                  type: integer
+                  description: Video file size
+                  format: int32
+                size:
+                  type: array
+                  items:
+                    type: string
+                    description: Video length and width
+        video:
+          type: object
+          properties:
+            Key:
+              type: string
+              description: Store file name
+            Bucket:
+              type: string
+              description: Store path
+            mete:
+              type: object
+              properties:
+                file_size:
+                  type: integer
+                  description: Video file size
+                size:
+                  type: array
+                  items:
+                    type: string
+                    description: Video length and width
+        started_at:
+          type: string
+          description: Saved video create time
+          format: date-time
+        ended_at:
+          type: string
+          description: Saved video end time
+          format: date-time
+
+    CreateResult:
+      type: object
+      properties:
+        allOf:
+          - $ref: '../common.yaml#/components/schemas/Result'
+          - type: object
+            properties:
+              ret:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Camera video id
+                    format: int32
+                  camera_id:
+                    type: string
+                    description: Camera id
+                    format: int32
+                  snapshot:
+                    type: object
+                    properties:
+                      file_size:
+                        type: integer
+                        description: Snapshot file size
+                        format: int32
+                      size:
+                        type: array
+                        items:
+                          type: string
+                          description: Snapshot length and width
+                      Key:
+                        type: string
+                        description: Store file name
+                      Bucket:
+                        type: string
+                        description: Store path
+                      content_type:
+                        type: string
+                        description: Choose according to File content type
+                        enum:
+                          - video/mp4
+                          - text/json
+                          - image/jpeg
+                      url:
+                        type: string
+                        description: Snapshot url path
+                  video:
+                    type: object
+                    properties:
+                      file_size:
+                        type: integer
+                        description: Video file size
+                        format: int32
+                      size:
+                        type: array
+                        items:
+                          type: string
+                          description: Video length and width
+                      Key:
+                        type: string
+                        description: Store file name
+                      Bucket:
+                        type: string
+                        description: Video path
+                      content_type:
+                        type: string
+                        description: Choose according to File content type
+                        enum:
+                          - video/mp4
+                          - text/json
+                          - image/jpeg
+                      url:
+                        type: string
+                        description: Video url path
+                  started_at:
+                    type: string
+                    description: Saved video create time
+                    format: date-time
+                  ended_at:
+                    type: string
+                    description: Saved video end time
+                    format: date-time
+
+  examples:
+    VideosListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 1
+          next: ''
+          previous: ''
+          results:
+            - id: 1
+              camera_id: 1
+              snapshot:
+                content_type: image/jpeg
+                file_size: 1123
+                size:
+                  - 600,369
+                url: https://devs-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/1/cameras/1/events/logo.jpg?X-Amz-AlC-SHA256&X-Amz-Credential=AKIA3ADBRQCSDF
+              video:
+                content_type: image/jpeg
+                file_size: 1123
+                size:
+                  - 600,369
+                url: https://devs-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/1/cameras/1/events/logo.jpg?X-Amz-AlC-SHA256&X-Amz-Credential=AKIA3ADBRQCSDF
+              started_at: "2019-09-27 06:15:31+00"
+              ended_at: "2019-09-27 06:15:31+00"
+
+    CreateRequest:
+      value:
+        camera_id: 1
+        snapshot:
+          Key: users/1/cameras/1/events/logo.jpg
+          Bucket: dev-turingvideo-com
+          meta:
+            file_size: 1123
+            size:
+              - 600,369
+        video:
+          Key: users/1/cameras/1/events/logo.jpg
+          Bucket: dev-turingvideo-com
+          meta:
+            file_size: 4123
+            size:
+              - 600,369
+        started_at: "2019-09-27 06:15:31+00"
+        ended_at: "2019-09-27 06:15:31+00"
+    CreateResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 1
+          camera_id: 1
+          snapshot:
+            Key: users/1/cameras/1/events/logo.jpg
+            Bucket: dev-turingvideo-com
+            content_type: image/jpeg
+            file_size: 1123
+            size:
+              - 600,369
+            url: https://devs-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/1/cameras/1/events/logo.jpg?X-Amz-AlC-SHA256&X-Amz-Credential=AKIA3ADBRQCSDF
+          video:
+            Key: users/1/cameras/1/events/logo.jpg
+            Bucket: dev-turingvideo-com
+            content_type: image/jpeg
+            file_size: 1123
+            size:
+              - 600,369
+            url: https://devs-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/1/cameras/1/events/logo.jpg?X-Amz-AlC-SHA256&X-Amz-Credential=AKIA3ADBRQCSDF
+          started_at: "2019-09-27 06:15:31+00"
+          ended_at: "2019-09-27 06:15:31+00"

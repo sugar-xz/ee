@@ -1,0 +1,33 @@
+# Name: test_default.tavern
+test_name: Retrieve box
+stages:
+  - type: ref
+    id: login_customer
+  - name: Retrieve box
+    request: &retrieve_box_anchor
+      url: "{url}/box/boxes/{test_box_id}"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        ret:
+          id: "{test_box_id}"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Retrieve box error
+stages:
+  - type: ref
+    id: login_customer
+  - name: Retrieve box error
+    request:
+      <<: *retrieve_box_anchor
+      url: "{url}/box/boxes/err_box_id"
+    response:
+      status_code: 404
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_404

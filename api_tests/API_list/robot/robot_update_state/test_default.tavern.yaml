@@ -1,0 +1,78 @@
+# Name: test_default.tavern
+test_name: Update State robot
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: robot_initiate
+  - type: ref
+    id: robot_authenticate
+  - name: Update State robot
+    request:
+      url: "{url}/robot/robots/update_state"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        X-APP: "Robot/{robot_level}/{robot_version}"
+        Referer: "{Referer}"
+      json:
+        scene: 0
+        state:
+          robot:
+            state:
+              status: online
+              power_percentage: 10
+              mode: patrol
+        partial: true
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+
+---
+test_name: Update State robot err
+marks:
+  - parametrize:
+      key:
+        - err_status
+        - err_mode
+        - err_partial
+      vals:
+        - ["", "", ""]
+        - ["online", "patrol", "err_true"]
+        - ["onlines", "patrol", "true"]
+        - ["onlines", "patrol_no_exist", "true"]
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: robot_initiate
+  - type: ref
+    id: robot_authenticate
+  - name: Update State robot err
+    request:
+      url: "{url}/robot/robots/update_state"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        X-APP: "Robot/{robot_level}/{robot_version}"
+        Referer: "{Referer}"
+      json:
+        scene: 0
+        state:
+          robot:
+            state:
+              status: "{err_status}"
+              power_percentage: 10
+              mode: "{err_mode}"
+        partial: "{err_partial}"
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+ #   delay_after: 1

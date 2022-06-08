@@ -1,0 +1,71 @@
+# Name: test_default.tavern
+test_name: Get Analytics Token
+#marks:
+#  - parametrize:
+#      key: name
+#      vals:
+#        - robot_logs
+#        - robot_lidar
+stages:
+  - type: ref
+    id: robot_initiate
+#  - type: ref
+#    id: robot_authenticate
+  - name: Robot Authenticate
+    request:
+      url: "{url}/robot/robots/authenticate"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Robot/{robot_level}/{robot_version}"
+      json:
+        type: "{robot_type}"
+        challenge: "{get_robot_challenge}"
+        ip_address: "{robot_ip_address}"
+    response:
+      status_code:
+        - 200
+        - 409
+        - 500
+#  - name: Get Analytics Token
+#    request:
+#      url: "{url}/robot/robots/get_analytics_token?name={name}"
+#      method: GET
+#      headers:
+#        content-type: application/json
+##        Referer: "{Referer}"
+#    response:
+#      status_code: 200
+#      body:
+#        ret:
+#          url: !anything
+#          fields: !anything
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200
+#---
+#test_name: Get analytics token error
+#marks:
+#  - parametrize:
+#      key: err_name_robot
+#      vals:
+#        - ""
+#        - 12312
+#        - qweasd
+#        - wqe@#$%1424
+#stages:
+#  - type: ref
+#    id: robot_initiate
+#  - type: ref
+#    id: robot_authenticate
+#  - name: Get analytics token error
+#    request:
+#      url: "{url}/robot/robots/get_analytics_token?name={err_name_robot}"
+#      method: GET
+#      headers:
+#        content-type: application/json
+##        Referer: "{Referer}"
+#    response:
+#      status_code: 400
+#      body:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_400

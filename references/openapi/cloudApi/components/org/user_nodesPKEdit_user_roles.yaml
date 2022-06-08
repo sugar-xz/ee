@@ -1,0 +1,48 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  schemas:
+    Request:
+      type: object
+      required:
+      - "user"
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Org user_node id
+        user:
+          type: object
+          required:
+          - "role_ids"
+          - "domain_ids"
+          properties:
+            role_ids:
+              type: array
+              items:
+                type: string
+                description: Prem role id, allow multiple delimiters ","
+            domain_ids:
+              type: array
+              items:
+                type: string
+
+  examples:
+    Request:
+      value:
+        id: 4
+        user:
+          role_ids:
+            - 1
+            - 5
+          domain_ids:
+            - 1

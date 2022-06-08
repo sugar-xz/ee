@@ -1,0 +1,116 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    PutRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PutRequest'
+          examples:
+            response:
+              $ref: '#/components/examples/PutRequest'
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SettingResult'
+          examples:
+            response:
+              $ref: '#/components/examples/SettingResult'
+  schemas:
+    PutRequest:
+      type: object
+      required:
+        - tracking_record_saved_time
+        - track_temp_normal_event
+        - track_temp_abnormal_event
+        - track_face_tracking_event
+      properties:
+        tracking_record_saved_time:
+          type: integer
+          format: int32
+          description: Track saves time by default
+        track_temp_normal_event:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Temperature detection for valid events
+        track_temp_abnormal_event:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Invalid temperature detection event
+        track_face_tracking_event:
+          type: boolean
+          enum:
+            - true
+            - false
+
+    SettingResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                organization:
+                  type: integer
+                  format: int32
+                  description: Organization id
+                tracking_record_saved_time:
+                  type: integer
+                  format: int32
+                  description: Track saves time by default
+                created_at:
+                  type: string
+                  description: Data create time
+                  format: date-time
+                updated_at:
+                  type: string
+                  description: Data update time
+                  format: date-time
+                track_temp_normal_event:
+                  type: boolean
+                  enum:
+                    - true
+                    - false
+                  description: Temperature detection for valid events
+                track_temp_abnormal_event:
+                  type: boolean
+                  enum:
+                    - true
+                    - false
+                  description: Invalid temperature detection event
+                track_face_tracking_event:
+                  type: boolean
+                  enum:
+                    - true
+                    - false
+
+  examples:
+    PutRequest:
+      value:
+        tracking_record_saved_time: 2592000
+        track_temp_normal_event: true
+        track_temp_abnormal_event: true
+        track_face_tracking_event: true
+    SettingResult:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: null
+        ret:
+          organization: 9
+          tracking_record_saved_time: 2592000
+          created_at: '2020-07-14T09:27:59Z'
+          updated_at: '2020-07-14T09:27:59Z'
+          track_temp_normal_event: true
+          track_temp_abnormal_event: true
+          track_face_tracking_event: true

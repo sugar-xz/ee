@@ -1,0 +1,255 @@
+openapi: 3.0.2
+
+components:
+  parameters:
+    UserIDParam:
+      in: path
+      name: user_id
+      required: true
+      description: User id of route backup
+      schema:
+        type: string
+    RouteId:
+      in: path
+      name: route_id
+      required: true
+      description: Route id
+      schema:
+        type: string
+  requestBodies:
+    PutRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'ConfigRobotPKMaps.yaml#/components/schemas/Route'
+    RouteCopyRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RouteCopy'
+    FullRouteRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FullRoute'
+    BackupRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BackupRequest'
+    RestoreRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RestoreRequest'
+  responses:
+    200:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RoutesResult'
+          examples:
+            response:
+              $ref: '#/components/examples/RoutesResult'
+    RouteResult:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RouteResult'
+          examples:
+            response:
+              $ref: '#/components/examples/RouteResult'
+    FullRouteResult:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FullRoute'
+
+  schemas:
+    RouteResult:
+      description: 机器人指定巡检路径信息
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: 'ConfigRobotPKMaps.yaml#/components/schemas/Route'
+
+    RoutesResult:
+      description: 机器人全部巡检路径信息
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: array
+              items:
+                $ref: 'ConfigRobotPKMaps.yaml#/components/schemas/Map'
+
+    RouteCopy:
+      type: object
+      properties:
+        map_id_from:
+          type: string
+          description: Map id
+        map_id_to:
+          type: string
+          description: Map id
+        route_id:
+          type: string
+          description: Route id
+        to:
+          type: string
+          description: Map id
+        from:
+          type: string
+          description: Map id
+    FullRoute:
+      type: object
+      properties:
+        full_route:
+          type: array
+          items:
+            type: object
+            properties:
+              map_id:
+                type: string
+                description: Map id
+              route_id:
+                type: string
+                description: Route id
+    BackupRequest:
+      type: object
+      properties:
+        map_id:
+          type: string
+          description: Map id
+        route_id:
+          type: string
+          description: Route id
+        robot_id:
+          type: string
+          description: Robot id
+    RestoreRequest:
+      type: object
+      properties:
+        map_id_from:
+          type: string
+          description: Copied map id
+        map_id_to:
+          type: string
+          description: Copy to map_id
+        route_id:
+          type: string
+          description: Route id
+        robot_id:
+          type: string
+          description: Robot id
+  examples:
+    RouteResult:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: ok
+        ret:
+          id: 1589509790549
+          name: '新建路线 2020-05-15 02:31:25'
+          meta_id: 'robot_dog_sr_20020::route::robot_dog_sr_20020.1589509647283::1589509790549'
+          way_points:
+            - id: 1589509799458
+              name:
+              actions:
+                - act: snapshot
+                  arg:
+                    duration: 0
+                    pitch: 0.0036440939
+                    theta: -2.0937453135848045
+                  name: ''
+              isInterpolated: false
+              mapId: 'robot_dog_sr_20020.1589509647283'
+              routeId: 1589509790549
+              point:
+                x: '-2.0111198726356423'
+                y: '0.600399600638084'
+          robot_ids:
+            - robot_dog_sr_20020
+    RoutesResult:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: ok
+        ret:
+          id: 'robot_dog_sr_20020.1589509647283'
+          meta_id: 'robot_dog_sr_20020::map::robot_dog_sr_20020.1589509647283'
+          name: '新建地图 2020-05-15 02:28:16'
+          comment: ''
+          upload: false
+          upload_status: finished
+          delete: false
+          files: null
+          signed_files:
+            - file:
+                file_size: 15595
+                size:
+                  - 303
+                  - 317
+                content_type:  image/png
+                url:  https://dev-data-fo
+              type:  map_png
+            - file:
+                file_size: 606602
+                size: null
+                content_type:  text/pbstream
+                url:  https://dev-data-fo
+              type:  map_pbstream
+            - file:
+                file_size: 208
+                size: null
+                content_type:  text/yaml
+                url:  https://dev-data-fo
+              type:  map_yaml
+          map_config:
+            resolution: 0.04
+            origin:
+              - '-5.832344'
+              - '-8.832344'
+            virtual_wall: null
+          route:
+            - id: 1589509790549
+              name: '新建路线 2020-05-15 02:31:25'
+              meta_id: 'robot_dog_sr_20020::route::robot_dog_sr_20020.1589509647283::1589509790549'
+              way_points:
+                - id: 1589509799458
+                  name:
+                  actions:
+                    - act: snapshot
+                      arg:
+                        duration: 0
+                        pitch: 0.0036440939
+                        theta: -2.0937453135848045
+                      name: ''
+                  isInterpolated: false
+                  mapId: 'robot_dog_sr_20020.1589509647283'
+                  routeId: 1589509790549
+                  point:
+                    x: '-2.0111198726356423'
+                    y: '0.600399600638084'
+              robot_ids:
+                - robot_dog_sr_20020
+          elevator_base: null
+          calibration: null
+          landmarks: []
+          floor: 0
+          robot_ids:
+            - robot_dog_sr_20020
+          transforms: null

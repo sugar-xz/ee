@@ -1,0 +1,104 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      properties:
+        service:
+          type: string
+          enum:
+            - robox
+            - box
+            - zeno
+            - apk-robot
+        system:
+          type: string
+          enum:
+            - ubuntu_16.04
+            - ubuntu_18.04
+            - generic
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                service:
+                  type: string
+                system:
+                  type: string
+                lrs:
+                  type: object
+                  properties:
+                    min:
+                      type: object
+                      properties:
+                        tag:
+                          type: string
+                        name:
+                          type: string
+                        level:
+                          type: integer
+                        version:
+                          type: string
+                        system:
+                          type: string
+                    latest:
+                      type: object
+                      properties:
+                        tag:
+                          type: string
+                        name:
+                          type: string
+                        level:
+                          type: integer
+                        version:
+                          type: string
+                        system:
+                          type: string
+
+  examples:
+    Request:
+      value:
+        service: box
+        system: ubuntu_18.04
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          service: box
+          system: ubuntu_18.04
+          lrs:
+            min: null
+            latest:
+              tag: latest
+              name: Box
+              level: 1
+              version: 1.1.1
+              system: ubuntu_18.04

@@ -1,0 +1,53 @@
+openapi: 3.0.2
+components:
+  parameters:
+    TargetIDParam:
+      in: path
+      name: id
+      description: Target id
+      required: true
+      schema:
+        type: integer
+        format: int32
+  requestBodies:
+    PutRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PutRequest'
+          examples:
+            request:
+              $ref: 'targetTargets.yaml#/components/examples/PostRequest'
+  schemas:
+    PutRequest:
+      type: object
+      properties:
+        site:
+          type: integer
+          format: int64
+          description: Site id
+        serial_no:
+          type: string
+          description: Serial number, uniqueness of inspection point
+        name:
+          type: string
+          description: Name of inspection point
+        floor:
+          type: integer
+          format: int32
+          description: The floor number of the inspection point, `-1` means `B1`, `1` means `F1`
+        longitude:
+          type: number
+          format: double
+          description: The longitude of the inspection point, which is required when using robot to patrol
+        latitude:
+          type: number
+          format: double
+          description: The latitude of the inspection point, which is required when using robot to patrol
+        desc:
+          type: string
+          description: Information description of inspection points
+        category:
+          type: string
+          description: Types of inspection points, such as shops, safe passages, etc.

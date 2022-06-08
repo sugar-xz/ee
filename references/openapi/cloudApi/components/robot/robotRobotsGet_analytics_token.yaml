@@ -1,0 +1,86 @@
+openapi: 3.0.2
+components:
+  parameters:
+    NameParam:
+      in: query
+      name: name
+      required: true
+      description: name=robot_logs|robot_lidar
+      schema:
+        type: string
+        enum:
+          - robot_logs
+          - robot_lidar
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                robot_id:
+                  type: string
+                  description: Robot ID
+                url:
+                  type: string
+                fields:
+                  type: object
+                  properties:
+                    key:
+                      type: string
+                    bucket:
+                      type: string
+                    x-amz-credential:
+                      type: string
+                    acl:
+                      type: string
+                    x-amz-algorithm:
+                      type: string
+                    success_action_status:
+                      type: integer
+                      format: int32
+                    x-amz-server-side-encryption:
+                      type: string
+                    tagging:
+                      type: string
+                    policy:
+                      type: string
+                    x-amz-date:
+                      type: string
+                    x-amz-signature:
+                      type: string
+
+  examples:
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          url: https://dev.s3.cn-northwest-1.amazonaws.com.cn/
+          fields:
+              x-amz-credential: AKIA3ADBR2YFA/20191014/cn-northwest-1/s3/aws4_request
+              acl: private
+              x-amz-algorithm: AWS4-HMAC-SHA256
+              success_action_status: 201
+              x-amz-server-side-encryption: AES256
+              tagging: <Tagging><TagSet><Tag><Key>expiration</Key><Value>31days</Value></Tag></TagSet></Tagging>
+              key: users/2/cameras/camera_id/videos/filename
+              x-amz-date: 20191014T064358Z
+              policy: eyJleHBpcmC1yYW5nZSIsIDEWRbXjxUYWdnaWFQwNjQzNThaIn1dfQ==
+              x-amz-signature: ce4027f2d3d5dc61f84819e2148ecd2668
+          robot_id: robot_dog_sr_20002

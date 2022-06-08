@@ -1,0 +1,42 @@
+# Name: test_default.tavern
+test_name: Get camera information from box
+stages:
+  - type: ref
+    id: login_customer
+  - name: Get camera information from camera_id
+    request:
+      url: "{url}/camera/cameras/{camera_id}"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+
+---
+test_name: Use the wrong camera id to query
+marks:
+  - parametrize:
+      key: err_camera_cameras_id
+      vals:
+        - "aaa@@#33"
+        - "box_no_exist"
+        - "99999"
+stages:
+  - type: ref
+    id: login_customer
+  - name: Use the wrong camera id to query
+    request:
+      url: "{url}/camera/cameras/{err_camera_cameras_id}"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 404
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_404
+ #   delay_after: 1

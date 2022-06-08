@@ -1,0 +1,213 @@
+openapi: 3.0.2
+components:
+  parameters:
+    LibIDParam:
+      in: query
+      name: lib
+      description: Face lib id
+      schema:
+        type: string
+        format: uuid
+    LibOrgIDParam:
+      in: query
+      name: lib__organization
+      description: Face lib organization id
+      schema:
+        type: integer
+        format: int32
+    FaceIDParam:
+      in: path
+      name: id
+      required: true
+      description: Face detection id
+      schema:
+        type: string
+        format: uuid
+  requestBodies:
+    PostRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/IMGByteRequest'
+              - $ref: '#/components/schemas/IMGS3Request'
+          examples:
+            img_S3:
+              $ref: '#/components/examples/S3Request'
+            img_byte:
+              $ref: '#/components/examples/ByteRequest'
+
+  responses:
+    FaceListResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FaceListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/FaceListResult'
+    FaceResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FaceResult'
+          examples:
+            response:
+              $ref: '#/components/examples/FaceResult'
+  schemas:
+    IMGByteRequest:
+      type: object
+      required:
+        - lib
+        - img
+        - person_id
+      properties:
+        lib:
+          type: string
+          format: uuid
+          description: Face detection id
+        img:
+          type: string
+        person_id:
+          type: string
+        note:
+          type: string
+    IMGS3Request:
+      type: object
+      required:
+        - lib
+        - img
+        - person_id
+      properties:
+        lib:
+          type: string
+          format: uuid
+          description: Face detection id
+        img:
+          type: object
+          description: S3 object
+          required:
+            - Key
+            - Bucket
+          properties:
+            meta:
+              type: object
+              properties:
+                file_size:
+                  type: string
+                content_type:
+                  type: string
+            Key:
+              type: string
+            Bucket:
+              type: string
+            Etag:
+              type: string
+            Location:
+              type: string
+        person_id:
+          type: string
+        note:
+          type: string
+
+    FaceListResult:
+      description: Face detection list
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/FaceInfo'
+    FaceInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Face detection id
+        created_at:
+          type: string
+          description: Data create time
+          format: date-time
+        updated_at:
+          type: string
+          description: Data update time
+          format: date-time
+        person_id:
+          type: string
+        lib_id:
+          type: string
+          format: uuid
+          description: Face lib id
+        confidence:
+          type: number
+        note:
+          type: string
+
+    FaceResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/FaceInfo'
+
+  examples:
+    ByteRequest:
+      value:
+        lib: 327f5a1eb46945d48bb3f3316e5c8866
+        img:
+          Key: test
+          Bucket: test
+        person_id: 327f5a1eb46945d48bb3f3316e5c8863
+        note: test
+    S3Request:
+      value:
+        lib: 327f5a1eb46945d48bb3f3316e5c8866
+        img: img_byte
+        person_id: 327f5a1eb46945d48bb3f3316e5c8863
+        note: test
+
+    FaceListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 1
+          next: null
+          previous: null
+          results:
+            - id: 327f5a1eb46945d48bb3f3316e5c8865
+              created_at: '2020-07-13T03:32:54Z'
+              updated_at: '2020-07-13T03:32:56Z'
+              person_id: 327f5a1eb46945d48bb3f3316e5c8863
+              lib_id: 327f5a1eb46945d48bb3f3316e5c8866
+              confidence: 1.0
+              note: test
+
+    FaceResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 327f5a1eb46945d48bb3f3316e5c8865
+          created_at: '2020-07-13T03:32:54Z'
+          updated_at: '2020-07-13T03:32:56Z'
+          person_id: 327f5a1eb46945d48bb3f3316e5c8863
+          lib_id: 327f5a1eb46945d48bb3f3316e5c8866
+          confidence: 1.0
+          note: test

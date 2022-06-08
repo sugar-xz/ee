@@ -1,0 +1,111 @@
+openapi: 3.0.2
+components:
+  parameters:
+    CompanyIDParam:
+      in: path
+      name: id
+      description: Guard company id
+      schema:
+        type: integer
+        format: int64
+  requestBodies:
+    PostRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PostRequest'
+  responses:
+    CompanyListResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CompanyListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/CompanyListResult'
+    PostResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostResult'
+          examples:
+            response:
+              $ref: '#/components/examples/PostResult'
+
+  schemas:
+    PostRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Guard company title
+
+    CompanyListResult:
+      description: Guard company list
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/CompanyInfo'
+
+    PostResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/CompanyInfo'
+
+    CompanyInfo:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Guard company title
+        id:
+          type: integer
+          format: int64
+          description: Guard company id
+
+  examples:
+    PostRequest:
+      value:
+        title: Nanjing Guard
+
+    CompanyListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 1
+          next: null
+          previous: null
+          results:
+            - title: Nanjing Guard
+              id: 1
+
+    PostResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          title: Nanjing Guard
+          id: 1

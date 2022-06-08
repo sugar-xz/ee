@@ -1,0 +1,61 @@
+# Name: test_default.tavern
+test_name: Create Patrol
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create Patrol
+    request:
+      url: "{url}/robot/{test_robot_id}/patrols"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        route_id: 1
+        name: route_test
+        mode: "on"
+        start_at: 12
+        end_at: 36
+    response:
+      status_code: 201
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_201
+
+---
+test_name: Get camera information from err box
+marks:
+  - parametrize:
+      key:
+        - err_route_id
+        - err_name
+        - er_mode
+      vals:
+        - ["" ,"" ,""]
+        - ["" ,"route_test" ,"on"]
+        - ["33" ,"" ,"on"]
+        - ["33" ,"route_test" ,""]
+        - ["33" ,"route_test" ,"11"]
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create Patrol
+    request:
+      url: "{url}/robot/{test_robot_id}/patrols"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        route_id: "{err_route_id}"
+        name: "{err_name}"
+        mode: "{er_mode}"
+        start_at: 12
+        end_at: 36
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400

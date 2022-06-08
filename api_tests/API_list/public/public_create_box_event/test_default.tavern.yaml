@@ -1,0 +1,68 @@
+# Name: test_default.tavern
+test_name: Create Event (camera)
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_initiate
+  - type: ref
+    id: box_authenticate
+  - name: Create Event (camera)
+    request:
+      url: "{url}/event/events/camera"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        X-APP: "Box/{box_level}/{box_version}"
+#        Referer: "{Referer}"
+      json:
+        camera_id: "{camera_id}"
+        detection:
+          algos: person
+          threshold: 0.5
+        started_at: "2019-10-13T06:00:57.262076Z"
+        ended_at: "2019-10-14T06:01:57.262076Z"
+        media:
+          snapshot:
+            file:
+              Key: users/1/cameras/1/events/logo.jpg
+              Bucket: develop-data-turingvideo-com
+              meta:
+                file_size: 1888
+                size:
+                  - 640
+                  - 360
+                content_type: image/jpeg
+          bbox:
+            file:
+              Key: users/3/cameras/3/events/0dc87e3
+              Bucket: develop-data-turingvideo-com
+              meta:
+                file_size: 1888
+                size:
+                  - 640
+                  - 360
+                content_type: text/json
+          videos:
+            - file:
+                Key: users/3/cameras/3/events/0dc87e3
+                Bucket: develop-data-turingvideo-com
+                meta:
+                  file_size: 1888
+                  size:
+                    - 640
+                    - 360
+                  content_type: video/mp4
+              started_at: "2019-10-14T06:00:57.262076Z"
+              ended_at: "2019-10-14T06:01:57.262076Z"
+        location:
+          lng: 0.0
+          lat: 0.0
+
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1

@@ -1,0 +1,112 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    MergeResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MergeResult'
+          examples:
+            response:
+              $ref: '#/components/examples/MergeResult'
+
+  schemas:
+    Request:
+      type: object
+      required:
+        - src_id
+        - dest_id
+      properties:
+        src_id:
+          type: string
+          format: uuid
+          description: Tracking objects combined id
+        dest_id:
+          type: string
+          format: uuid
+          description: Tracking objects target id
+    MergeResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/TrackingInfo'
+    TrackingInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Tracking id
+        created_at:
+          type: string
+          description: Data create time
+          format: date-time
+        updated_at:
+          type: string
+          description: Data update time
+          format: date-time
+        enabled_tracking:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Enabled tracking
+        note:
+          type: string
+        params:
+          type: string
+          format: JSONObjectField
+        organization_id:
+          type: integer
+          format: int32
+          description: Organization id
+        img_url:
+          type: string
+          description: Img path
+        data:
+          type: object
+          properties:
+            serial_no:
+              type: string
+              description: Tracking object serial no
+            name:
+              type: string
+              description: Tracking object name
+
+  examples:
+    Request:
+      value:
+        src_id: 4366ea92-b2ee-45aa-8580-2985392518a5
+        dest_id: 4366ea92-b2ee-45aa-8580-2985392518a6
+
+    MergeResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 4366ea92-b2ee-45aa-8580-2985392518a6
+          created_at: '2020-07-11T10:33:45Z'
+          updated_at: '2020-07-12T04:57:57Z'
+          enabled_tracking: false
+          note:
+          params: {}
+          organization_id: 9
+          img_url: https://turingvideo-staging-api.s3.amazonaws.com
+          data:
+            serial_no: serial_no1
+            name: test

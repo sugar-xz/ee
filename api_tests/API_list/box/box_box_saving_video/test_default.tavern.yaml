@@ -1,0 +1,28 @@
+# Name: test_default.tavern
+test_name: Get camera information from box
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: box_initiate
+  - type: ref
+    id: box_authenticate
+  - name: Get camera information from box
+    request:
+      url: "{url}/camera/cameras/saving_video"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+        Referer: "{Referer}"
+      json:
+          camera_id: "{camera_id}"
+    response:
+      status_code:
+        - 200
+        - 409
+#      status_code: 200
+#      body:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1

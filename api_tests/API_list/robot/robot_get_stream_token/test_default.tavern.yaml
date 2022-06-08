@@ -1,0 +1,50 @@
+# Name: test_default.tavern
+test_name: Remember to renew when stream expires or invalid
+stages:
+  - type: ref
+    id: robot_initiate
+  - type: ref
+    id: robot_authenticate
+  - name: Remember to renew when stream expires or invalid
+    request:
+      url: "{url}/robot/robots/get_stream_token?camera_name={robot_camera_name}"
+      method: GET
+      headers:
+        content-type: application/json
+#        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Renewal when token error
+marks:
+  - parametrize:
+      key: err_name_camera
+      vals:
+        - ""
+        - 123122452
+        - qweasd
+        - wqe@#$%1424
+stages:
+  - type: ref
+    id: robot_initiate
+  - type: ref
+    id: robot_authenticate
+  - name: Renewal when token error
+    request:
+      url: "{url}/robot/robots/get_token?name={err_name_camera}"
+      method: GET
+      headers:
+        content-type: application/json
+#        Referer: "{Referer}"
+    response:
+      status_code: 400
+      body:
+        extra:
+          detail:
+            name:
+              - !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400

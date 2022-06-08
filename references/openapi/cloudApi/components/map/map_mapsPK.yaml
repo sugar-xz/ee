@@ -1,0 +1,43 @@
+openapi: 3.0.2
+components:
+  parameters:
+    MapIDParam:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+        foramt: int32
+      description: Map id
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int32
+                  description: Map id
+  examples:
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 2

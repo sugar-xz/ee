@@ -1,0 +1,95 @@
+# Name: test_default.tavern
+test_name: Robot Authenticate
+stages:
+  - &initiate_anchor
+    name: Robot initiate
+    request:
+      url: "{url}/robot/robots/initiate"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Robot/{robot_level}/{robot_version}"
+      json:
+        id: "{test_robot_id}"
+    response:
+      status_code: 200
+      save:
+        $ext:
+          function: api_tests.utils.validation_method:validate_robot_initiate_get_challenge
+ #   delay_after: 1
+
+  - name: Robot Authenticate
+    request: &authenticate_anchor
+      url: "{url}/robot/robots/authenticate"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Robot/{robot_level}/{robot_version}"
+      json:
+        type: "{robot_type}"
+        challenge: "{get_robot_challenge}"
+        ip_address: "{robot_ip_address}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Input error to authenticate
+marks:
+  - parametrize:
+      key:
+        - err_type
+        - err_ip_address
+      vals:
+        - ["",  ""]
+        - ["213qwsdas", ""]
+        - ["213qwsdas", "12312sda"]
+stages:
+  - *initiate_anchor
+  - name: Input error to start
+    request:
+      <<: *authenticate_anchor
+      json:
+        type: "{err_type}"
+        challenge: "{get_robot_challenge}"
+        ip_address: "{err_ip_address}"
+    response: &auth_response_anchor
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+ #   delay_after: 1
+
+---
+test_name: Input error to authenticate
+stages:
+  - *initiate_anchor
+  - name: Input error to start
+    request:
+      <<: *authenticate_anchor
+      json:
+        type: ""
+        challenge: ""
+        ip_address: ""
+    response: *auth_response_anchor
+ #   delay_after: 1
+
+---
+test_name: Robot Authenticate err
+stages:
+  - *initiate_anchor
+  - name: Robot Authenticate err
+    request:
+      <<: *authenticate_anchor
+      json:
+        type: "{robot_type}"
+        challenge: 111
+        ip_address: "{robot_ip_address}"
+    response:
+      status_code: 409
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_409
+ #   delay_after: 1

@@ -1,0 +1,22 @@
+# Name: test_default.tavern
+test_name: Map config list
+stages:
+  - type: ref
+    id: login_customer
+  - name: Map config list
+    request:
+      url: "{url}/map_config/map_configs"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+        ret:
+          count: !anyint
+          results: !anything
+            -
+              id: !anyint

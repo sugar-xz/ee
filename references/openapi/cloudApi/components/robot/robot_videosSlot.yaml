@@ -1,0 +1,47 @@
+openapi: 3.0.2
+
+components:
+  responses:
+    200:
+      description: Query the video saved by robot
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: array
+              items:
+                $ref: 'robot_videos.yaml#/components/schemas/VideoInfo'
+
+  examples:
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          - id: 11
+            robot_id: robot_dog_sr_20002
+            camera:
+              name: front
+              lablel: Front camera
+            video:
+              content_type: image/jpeg
+              file_size: 1123
+              size:
+                - 600
+                - 369
+              url: https://devs-turingvideo-com.s3.cn-northwest-1.amazonaws.com.cn/users/1/cameras/1/events/logo.jpg?X-Amz-AlC-SHA256&X-Amz-Credential=AKIA3ADBRQCSDF
+            started_at: "2019-09-27 06:15:31+00"
+            ended_at: "2019-09-27 06:15:31+00"
+            size: 1123

@@ -1,0 +1,93 @@
+# Name: test_default.tavern
+test_name: Create map config (customer)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create map config
+    request: &request_anchor
+      url: "{url}/map/maps"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        map_config_id: 1
+        center_point:
+          lat: 32.0571355
+          lng: 118.77807341
+        initial_zoom: 8
+        min_zoom: 2
+        max_zoom: 6
+        data:
+          tavern: test
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !anyint
+      save:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Create map (customer)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create map
+    request:
+      <<: *request_anchor
+      json:
+        map_config_id: 2
+        data: null
+        image:
+          meta:
+            file_size: 888
+            content_type: image/jpeg
+          Key: tavern/tavern.jpg
+          Bucket: test-turingvideo-com
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !anyint
+      save:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Create map error(customer)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create map error
+    request:
+      <<: *request_anchor
+      json:
+        map_config_id: 1
+    response:
+      status_code: 400
+      body:
+        extra:
+          detail:
+            center_point: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+---
+test_name: Create map error(customer)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create map error
+    request:
+      <<: *request_anchor
+      json:
+        map_config_id: 1
+        image:
+          ""
+    response:
+      status_code: 400
+      body:
+        extra:
+          detail:
+            image: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400

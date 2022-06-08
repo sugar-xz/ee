@@ -1,0 +1,181 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    PostRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PostRequest'
+  responses:
+    TargetResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TargetResult'
+          examples:
+            response:
+              $ref: '#/components/examples/TargetResult'
+    TargetListResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TargetListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/TargetListResult'
+  schemas:
+    PostRequest:
+      type: object
+      required:
+        - site_id
+        - name
+        - floor
+      properties:
+        site_id:
+          type: integer
+          format: int64
+          description: Site id
+        serial_no:
+          type: string
+          description: Serial number, uniqueness of inspection point
+        name:
+          type: string
+          description: Name of inspection point
+        floor:
+          type: integer
+          format: int32
+          description: The floor number of the inspection point, `-1` means `B1`, `1` means `F1`
+        longitude:
+          type: number
+          format: double
+          description: The longitude of the inspection point, which is required when using robot to patrol
+        latitude:
+          type: number
+          format: double
+          description: The latitude of the inspection point, which is required when using robot to patrol
+        desc:
+          type: string
+          description: Information description of inspection points
+        category:
+          type: string
+          description: Types of inspection points, such as shops, safe passages, etc.
+
+    TargetResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/TargetInfo'
+    TargetListResult:
+      description: Robot target list
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/TargetInfo'
+    TargetInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Robot target id
+        site_id:
+          type: integer
+          format: int64
+          description: Site id
+        serial_no:
+          type: string
+          description: Serial number, uniqueness of inspection point
+        name:
+          type: string
+          description: Name of inspection point
+        floor:
+          type: integer
+          format: int32
+          description: The floor number of the inspection point, `-1` means `B1`, `1` means `F1`
+        longitude:
+          type: number
+          format: double
+          description: The longitude of the inspection point, which is required when using robot to patrol
+        latitude:
+          type: number
+          format: double
+          description: The latitude of the inspection point, which is required when using robot to patrol
+        desc:
+          type: string
+          description: Information description of inspection points
+        category:
+          type: string
+          description: Types of inspection points, such as shops, safe passages, etc.
+        latest_inspection_time:
+          type: string
+          description: The system will automatically update the time of the last patrol
+
+  examples:
+    PostRequest:
+      value:
+        site_id: 2
+        serial_no: 5-312
+        name: 财务室
+        floor: 3
+        longitude: ''
+        latitude: ''
+        desc: ''
+        category: ''
+
+    TargetResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 3
+          site_id: 2
+          serial_no: 5-312
+          name: 财务室
+          floor: 3
+          longitude: ''
+          latitude: ''
+          desc: ''
+          category: ''
+          latest_inspection_time: '2019-08-16T09:15:22Z'
+
+    TargetListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 1
+          next: null
+          previous: null
+          results:
+            - id: 3
+              site_id: 2
+              serial_no: 5-312
+              name: 财务室
+              floor: 3
+              longitude: ''
+              latitude: ''
+              desc: ''
+              category: ''
+              latest_inspection_time: '2019-08-16T09:15:22Z'
+

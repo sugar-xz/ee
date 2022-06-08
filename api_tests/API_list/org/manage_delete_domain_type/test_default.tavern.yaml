@@ -1,0 +1,19 @@
+# Name: test_default.tavern
+test_name: Update domain type (org put)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Update domain type
+    request:
+      url: "{url}/domain_type/domain_types/3"
+      method: DELETE
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          pk: !int 3
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

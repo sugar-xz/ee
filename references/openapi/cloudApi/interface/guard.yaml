@@ -1,0 +1,475 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Guard
+    description: Guard related interface
+security:
+  - BasicAuth: []
+
+paths:
+  /guard_company/guard_companies:
+    get:
+      tags:
+        - Guard
+      summary: Get guard company list
+      description: |
+        Perms：
+        * `guard.guardcompany`: retrieve
+
+        Condition:
+        * User is system
+      responses:
+        200:
+          $ref: '../components/guard/guard_companies.yaml#/components/responses/CompanyListResult'
+    post:
+      tags:
+        - Guard
+      summary: Create guard company
+      description: |
+        Perms：
+        * `guard.guardcompany`: create
+
+        Condition:
+        * User is system
+      requestBody:
+        $ref: '../components/guard/guard_companies.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: '../components/guard/guard_companies.yaml#/components/responses/PostResult'
+  /guard_company/guard_companies/{id}:
+    get:
+      tags:
+        - Guard
+      summary: Get the specified Guard company information
+      parameters:
+        - $ref: '../components/guard/guard_companies.yaml#/components/parameters/CompanyIDParam'
+      description: |
+        Perms：
+        * `guard.guardcompany`: retrieve
+
+        Condition
+        * User is system
+      responses:
+        200:
+          $ref: '../components/guard/guard_companies.yaml#/components/responses/PostResult'
+    put:
+      tags:
+        - Guard
+      summary: Update guard company
+      parameters:
+        - $ref: '../components/guard/guard_companies.yaml#/components/parameters/CompanyIDParam'
+      description: |
+        Perms：
+        * `guard.guardcompany`: update
+
+        Condition:
+        * User is system
+      requestBody:
+        $ref: '../components/guard/guard_companies.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: '../components/guard/guard_companies.yaml#/components/responses/PostResult'
+    delete:
+      tags:
+        - Guard
+      summary: Delete guard company
+      description: |
+        Perms：
+        * `guard.guardcompany`: destroy
+
+        Condition:
+        * User is system
+      parameters:
+        - $ref: '../components/guard/guard_companies.yaml#/components/parameters/CompanyIDParam'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200'
+
+  /guard_admin/guard_admins:
+    get:
+      tags:
+        - Guard
+      summary: Get guard admins list
+      description: |
+        Perms：
+        * `guard.guardadmin`: retrieve
+
+        Condition
+        * User is system or user's role is guard_admin
+      responses:
+        200:
+          $ref: '../components/guard/guard_admins.yaml#/components/responses/AdminListResult'
+    post:
+      tags:
+        - Guard
+      summary: Create guard admin user
+      description: |
+        Perms：
+        * `guard.guardadmin`: create
+
+        Condition:
+        * User is system
+      requestBody:
+        $ref: '../components/guard/guard_admins.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: '../components/guard/guard_admins.yaml#/components/responses/AdminResult'
+  /guard_admin/guard_admins/{id}:
+    get:
+      tags:
+        - Guard
+      summary: Get the specified Guard admin information
+      parameters:
+        - $ref: '../components/guard/guard_adminsPK.yaml#/components/parameters/AdminIDParam'
+      description: |
+        Perms：
+        * `guard.guardadmin`: retrieve
+
+        Condition
+        * User is system or user's role is guard_admin
+      responses:
+        200:
+          $ref: '../components/guard/guard_admins.yaml#/components/responses/AdminResult'
+    put:
+      tags:
+        - Guard
+      summary: Update guard admin phone_number
+      parameters:
+        - $ref: '../components/guard/guard_adminsPK.yaml#/components/parameters/AdminIDParam'
+      description: |
+        Perms：
+        * guard.guardadmin: update
+
+        Condition:
+        * User is system
+      requestBody:
+        $ref: '../components/guard/guard_adminsPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200'
+    delete:
+      tags:
+        - Guard
+      summary: Delete guard admin user
+      description: |
+        Perms：
+        * guard.guardadmin: destroy
+
+        Condition:
+        * User is system
+      parameters:
+        - $ref: '../components/guard/guard_adminsPK.yaml#/components/parameters/AdminIDParam'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200'
+
+  /guard_admin/guard_admins/resend_activate_email:
+    post:
+      tags:
+        - Guard
+      summary: Activation email
+      description: |
+        Perms：
+        * `guard.guardadmin`: send_activate_email
+
+        Condition:
+        * User is system
+      requestBody:
+        $ref: '../components/guard/resend_activate_email.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/guard/resend_activate_email.yaml#/components/responses/200'
+
+  /guard/guards:
+    get:
+      tags:
+        - Guard
+      summary: Get guard list
+      description: |
+        Perms：
+        * `guard.guard`: retrieve
+
+        Condition
+        * User's role is guard_admin or user's role is guard or user's role is monitoring_operator
+      responses:
+        200:
+          $ref: '../components/guard/guard_guards.yaml#/components/responses/GuardListResult'
+    post:
+      tags:
+        - Guard
+      summary: Create guard user
+      description: |
+        Perms：
+        * `guard.guard`: create
+
+        Condition:
+        * User's role is guard_admin or user's role is monitoring_operator
+      requestBody:
+        $ref: '../components/guard/guard_guards.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: '../components/guard/guard_guards.yaml#/components/responses/GuardResult'
+  /guard/guards/{id}:
+    get:
+      tags:
+        - Guard
+      summary: Get the specified Guard information
+      parameters:
+        - $ref: '../components/guard/guard_guardsPK.yaml#/components/parameters/GuardIDParam'
+      description: |
+        Perms：
+        * `guard.guard`: retrieve
+
+        Condition
+        * User's role is guard_admin or user's role is guard or user's role is monitoring_operator
+      responses:
+        200:
+          $ref: '../components/guard/guard_guards.yaml#/components/responses/GuardResult'
+    put:
+      tags:
+        - Guard
+      summary: Update guard phone_number
+      parameters:
+        - $ref: '../components/guard/guard_guardsPK.yaml#/components/parameters/GuardIDParam'
+      description: |
+        Perms：
+        * `guard.guard`: update
+
+        Condition:
+        * User's role is guard and Modify yourself
+      requestBody:
+        $ref: '../components/guard/guard_guardsPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/guard/guard_guardsPK.yaml#/components/responses/PutResult'
+    delete:
+      tags:
+        - Guard
+      summary: Delete guard user
+      description: |
+        Perms：
+        * `guard.guard`: destroy
+
+        Condition:
+        * User's role is guard_admin or user's role is monitoring_operator
+      parameters:
+        - $ref: '../components/guard/guard_guardsPK.yaml#/components/parameters/GuardIDParam'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200'
+  /guard/guards/resend_activate_email:
+    post:
+      tags:
+        - Guard
+      summary: Activation email
+      description: |
+        Perms：
+        * `guard.guard`: resend_activate_email
+
+        Condition:
+        * User's role is guard_admin or user's role is monitoring_operator
+      requestBody:
+        $ref: '../components/guard/resend_activate_email.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/guard/resend_activate_email.yaml#/components/responses/200'
+
+  /monitoring_operator/monitoring_operators:
+    get:
+      tags:
+        - Guard
+      summary: Get monitoring operator list
+      description: |
+        Perms：
+        * `guard.monitoringoperator`: retrieve
+
+        Condition
+        * User's role is guard_admin or user's role is monitoring_operator
+      responses:
+        200:
+          $ref: '../components/guard/guard_guards.yaml#/components/responses/GuardListResult'
+    post:
+      tags:
+        - Guard
+      summary: Create monitoring operator user
+      description: |
+        Perms：
+        * `guard.monitoringoperator`: create
+
+        Condition:
+        * User's role is guard_admin
+      requestBody:
+        $ref: '../components/guard/guard_guards.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: '../components/guard/guard_guards.yaml#/components/responses/GuardResult'
+  /monitoring_operator/monitoring_operators/resend_activate_email:
+    post:
+      tags:
+        - Guard
+      summary: Activation email
+      description: |
+        Perms：
+        * `guard.monitoringoperator`: send_activate_email
+
+        Condition:
+        * User's role is guard_admin
+      requestBody:
+        $ref: '../components/guard/resend_activate_email.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/guard/resend_activate_email.yaml#/components/responses/200'
+  /monitoring_operator/monitoring_operators/{id}:
+    get:
+      tags:
+        - Guard
+      summary: Get the specified monitoring operator information
+      parameters:
+        - $ref: '../components/guard/guard_guardsPK.yaml#/components/parameters/GuardIDParam'
+      description: |
+        Perms：
+        * `guard.monitoringoperator`: retrieve
+
+        Condition
+        * User's role is guard_admin or user's role is monitoring_operator
+      responses:
+        200:
+          $ref: '../components/guard/guard_guards.yaml#/components/responses/GuardResult'
+    put:
+      tags:
+        - Guard
+      summary: Update monitoring operator phone_number
+      parameters:
+        - $ref: '../components/guard/guard_guardsPK.yaml#/components/parameters/GuardIDParam'
+      description: |
+        Perms：
+        * `guard.monitoringoperator`: update
+
+        Condition:
+        * User's role is monitoring_operator and Modify yourself
+      requestBody:
+        $ref: '../components/guard/guard_guardsPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/guard/guard_guardsPK.yaml#/components/responses/PutResult'
+    delete:
+      tags:
+        - Guard
+      summary: Delete monitoring operator user
+      description: |
+        Perms：
+        * `guard.monitoringoperator`: destroy
+
+        Condition:
+        * User's role is guard_admin
+      parameters:
+        - $ref: '../components/guard/guard_guardsPK.yaml#/components/parameters/GuardIDParam'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200'
+
+  /new_case/cases:
+    get:
+      tags:
+        - Guard
+      summary: Get guard case related information
+      description: |
+        Perms：
+        * `guard.case`: retrieve
+
+        User condition:
+        * customer
+        * site_manager
+        * monitoring_operator
+      responses:
+        200:
+          $ref: '../components/guard/new_caseCases.yaml#/components/responses/CaseListResult'
+  /new_case/cases/{id}:
+    put:
+      tags:
+        - Guard
+      summary: Update case
+      parameters:
+        - $ref: '../components/guard/new_caseCases.yaml#/components/parameters/GuardCaseIDParam'
+      description: |
+        Perms：
+        * guard.case: update
+
+        User condition
+        * customer
+        * site_manager
+        * monitoring_operator
+      requestBody:
+        $ref: '../components/guard/new_caseCases.yaml#/components/requestBodies/UpdateRequest'
+      responses:
+        200:
+          $ref: '../components/guard/new_caseCases.yaml#/components/responses/CaseResult'
+    patch:
+      tags:
+        - Guard
+      summary: Update case
+      parameters:
+        - $ref: '../components/guard/new_caseCases.yaml#/components/parameters/GuardCaseIDParam'
+      description: |
+        Perms：
+        * guard.case: update
+
+        User condition
+        * customer
+        * site_manager
+        * monitoring_operator
+      requestBody:
+        $ref: '../components/guard/new_caseCases.yaml#/components/requestBodies/UpdateRequest'
+      responses:
+        200:
+          $ref: '../components/guard/new_caseCases.yaml#/components/responses/CaseResult'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    X_APP:
+      type: apiKey
+      in: header
+      name: X-APP

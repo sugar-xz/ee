@@ -1,0 +1,316 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    PutRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PutRequest'
+
+    PatchRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PatchRequest'
+
+  responses:
+    EventResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EventResult'
+          examples:
+            BoxEventResult:
+              $ref: '#/components/examples/BoxEventResult'
+            RobotEventResult:
+              $ref: '#/components/examples/RobotEventResult'
+    DeleteResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '../common.yaml#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '../common.yaml#/components/examples/Result'
+
+
+  schemas:
+    EventResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: 'eventEvents.yaml#/components/schemas/EventInfo'
+
+    PutRequest:
+      type: object
+      required:
+        - tag
+      properties:
+        tag:
+          type: boolean
+          enum:
+            - true
+            - false
+        marked:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Event mark
+        viewed:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Event view status
+    PatchRequest:
+      type: object
+      properties:
+        tag:
+          type: boolean
+          enum:
+            - true
+            - false
+        marked:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Event mark
+        viewed:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Event view status
+
+  examples:
+    BoxEventResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 6
+          camera_id: 104
+          robot_id: null
+          robot_camera:
+            name: front
+            lablel: Front camera
+          camera:
+            id: 104
+            name: 小镇
+          robot: null
+          types:
+            - name: person
+              label: Person
+          started_at: '2017-10-18T06:00:57Z'
+          ended_at: '2017-10-19T06:01:57Z'
+          mediums:
+            - id: 19
+              name: snapshot
+              file:
+                file_size: 8888
+                size:
+                  - 640
+                  - 360
+                content_type: image/jpeg
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.ams
+              event_id: 6
+            - id: 20
+              name: bbox
+              file:
+                file_size: 8888
+                size:
+                  - 640
+                  - 360
+                content_type: text/json
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.am
+              event_id: 6
+            - id: 21
+              name: video
+              file:
+                file_size: 8888
+                content_type: video/mp4
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.a
+              event_id: 6
+          robot_data: null
+          camera_data:
+            threshold: 0.5
+          media:
+            snapshot:
+              id: 19
+              name: snapshot
+              file:
+                file_size: 8888
+                size:
+                  - 640
+                  - 360
+                content_type: image/jpeg
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.a
+              event_id: 6
+            bbox:
+              id: 20
+              name: bbox
+              file:
+                file_size: 8888
+                size:
+                  - 640
+                  - 360
+                content_type: text/json
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.a
+              event_id: 6
+            videos:
+              - id: 21
+                name: video
+                file:
+                  file_size: 8888
+                  content_type: video/mp4
+                  url: https://develop-data-turingvideo-com.s3.cn-northwest-1.a
+                event_id: 6
+                started_at: '2017-10-18T06:00:57Z'
+                ended_at: '2017-10-19T06:00:57Z'
+          location: null
+          source: camera
+          tag: ''
+          marked: false
+          viewed: false
+          annotate: unknown
+          site:
+            id: 2
+            created_at: '2019-08-16T09:06:45Z'
+            updated_at: '2019-08-16T09:15:22Z'
+            name: test-site
+            location: Nanjing/China
+            note: ''
+            label: Zidong
+            county: 栖霞区
+            province: 江苏省
+            city: 南京市
+            polygons: []
+    RobotEventResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 7
+          camera_id: null
+          robot_id: robot_dog_sr_20002
+          robot_camera:
+            name: front
+            lablel: Front camera
+          camera: null
+          robot:
+            id: robot_dog_sr_20002
+            name: 20002
+            type: test_li
+          types:
+            - name: person:513
+              label: 人群聚集
+            - name: enter
+              label: Enter
+          started_at: '2017-10-18T06:00:57Z'
+          ended_at: '2017-10-19T06:01:57Z'
+          mediums:
+            - id: 22
+              name: snapshot
+              file:
+                file_size: 8888
+                size:
+                  - 640
+                  - 360
+                content_type: image/jpeg
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.a
+              event_id: 7
+            - id: 23
+              name: bbox
+              file:
+                file_size: 8888
+                size:
+                  - 640
+                  - 360
+                content_type: text/json
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.a
+              event_id: 7
+            - id: 24
+              name: video
+              file:
+                file_size: 8888
+                content_type: video/mp4
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.am
+              event_id: 7
+          robot_data:
+            detected_macs: []
+            camera:
+              name: front
+              label: Frant camera
+            threshold: 0.9
+          camera_data: null
+          media:
+            snapshot:
+              id: 22
+              name: snapshot
+              file:
+                file_size: 8888
+                size:
+                  - 640
+                  - 360
+                content_type: image/jpeg
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.am
+              event_id: 7
+            bbox:
+              id: 23
+              name: bbox
+              file:
+                file_size: 8888
+                size:
+                  - 640
+                  - 360
+                content_type: text/json
+                url: https://develop-data-turingvideo-com.s3.cn-northwest-1.am
+              event_id: 7
+            videos:
+              - id: 24
+                name: video
+                file:
+                  file_size: 8888
+                  content_type: video/mp4
+                  url: https://develop-data-turingvideo-com.s3.cn-northwest-1.am
+                event_id: 6
+                started_at: '2017-10-18T06:00:57Z'
+                ended_at: '2017-10-19T06:00:57Z'
+          location:
+            lat: 0.0
+            lng: 0.0
+          source: robot
+          tag: ""
+          marked: false
+          viewed: false
+          annotate: unknown
+          site:
+            id: 2
+            created_at: '2019-08-16T09:06:45Z'
+            updated_at: '2019-08-16T09:15:22Z'
+            name: test-site
+            location: Nanjing/China
+            note: ''
+            label: Zidong
+            county: 栖霞区
+            province: 江苏省
+            city: 南京市
+            polygons: []
+          data:
+            detected_macs: []
+            camera:
+              name: front
+              label: Frant camera
+            threshold: 0.9

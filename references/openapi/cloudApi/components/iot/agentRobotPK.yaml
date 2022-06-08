@@ -1,0 +1,126 @@
+openapi: 3.0.2
+components:
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: Robot id
+                version:
+                  type: integer
+                  description: Robot version
+                agents:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      agent:
+                        type: object
+                        properties:
+                          name:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                                description: Robot name
+                              label:
+                                type: string
+                                description: Label of the robot
+                          level:
+                            type: integer
+                            format: int32
+                            description: Robot level
+                          version:
+                            type: string
+                            description: Robot app version
+                          upgradable:
+                            type: boolean
+                            enum:
+                              - true
+                              - false
+                            description: Robot app version upgrade
+                          outdated:
+                            type: string
+                            description: App agent version expired
+                          upgrading:
+                            type: string
+                            description: Robot app version upgrading
+                      latest_agent:
+                        type: object
+                        properties:
+                          name:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                                description: Robot name
+                              label:
+                                type: string
+                                description: Label of the robot
+                          level:
+                            type: integer
+                            format: int32
+                            description: Robot level
+                          version:
+                            type: int32
+                            description: Robot app version
+                          system:
+                            type: string
+                      upgrading_agent:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            enum:
+                              - initialized
+                              - success
+                              - failed
+                              - ongoing
+                              - terminated
+                          failed:
+                            type: boolean
+                            enum:
+                              - true
+                              - false
+                          failed_reason:
+                            type: string
+
+  examples:
+    Result:
+      value:
+        id: robot_dog_sr_20002
+        version: 1603
+        agents:
+          - agent:
+              name:
+                name: Robot
+                label: Turing Robox
+              level: 1
+              version: 0.14.3
+              upgradable: true
+              outdated: null
+              upgrading: null
+            latest_agent:
+              name:
+                name: Robot
+                label: Turing Robox
+              level: 1
+              version: 0.14.4
+              system: generic
+            upgrading_agent: null

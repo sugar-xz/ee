@@ -1,0 +1,49 @@
+# Name: test_default.tavern
+test_name: View the box info
+stages:
+  - type: ref
+    id: login_customer
+  - name: View the box info
+    request:
+      url: "{url}/box/boxes"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      body:
+        ret: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Method error to view the box info
+stages:
+  - type: ref
+    id: login_customer
+  - name: method error
+    request:
+      url: "{url}/box/boxes"
+      method: POST
+      headers:
+        content-type: application/json
+    response:
+      status_code: 403
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_403
+
+---
+test_name: Not logged in to see box information
+stages:
+  - name: Not logged in to see box information
+    request:
+      url: "{url}/box/boxes"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 401
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_401

@@ -1,0 +1,60 @@
+# Name: test_default.tavern
+test_name: Inspection List--all
+stages:
+  - type: ref
+    id: login_customer
+  - name: Inspection List
+    request: &request_anchor
+      url: "{url}/inspection/inspections"
+      method: GET
+      headers:
+        content-type: application/json
+        Referer: "{Referer}"
+    response: &response_anchor
+      status_code: 200
+      body:
+        ret:
+          count: !anyint
+          results: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Inspection List--target_categories__in
+stages:
+  - type: ref
+    id: login_customer
+  - name: Inspection List
+    request:
+      <<: *request_anchor
+      url: "{url}/inspection/inspections?target_categories__in=test"
+    response: *response_anchor
+---
+test_name: Inspection List--target_id
+stages:
+  - type: ref
+    id: login_customer
+  - name: Inspection List
+    request:
+      <<: *request_anchor
+      url: "{url}/inspection/inspections?target_id=2"
+    response: *response_anchor
+---
+test_name: Inspection List--map_id
+stages:
+  - type: ref
+    id: login_customer
+  - name: Inspection List
+    request:
+      <<: *request_anchor
+      url: "{url}/inspection/inspections?map_id=robot_test_10001.1570763226327"
+    response: *response_anchor
+---
+test_name: Inspection List--route_id
+stages:
+  - type: ref
+    id: login_customer
+  - name: Inspection List
+    request:
+      <<: *request_anchor
+      url: "{url}/inspection/inspections?route_id=1"
+    response: *response_anchor

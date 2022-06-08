@@ -1,0 +1,331 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Map
+    description: Map related interface
+security:
+  - BasicAuth: []
+
+paths:
+  /map_config/map_configs:
+    get:
+      tags:
+        - Map
+      summary: Map config list
+      description: |
+        Perms：
+        * `mapping.mapconfig`: retrieve
+
+        Role condition
+        * site_manager
+        * customer
+      responses:
+        200:
+          $ref: '../components/map/map_configs.yaml#/components/responses/ConfigListResult'
+    post:
+      tags:
+        - Map
+      summary: Create map config
+      description: |
+        Perms：
+        * `mapping.mapconfig`: create
+
+        Role condition
+        * customer
+      requestBody:
+        $ref: '../components/map/map_configs.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: '../components/map/map_configs.yaml#/components/responses/ConfigResult'
+  /map_config/map_configs/{id}:
+    get:
+      tags:
+        - Map
+      summary: Map config
+      description: |
+        Perms：
+        * `mapping.mapconfig`: retrieve
+
+        Role condition
+        * site_manager
+        * customer
+      parameters:
+        - $ref: '../components/map/map_configsPK.yaml#/components/parameters/MapConfigIDParam'
+      responses:
+        200:
+          $ref: '../components/map/map_configs.yaml#/components/responses/ConfigResult'
+    delete:
+      tags:
+        - Map
+      summary: Delete map config
+      description: |
+        Perms：
+        * `mapping.mapconfig`: destroy
+
+        Role condition
+        * customer
+      parameters:
+        - $ref: '../components/map/map_configsPK.yaml#/components/parameters/MapConfigIDParam'
+      responses:
+        200:
+          $ref: '../components/map/map_configsPK.yaml#/components/responses/200'
+
+  /map/maps:
+    get:
+      tags:
+        - Map
+      summary: Map list
+      description: |
+        Perms：
+        * `mapping.map`: retrieve
+
+        Role condition
+        * site_manager
+        * customer
+      responses:
+        200:
+          $ref: '../components/map/map_maps.yaml#/components/responses/MapListResult'
+    post:
+      tags:
+        - Map
+      summary: Create map
+      description: |
+        Perms：
+        * `mapping.map`: create
+
+        Role condition
+        * customer
+        * site_manager
+      requestBody:
+        $ref: '../components/map/map_maps.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: '../components/map/map_maps.yaml#/components/responses/MapResult'
+  /map/maps/{id}:
+    get:
+      tags:
+        - Map
+      summary: Retrieve an map
+      description: |
+        Perms：
+        * `mapping.map`: retrieve
+
+        Role condition
+        * site_manager
+        * customer
+      parameters:
+        - $ref: '../components/map/map_mapsPK.yaml#/components/parameters/MapIDParam'
+      responses:
+        200:
+          $ref: '../components/map/map_maps.yaml#/components/responses/MapResult'
+    delete:
+      tags:
+        - Map
+      summary: Delete map
+      description: |
+        Perms：
+        * `mapping.map`: destroy
+
+        Role condition
+        * site_manager
+        * customer
+      parameters:
+        - $ref: '../components/map/map_mapsPK.yaml#/components/parameters/MapIDParam'
+      responses:
+        200:
+          $ref: '../components/map/map_mapsPK.yaml#/components/responses/200'
+
+  /map/targets:
+    get:
+      tags:
+        - Map
+      summary: Map target list
+      description: |
+        Perms：
+        * `mapping.target`: retrieve
+
+        Role condition
+        * site_manager
+        * customer
+      responses:
+        200:
+          $ref: '../components/map/map_targets.yaml#/components/responses/MapTargetListResult'
+    post:
+      tags:
+        - Map
+      summary: Create map target
+      description: |
+        Perms：
+        * `mapping.target`: create
+
+        Role condition
+        * customer
+        * site_manager
+      requestBody:
+        $ref: '../components/map/map_targets.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: '../components/map/map_targets.yaml#/components/responses/MapTargetResult'
+  /map/targets/{id}:
+    get:
+      tags:
+        - Map
+      summary: Retrieve an map target
+      description: |
+        Perms：
+        * `mapping.target`: retrieve
+
+        Role condition
+        * site_manager
+        * customer
+      parameters:
+        - $ref: '../components/map/map_targetsPK.yaml#/components/parameters/MapTargetIDParam'
+      responses:
+        200:
+          $ref: '../components/map/map_targets.yaml#/components/responses/MapTargetResult'
+    delete:
+        tags:
+          - Map
+        summary: Delete map target
+        description: |
+          Perms：
+          * `mapping.target`: destroy
+
+          Role condition
+          * site_manager
+          * customer
+        parameters:
+          - $ref: '../components/map/map_targetsPK.yaml#/components/parameters/MapTargetIDParam'
+        responses:
+          200:
+            $ref: '../components/map/map_targetsPK.yaml#/components/responses/200'
+
+  /site/sites/{id}/add_map:
+    post:
+      tags:
+        - Map
+        - Site
+      summary: Create site_map
+      description: |
+        Perms：
+        * `logic.site`: add_map
+
+        Role condition
+        * customer
+        * site_manager
+      parameters:
+        - $ref: '../components/map/siteSitesAdd_map.yaml#/components/parameters/SiteIDParam'
+      requestBody:
+        $ref: '../components/map/siteSitesAdd_map.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/map/siteSitesAdd_map.yaml#/components/responses/200'
+  /site/sites/{id}/remove_map:
+    post:
+      tags:
+        - Map
+        - Site
+      summary: Delete site_map
+      description: |
+        Perms：
+        * `logic.site`: remove_map
+
+        Role condition
+        * customer
+        * site_manager
+      parameters:
+        - $ref: '../components/map/siteSitesAdd_map.yaml#/components/parameters/SiteIDParam'
+      requestBody:
+        $ref: '../components/map/siteSitesRemove_map.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/map/siteSitesRemove_map.yaml#/components/responses/200'
+
+  /domain/domains/{id}/set_map:
+    post:
+      tags:
+        - Org
+        - Map
+      summary: Associate domain and map
+      description: |
+        Perms：
+        * `org.domain`: set_map
+
+        Role condition
+        * customer
+      parameters:
+        - $ref: '../components/map/domainDomainsPKSet_map.yaml#/components/parameters/DomainIDParam'
+      requestBody:
+        $ref: '../components/map/domainDomainsPKSet_map.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/map/domainDomainsPKSet_map.yaml#/components/responses/200'
+  /domain/domains/{id}/unset_map:
+    post:
+      tags:
+        - Org
+        - Map
+      summary: Disassociate domain and map
+      description: |
+        Perms：
+        * `org.domain`: unset_map
+
+        Role condition
+        * customer
+      parameters:
+        - $ref: '../components/map/domainDomainsPKSet_map.yaml#/components/parameters/DomainIDParam'
+      requestBody:
+        $ref: '../components/map/domainDomainsPKSet_map.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/map/domainDomainsPKSet_map.yaml#/components/responses/200'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    X_APP:
+      type: apiKey
+      in: header
+      name: X-APP

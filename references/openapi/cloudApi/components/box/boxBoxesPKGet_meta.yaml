@@ -1,0 +1,91 @@
+openapi: 3.0.2
+
+components:
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Box id
+                algos:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Algorithm name
+                      label:
+                        type: string
+                        description: Algorithm name label
+                agent:
+                  type: object
+                  properties:
+                    name:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Box name
+                        label:
+                          type: string
+                          description: Label of the box
+                    level:
+                      type: integer
+                      description: Box level
+                      format: int32
+                    version:
+                      type: string
+                      description: Box app version
+                    upgrading:
+                      type: string
+                      description: Box app version upgrading
+                max_camera_cnt:
+                  type: integer
+                  description: Maximum number of cameras
+                  format: int32
+                max_detect_cnt:
+                  type: integer
+                  description: Maximum number of cameras detected
+                  format: int32
+
+  examples:
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          agent:
+            name:
+              name: Box
+              label: Turing Box
+            level: 0
+            version: 0.14.0pre
+            upgrading: null
+          id: box_dog_sr_10001
+          algos:
+            - name: person
+              label: Person
+            - name: apple
+              label: Apple
+          max_detect_cnt: 4
+          max_camera_cnt: 4

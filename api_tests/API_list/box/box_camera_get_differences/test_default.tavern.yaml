@@ -1,0 +1,65 @@
+# Name: test_default.tavern
+test_name: Viewing camera is different
+stages:
+  - type: ref
+    id: login_customer
+  - name: Viewing camera is different
+    request:
+      url: "{url}/camera/cameras/differences"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        cameras:
+          - id: "{camera_id}"
+            version: 1
+    response:
+      status_code: 200
+      body:
+        ret:
+          updates: !anything
+          deletes: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+
+---
+test_name: Error viewing camera is different
+marks:
+  - parametrize:
+      key:
+        - err_id
+        - err_version
+      vals:
+        - ["",""]
+        - ["",1]
+        - ["{camera_id}",""]
+        - [aa,1]
+        - ["{camera_id}",aa]
+        - [0.1,0.0.1]
+stages:
+  - type: ref
+    id: login_customer
+  - name: Error viewing camera is different
+    request:
+      url: "{url}/camera/cameras/differences"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      cookies:
+        - sessionid
+        - csrftoken
+      json:
+        cameras:
+          - id: "{err_id}"
+            version: "{err_version}"
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+ #   delay_after: 1

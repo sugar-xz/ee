@@ -1,0 +1,70 @@
+openapi: 3.0.2
+
+components:
+  responses:
+    200:
+      description: Returns box information and camera information under box
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BoxResult'
+          examples:
+            response:
+              $ref: '#/components/examples/BoxResult'
+  schemas:
+    BoxResult:
+      description: View a box information
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: 'boxBoxes.yaml#/components/schemas/BoxInfo'
+
+  examples:
+    BoxResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: box_dog_sr_10001
+          user_id: 12
+          max_camera_cnt: 100
+          camera_cnt: 1
+          max_detect_cnt: 100
+          paid_cnt: 0
+          created_at: '2019-06-27T01:46:19Z'
+          updated_at: '2019-09-29T08:12:35Z'
+          state:
+            name: 'online'
+            label: 'Online'
+          scene: 851,
+          sequence: 331,
+          billing:
+            name: 'paid'
+            label: 'Paid'
+          upload_video_expire: 1209600
+          upload_event_expire: 1209600
+          version: 2388
+          type: 'pc_v1'
+          ip_address: '192.168.0.119'
+          meta:
+            agent:
+              name:
+                name: Box
+                label: Turing Box
+              level: 0
+              version: '0.14.0pre'
+              upgradable: null
+              outdated: null
+              upgrading: null
+            max_camera_cnt: 100
+            max_detect_cnt: 100
+          cameras:
+            - id: 163
+              name: 'asdgghh'
+          timezone: 'UTC'
+          site: 2
+

@@ -1,0 +1,41 @@
+openapi: 3.0.2
+components:
+  responses:
+    CreateVideoResult:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VideoSlotResult'
+          examples:
+            response:
+              $ref: '#/components/examples/VideoSlotResult'
+  schemas:
+    VideoSlotResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: array
+              items:
+                $ref: 'camera_videos.yaml#/components/schemas/VideoInfo'
+
+  examples:
+    VideoSlotResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          - id: 8833
+            camera_id: 1
+            started_at: "2017-10-19T06:00:57.262076Z"
+            ended_at: "2017-10-19T06:01:57.262076Z"
+            video:
+              file_size: 1000
+              content_type: "video/mp4"
+              erl: https://develop-data-turingvideo-com.s3.cn
+            size: 1000

@@ -1,0 +1,143 @@
+# Name: test_default.tavern
+#test_name: User change password
+#stages:
+#  - type: ref
+#    id: login_customer
+#  - name: User change password
+#    request: &change_password_anchor
+#      url: "{url}/user/auth/change_password"
+#      method: POST
+#      headers:
+#        content-type: application/json
+#        X-CSRFTOKEN: "{get_csrftoken}"
+#        Referer: "{Referer}"
+#      json:
+#        old_password: "{password}"
+#        neo_password: 123qwe!@#QWE
+#    response:
+#      status_code: 200
+#      body:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200
+#
+#---
+#test_name: User change password
+#stages:
+#  - name: User login
+#    request:
+#      url: "{url}/user/auth/login"
+#      method: POST
+#      json:
+#        username: "{customer}"
+#        password: 123qwe!@#QWE
+#      headers:
+#        content-type: application/json
+#        X-CSRFTOKEN: "{get_csrftoken}"
+#        Referer: "{Referer}"
+#    response:
+#      status_code: 200
+#      cookies:
+#        - sessionid
+#        - csrftoken
+#      save:  #Token is required to create the camera interface
+#        $ext:
+#          function: api_tests.utils.validation_method:get_token
+#  - name: User change password
+#    request:
+#      <<: *change_password_anchor
+#      json:
+#        old_password: 123qwe!@#QWE
+#        neo_password: "{password}"
+#    response:
+#      status_code: 200
+#      body:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200
+#
+#---
+test_name: User error change password & 用户异常修改密码
+marks:
+  - parametrize:
+      key:
+        - err_old_password
+        - err_neo_password
+      vals:
+        - ["", ""]
+        - ["{password}", ""]
+        - ["", "{password}"]
+        - ["#@￥%我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@#@￥%我是测试字段段我真的是测试字段段我真的是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段段我真的是测试字段段我真段我真的是测试字段段我真的是测试字段的是测试字段段我真的是测试字段", "{password}"]
+        - ["{password}", "@￥%我是测试字段我只是测试字段我真字段我只是测试字段我真字段我只是测试字段我真字段我只是测试字段我真字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@#@￥%我是测试字段段我真的是测试字段段我真的是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段段我真的是测试字段段我真段我真的是测试字段段我"]
+
+stages:
+  - type: ref
+    id: login_customer
+  - name:  User error change password
+    request:
+      url: "{url}/user/auth/change_password"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        old_password: "{err_old_password}"
+        neo_password: "{err_neo_password}"
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+
+---
+test_name: Method error to change password
+stages:
+  - type: ref
+    id: login_customer
+  - name: method error
+    request:
+      url: "{url}/user/auth/change_password"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        old_password: "{password}"
+        neo_password: 123qwe!@#QWE
+    response:
+      status_code: 405
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_405
+
+---
+test_name: Missing header to change password
+stages:
+  - type: ref
+    id: login_customer
+  - name: Missing header change password
+    request: &change_password_anchor
+      url: "{url}/user/auth/change_password"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        old_password: "{password}"
+        neo_password: 123qwe!@#QWE
+    response:
+      status_code: 403
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_403
+
+---
+test_name: Not logged in change password & 未登录修改密码
+stages:
+  - name: Not logged in change password
+    request:
+      <<: *change_password_anchor
+    response:
+      status_code: 401
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_401

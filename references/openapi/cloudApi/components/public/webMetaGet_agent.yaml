@@ -1,0 +1,97 @@
+openapi: 3.0.2
+
+components:
+  responses:
+    200:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/BoxResult'
+              - $ref: '#/components/schemas/RobotResult'
+          examples:
+            BoxResult:
+              $ref: '#/components/examples/BoxResult'
+            RobotResult:
+              $ref: '#/components/examples/RobotResult'
+    400:
+      description: Type error returned
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EorrorResult'
+
+  schemas:
+    EorrorResult:
+      description: Parameter error
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            extra:
+              type: object
+              properties:
+                name:
+                  type: array
+                  items:
+                    type: string
+                    description: Example:`Not found`
+    BoxResult:
+      description: Get meta information by Algorithm product type
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                max_camera_cnt:
+                  type: integer
+                  format: int32
+                max_detect_cnt:
+                  type: integer
+                  format: int32
+
+    RobotResult:
+      description: Get meta information by Algorithm product type
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                cameras:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Exist multiple name object
+                mac_types:
+                  type: string
+
+  examples:
+    BoxResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          max_camera_cnt: 20
+          max_detect_cnt: 20
+
+    RobotResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          cameras:
+            - name: front
+            - name: rear
+          mac_types: null

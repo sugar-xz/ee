@@ -1,0 +1,33 @@
+openapi: 3.0.2
+components:
+  parameters:
+    AdminIDParam:
+      in: path
+      name: id
+      required: true
+      description: Guard admin id
+      schema:
+        type: integer
+        format: int64
+  requestBodies:
+    PutRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PutRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PutRequest'
+  schemas:
+    PutRequest:
+      type: object
+      properties:
+        phone_number:
+          type: integer
+          description: Need to add the international area code
+
+  examples:
+    PutRequest:
+      value:
+        phone_number: 13111112234

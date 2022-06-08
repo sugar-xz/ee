@@ -1,0 +1,89 @@
+openapi: 3.0.2
+
+components:
+  schemas:
+    RegisterRequest:
+      type: object
+      required:
+        - username
+        - password
+        - lang
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        username:
+          type: string
+          format: email
+        password:
+          type: string
+        lang:
+          type: string
+          description: language
+        timezone:
+          type: string
+          description: The time zone
+
+    RegisterResult:
+      description: Result of authentication
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              description: Content returned by request (JSON type)
+              properties:
+                id:
+                  type: integer
+                  format: int32
+                  description: User id
+                username:
+                  type: string
+                  format: email
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                lang:
+                  type: string
+                  description: Language
+                timezone:
+                  type: string
+                  description: The time zone
+                role:
+                  type: string
+                  description: User role
+                activated:
+                  type: boolean
+                  description: User active state
+                  enum:
+                    - true
+                    - false
+
+  examples:
+    RegisterRequest:
+      value:
+        first_name: turing
+        last_name: video
+        username: turingvideotest@turingvideo.net
+        password: "&passwords"
+        lang: en
+        timezone: "America/Los_Angeles"
+
+    RegisterResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          username: turingvideotest@turingvideo.net
+          first_name: turing
+          last_name: video
+          lang: en
+          role: customer
+          timezone: America/Los_Angeles
+          id: 21
+          activated: true

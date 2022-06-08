@@ -1,0 +1,25 @@
+# Name: test_default.tavern
+test_name:  Create guard_admin
+stages:
+  - type: ref
+    id: login_admin
+  - name: Create guard_admin
+    request:
+      url: "{url}/guard_admin/guard_admins"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        user:
+          username: "guard_admin1@turingvideo.net"
+          last_name: ""
+          first_name: ""
+        organization: 1
+        phone_number: 13111122222
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

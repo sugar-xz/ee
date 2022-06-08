@@ -1,0 +1,72 @@
+# Name: test_default.tavern
+test_name: User login
+stages:
+  - type: ref
+    id: login_customer
+
+---
+test_name: User error login
+marks:
+  - parametrize:
+      key:
+        - err_login_username
+        - err_login_password
+      vals:
+        - ["", ""]
+        - ["{customer}", ""]
+        - ["", "{password}"]
+        - ["#@￥%我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@#@￥%我是测试字段段我真的是测试字段段我真的是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段段我真的是测试字段段我真段我真的是测试字段段我真的是测试字段的是测试字段段我真的是测试字段", "{password}"]
+        - ["{customer}", "@￥%我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@#@￥%我是测试字段段我真的是测试字段段我真的是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段段我真的是测试字段段我真段我真的是测试字段段我"]
+stages:
+  - name: Abnormal error
+    request:
+      url: "{url}/user/auth/login"
+      method: POST
+      json:
+        username: "{err_login_username}"
+        password: "{err_login_password}"
+      headers:
+        content-type: application/json
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+
+---
+test_name: User password error login
+stages:
+  - name: password error
+    request:
+      url: "{url}/user/auth/login"
+      method: POST
+      json:
+        username: "{customer}"
+        password: errpassword!@#22
+      headers:
+        content-type: application/json
+    response:
+      status_code: 409
+      body:
+        err:
+          em: "Invalid email or password. (none)"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_409
+
+---
+test_name: Method error to login
+stages:
+  - name: Request method error
+    request:
+      url: "{url}/user/auth/login"
+      method: GET
+      json:
+        username: "{customer}"
+        password: "{password}"
+      headers:
+        content-type: application/json
+    response:
+      status_code: 405
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_405

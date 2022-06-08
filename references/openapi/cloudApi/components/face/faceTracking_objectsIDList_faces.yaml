@@ -1,0 +1,43 @@
+openapi: 3.0.2
+components:
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+
+  schemas:
+    Result:
+      description: Face tracking list
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    description: Tracking id
+                  url:
+                    type: string
+                    description: Img path
+
+  examples:
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          - id: 4366ea92-b2ee-45aa-8580-2985392518a5
+            url: https://turingvideo-staging-api.s3.amazonaws.com

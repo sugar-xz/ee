@@ -1,0 +1,93 @@
+# Name: test_default.tavern
+test_name: Update Robot Meta
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: robot_initiate
+  - type: ref
+    id: robot_authenticate
+  - name: Update Robot Meta
+    request:
+      url: "{url}/robot/robots/update_robot_meta"
+      method: PUT
+      headers:
+        content-type: application/json
+#        X-APP: "iOS_TV/100/1.0.0"
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        app_agent:
+          name: Bot_Nimbo
+          level: 3
+          version: 1.14.1
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Update Robot Meta err
+marks:
+  - parametrize:
+      key:
+        - err_name
+        - err_level
+        - err_version
+      vals:
+        - ["", "", ""]
+        - ["", "3", "1.14.1"]
+        - ["Bot_Nimbo", "", "1.14.1"]
+        - ["Bot_Nimbo", "3", ""]
+        - ["Bot_Nimbo222", "3", "1.14.1"]
+        - ["Bot_Nimbo", "1.25", "1.14.1"]
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: robot_initiate
+  - type: ref
+    id: robot_authenticate
+  - name: Update Robot Meta
+    request:
+      url: "{url}/robot/robots/update_robot_meta"
+      method: PUT
+      headers:
+        content-type: application/json
+#        X-APP: "iOS_TV/100/1.0.0"
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        app_agent:
+          name: "{err_name}"
+          level: "{err_level}"
+          version: "{err_version}"
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+
+---
+test_name: Update Robot Meta err
+stages:
+  - type: ref
+    id: login_customer
+  - name: Update Robot Meta
+    request:
+      url: "{url}/robot/robots/update_robot_meta"
+      method: PUT
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        app_agent:
+          name: Bot_Nimbo
+          level: 3
+          version: 1.14.1
+    response:
+      status_code: 401
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_401

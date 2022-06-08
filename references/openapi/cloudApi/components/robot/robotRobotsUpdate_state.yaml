@@ -1,0 +1,121 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      properties:
+        scene:
+          type: integer
+          format: int64
+          description: State version
+        state:
+          type: object
+          properties:
+            robot:
+              type: object
+              properties:
+                state:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                        - online
+                        - offline
+                        - robot_offline
+                      description: Robot online status
+                    power_percentage:
+                      type: number
+                      format: float
+                      description: Robot battery power
+                    mode:
+                      type: string
+                      description: Robot mode
+        partial:
+          type: boolean
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                scene:
+                  type: integer
+                  format: int64
+                  description: State version
+                state:
+                  type: object
+                  properties:
+                    robot:
+                      type: object
+                      properties:
+                        state:
+                          type: object
+                          properties:
+                            status:
+                              type: string
+                              enum:
+                                - online
+                                - offline
+                                - robot_offline
+                              description: Robot online status
+                            power_percentage:
+                              type: number
+                              format: float
+                              description: Robot battery power
+                            mode:
+                              type: string
+                              description: Robot mode
+
+  examples:
+    Request:
+      value:
+        scene: 0
+        state:
+          robot:
+            state:
+              status: online
+              power_percentage: 10
+              mode: patrol
+        partial: true
+        enum:
+          - true
+          - false
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          scene: 0
+          state:
+            robot:
+              state:
+                status: online
+                power_percentage: 10
+                mode: patrol

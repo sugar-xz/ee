@@ -1,0 +1,303 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    PostRequest:
+      required: true
+      description: Select according to target_type, corresponding parameters are also required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PostRequest'
+          examples:
+            Point:
+              $ref: '#/components/examples/Point'
+            Polygons:
+              $ref: '#/components/examples/Polygons'
+            Auto:
+              $ref: '#/components/examples/Auto'
+            Position:
+              $ref: '#/components/examples/Position'
+  responses:
+    MapTargetListResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MapTargetListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/MapTargetListResult'
+    MapTargetResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MapTargetResult'
+          examples:
+            response:
+              $ref: '#/components/examples/MapTargetResult'
+  schemas:
+    PostRequest:
+      type: object
+      required:
+        - target_type
+        - name
+      properties:
+        target_type:
+          type: string
+          description: Target type
+          enum:
+            - point
+            - polygons
+            - auto
+            - position
+        point:
+          type: object
+          description: |
+            Latitude and longitude
+            * Required when target_type is point or auto.
+          properties:
+            lat:
+              type: number
+              format: double
+              description: Location of latitude
+            lng:
+              type: number
+              format: double
+              description: Location of longitude
+        polygons:
+          type: array
+          description: |
+            Array of polygons
+            * Required when target_type is point or auto.
+          items:
+            type: string
+        position:
+          type: object
+          properties:
+            x:
+              type: number
+              format: double
+              description: The x axis
+            y:
+              type: number
+              format: double
+              description: The y axis
+            z:
+              type: nubmer
+              format: double
+              description: The z axis
+          description: |
+            Latitude longitude and floor
+            * Required when target_type is position
+        auto_threshold:
+          type: integer
+          format: float
+        name:
+          type: string
+          description: Target name
+        robot_id:
+          type: string
+        camera_id:
+          type: integer
+          format: int64
+        site_id:
+          type: integer
+          format: int64
+        domain_id:
+          type: integer
+          format: int32
+    MapTargetResult:
+      description: Map config list
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/TargetInfo'
+    MapTargetListResult:
+      description: Map config list
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/TargetInfo'
+    TargetInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Targets id
+        target_type:
+          type: string
+          description: Target type
+          enum:
+            - point
+            - polygons
+            - auto
+            - position
+        point:
+          type: object
+          description: Latitude and longitude
+          properties:
+            lat:
+              type: number
+              format: double
+              description: Location of latitude
+            lng:
+              type: number
+              format: double
+              description: Location of longitude
+        polygons:
+          type: array
+          items:
+            type: string
+        position:
+          type: object
+          properties:
+            x:
+              type: number
+              format: double
+              description: The x axis
+            y:
+              type: number
+              format: double
+              description: The y axis
+            z:
+              type: nubmer
+              format: double
+              description: The z axis
+          description: Latitude longitude and floor
+        auto_threshold:
+          type: integer
+          format: float
+        name:
+          type: string
+          description: Target name
+        robot_id:
+          type: string
+        camera_id:
+          type: integer
+          format: int64
+        site_id:
+          type: integer
+          format: int64
+        domain_id:
+          type: integer
+          format: int32
+
+  examples:
+    Point:
+      value:
+        target_type: point
+        name: point
+        point:
+          lat: 32.0572354
+          lng: 118.77807441
+        auto_threshold: 1
+        camera_id: 1
+    Polygons:
+      value:
+        target_type: polygons
+        name: polygons
+        polygons:
+          - points:
+              - lat: 23.21312312312
+                lng: 112.23213213
+              - lat: 24.21312312312
+                lng: 112.43213213
+              - lat: 23.41312312312
+                lng: 112.33213213
+        auto_threshold: 2
+        robot_id: robot_dog_sr_20002
+    Auto:
+      value:
+        target_type: auto
+        name: auto
+        point:
+          lat: 32.0572354
+          lng: 118.77807441
+        polygons:
+          - points:
+              - lat: 23.21312312312
+                lng: 112.23213213
+              - lat: 24.21312312312
+                lng: 112.43213213
+              - lat: 23.41312312312
+                lng: 112.33213213
+        domain_id: 4
+    Position:
+      value:
+        target_type: position
+        name: position
+        position:
+          x: 11
+          y: 22
+          z: 33
+        auto_threshold: null
+        camera_id: 2
+
+    MapTargetListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 1
+          next: null
+          previous: null
+          results:
+            - id: 6
+              target_type: polygons
+              point: null
+              polygons:
+                - points:
+                  - lat: 23.21312312312
+                    lng: 112.23213213
+                  - lat: 24.21312312312
+                    lng: 112.43213213
+                  - lat: 23.41312312312
+                    lng: 112.33213213
+              position: null
+              auto_threshold: 2
+              name: polygons_site
+              robot_id: null
+              camera_id: null
+              site_id: 6
+              domain_id: null
+
+    MapTargetResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 6
+          target_type: polygons
+          point: null
+          polygons:
+            - points:
+                - lat: 23.21312312312
+                  lng: 112.23213213
+                - lat: 24.21312312312
+                  lng: 112.43213213
+                - lat: 23.41312312312
+                  lng: 112.33213213
+          position: null
+          auto_threshold: 2
+          name: polygons_site
+          robot_id: null
+          camera_id: null
+          site_id: 6
+          domain_id: null

@@ -1,0 +1,17 @@
+# Name: test_default.tavern
+test_name: Guard_company list
+stages:
+  - type: ref
+    id: login_admin
+  - name: Guard_company list
+    request:
+      url: "{url}/guard_company/guard_companies"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

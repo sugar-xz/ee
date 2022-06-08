@@ -1,0 +1,57 @@
+openapi: 3.0.2
+components:
+  parameters:
+    UserNoteIDParam:
+      in: path
+      name: id
+      required: true
+      description: User node id
+      schema:
+        type: integer
+        format: int32
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: 'user_nodes.yaml#/components/schemas/UserNodeInfo'
+
+  examples:
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 3
+          user:
+            id: 12
+            first_name: turing
+            last_name: video
+            username: test@turingvideo.net
+            lang: en
+            timezone: America/Los_Angeles
+            role: customer
+            activated: true
+            roles:
+              - id: 5
+                code_name: customer
+                name: customer
+          parent_id: null
+          tree_id: 1
+          level: 0
+          lft: 1
+          rght: 4

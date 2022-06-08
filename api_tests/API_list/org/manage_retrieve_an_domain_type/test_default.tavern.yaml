@@ -1,0 +1,25 @@
+# Name: test_default.tavern
+test_name: retrieve an domain type
+marks:
+  - parametrize:
+      key: pk
+      vals:
+        - 1
+        - 2
+stages:
+  - type: ref
+    id: login_customer
+  - name: retrieve an domain type
+    request:
+      url: "{url}/domain_type/domain_types/{pk}"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+        ret:
+          id: !int "{pk}"

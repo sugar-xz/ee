@@ -1,0 +1,100 @@
+# Name: test_default.tavern
+test_name: Box Authenticate
+stages:
+  - &initiate_anchor
+    name: Box initiate
+    request:
+      url: "{url}/box/boxes/initiate"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+      json:
+        id: "{test_box_id}"
+    response:
+      status_code: 200
+      save:
+        $ext:
+          function: api_tests.utils.validation_method:validate_box_initiate_get_challenge
+    delay_after: 1
+
+
+  - name: Box Authenticate
+    max_retries: 1   # 重试
+    request: &authenticate_anchor
+      url: "{url}/box/boxes/authenticate"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+      json:
+        type: "{box_type}"
+        challenge: "{get_box_challenge}"
+        ip_address: "{box_ip_address}"
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        ret:
+          id: "{test_box_id}"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Input error to authenticate
+marks:
+  - parametrize:
+      key:
+        - err_type
+        - err_ip_address
+      vals:
+        - ["",  ""]
+        - ["213qwsdas", ""]
+        - ["213qwsdas", "12312sda"]
+stages:
+  - *initiate_anchor
+  - name: Input error to start
+    request:
+      <<: *authenticate_anchor
+      json:
+        type: "{err_type}"
+        challenge: "{get_box_challenge}"
+        ip_address: "{err_ip_address}"
+    response: &auth_response_anchor
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+ #   delay_after: 1
+
+---
+test_name: Input error to authenticate
+stages:
+  - *initiate_anchor
+  - name: Input error to start
+    request:
+      <<: *authenticate_anchor
+      json:
+        type: ""
+        challenge: ""
+        ip_address: ""
+    response: *auth_response_anchor
+ #   delay_after: 1
+
+---
+test_name: Box Authenticate of challenge verification
+stages:
+  - *initiate_anchor
+  - name: Box Authenticate err
+    request:
+      <<: *authenticate_anchor
+      json:
+        type: "{box_type}"
+        challenge: 111
+        ip_address: "{box_ip_address}"
+    response:
+      status_code: 409
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_409
+ #   delay_after: 1

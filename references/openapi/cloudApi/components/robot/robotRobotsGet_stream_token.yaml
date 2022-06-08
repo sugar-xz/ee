@@ -1,0 +1,10 @@
+openapi: 3.0.2
+components:
+  parameters:
+    CameraNameParam:
+      in: query
+      name: camera_name
+      required: true
+      description: camera_name=front
+      schema:
+        type: string

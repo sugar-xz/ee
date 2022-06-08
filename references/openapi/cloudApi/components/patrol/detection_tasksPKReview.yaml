@@ -1,0 +1,50 @@
+openapi: 3.0.2
+components:
+  parameters:
+    TaskIDParam:
+      in: path
+      name: id
+      description: Task id
+      required: true
+      schema:
+        type: integer
+        format: int32
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  schemas:
+    Request:
+      type: array
+      items:
+        type: object
+        required:
+          - review_result
+          - moderation_result
+          - moderation_types
+        properties:
+          review_result:
+            type: string
+          moderation_result:
+            type: boolean
+            enum:
+              - true
+              - false
+          moderation_types:
+            type: string
+
+  examples:
+    Request:
+      value:
+        review_result: {}
+        moderation_result: Ture
+        moderation_types: {}
+
+
+

@@ -1,0 +1,34 @@
+openapi: 3.0.2
+components:
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+
+  schemas:
+    Result:
+      allOf:
+        - $ref: 'common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: string
+                description: All supportted timezones
+
+  examples:
+    Result:
+      value:
+        code: 0
+        msg: ok
+        data:
+          - UTC
+          - Asia/Seoul
+          - America/Yakutat

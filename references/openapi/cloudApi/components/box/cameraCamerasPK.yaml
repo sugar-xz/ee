@@ -1,0 +1,47 @@
+openapi: 3.0.2
+
+components:
+  responses:
+    DeleteResult:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeleteResult'
+          examples:
+            response:
+              $ref: '#/components/examples/DeleteResult'
+
+  schemas:
+    DeleteResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                deleting:
+                  type: boolean
+                  description: Camera delete status
+                  enum:
+                    - true
+                    - false
+                increased:
+                  type: boolean
+                  description: Camera add status
+                  enum:
+                    - true
+                    - false
+
+  examples:
+    DeleteResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          deleting: true
+          increased: true

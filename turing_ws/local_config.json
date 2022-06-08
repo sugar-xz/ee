@@ -1,0 +1,64 @@
+{
+  "auth-sign-key": "TuringvideoAuth18$",
+  "pg-credential": {
+    "db-address": "devdb.cq8z21wdb9hv.rds.cn-northwest-1.amazonaws.com.cn:5432",
+    "db-name": "dev_apiserver",
+    "db-username": "zeno",
+    "db-password": "turingvideo"
+  },
+  "couchbase": {
+    "url": "localhost:8091",
+    "username": "midway",
+    "password": "123456"
+  },
+  "aws": {
+    "access-key-id": "AKIA3ADBR2YP4I3FGEGQ",
+    "secret-access-key": "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",
+    "region": "cn-northwest-1"
+  },
+  "cors": {
+    "allow-extra-headers": [
+      "X-APP",
+      "Content-Type"
+    ],
+    "allow-methods": [
+      "GET",
+      "POST",
+      "PUT",
+      "OPTIONS",
+      "PATCH"
+    ],
+    "allow-origins": [
+      "https://*.turingvideo.com",
+      "https://*.turingvideo.cn",
+      "http://*.turingvideo.cn",
+      "http://*"
+    ]
+  },
+  "sensor": {
+    "address": "http://172.17.0.1:8086",
+    "username": "midway",
+    "password": "midway",
+    "database": "turingvideo"
+  },
+  "box": {
+    "address": "http://172.17.0.1:8086",
+    "username": "midway",
+    "password": "midway",
+    "database": "turingvideo"
+  },
+  "nsqd-server": {
+    "address": "127.0.0.1:4150"
+  },
+  "internal_api_base": "https://dev-gw.turingvideo.cn/_internal",
+  "internal_lift_base": "https://dev-gw.turingvideo.cn/_internal",
+  "redis-server": {
+    "address": "192.168.10.234:6379",
+    "password": ""
+  },
+  "rabbitmq-server": {
+    "address": "192.168.10.234:5672/",
+    "username": "test",
+    "password": "root"
+  }
+}

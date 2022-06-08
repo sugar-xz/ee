@@ -1,0 +1,20 @@
+# Name: test_default.tavern
+test_name: User del camera
+stages:
+  - type: ref
+    id: login_customer
+  - name: User delete camera
+    request:
+      url: "{url}/camera/cameras/{delete_camera_id2}"
+      method: DELETE
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+

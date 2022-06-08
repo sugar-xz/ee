@@ -1,0 +1,469 @@
+openapi: 3.0.2
+
+components:
+  parameters:
+    UserIDParam:
+      in: path
+      name: user_id
+      required: true
+      description: User id of map backup
+      schema:
+        type: string
+    MapId:
+      in: path
+      name: map_id
+      required: true
+      description: Map id
+      schema:
+        type: string
+  requestBodies:
+    DeleteMaps:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeleteMaps'
+    PutRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Map'
+    MapCopyRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MapCopy'
+    BackupRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              map_id:
+                type: string
+                description: Map id
+              robot_id:
+                type: string
+                description: Robot id
+  responses:
+    MapResult:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MapResult'
+          examples:
+            response:
+              $ref: '#/components/examples/MapResult'
+    200:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MapsResult'
+          examples:
+            response:
+              $ref: '#/components/examples/MapsResult'
+  schemas:
+    MapResult:
+      description: 机器人巡检地图信息
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/Map'
+    MapsResult:
+      description: 机器人巡检地图信息
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: array
+              items:
+                $ref: '#/components/schemas/Map'
+    Map:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 机器人地图ID
+        meta_id:
+          type: string
+        name:
+          type: string
+          description: 机器人地图名称
+        comment:
+          type: string
+          description: 机器人地图描述
+        upload:
+          type: boolean
+          description: 上传开关
+          enum:
+            - true
+            - false
+        upload_status:
+          type: string
+          description: 上传状态
+          enum:
+            - ready
+            - processing
+            - finished
+        delete:
+          type: boolean
+          description: 删除开关
+          enum:
+            - true
+            - false
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              file:
+                $ref: '#/components/schemas/S3File'
+              type:
+                type: string
+                description: 文件类型
+                enum:
+                  - map_png
+                  - map_pbstream
+                  - map_yaml
+        signed_files:
+          type: array
+          items:
+            type: object
+            properties:
+              file:
+                $ref: '#/components/schemas/File'
+              type:
+                type: string
+                description: 文件类型
+                enum:
+                  - map_png
+                  - map_pbstream
+                  - map_yaml
+        map_config:
+          type: object
+          properties:
+            resolution:
+              type: number
+              description: 解析度
+              format: float
+            origin:
+              type: array
+              items:
+                type: string
+                description: 机器人地图原点
+            virtual_wall:
+              type: array
+              items:
+                type: number
+                format: float
+        route:
+          $ref: '#/components/schemas/Route'
+        elevator_base:
+          type: string
+        calibration:
+          type: string
+        landmarks:
+          type: array
+          items:
+            type: string
+        floor:
+          type: integer
+          format: int32
+          description: 楼层
+        robot_ids:
+          type: array
+          items:
+            type: string
+            description: 所属机器人ID
+        transforms:
+          type: array
+          items:
+            type: object
+            properties:
+              map_id:
+                type: string
+              matrix:
+                type: array
+                items:
+                  type: string
+              theta:
+                type: number
+                format: float
+
+    S3File:
+      type: object
+      properties:
+        meta:
+          type: object
+          properties:
+            file_size:
+              type: integer
+              description: 文件大小
+              format: int32
+            size:
+              type: array
+              items:
+                type: string
+                description: 文件长度和宽度
+            content_type:
+              type: string
+              description: 文件内容类型
+              enum:
+                - image/png
+                - text/pbstream
+                - text/yaml
+        Key:
+          type: string
+          description: S3文件存储库
+        Bucket:
+          type: string
+          description: S3文件存储路径
+    File:
+      type: object
+      properties:
+        meta:
+          type: object
+          properties:
+            file_size:
+              type: integer
+              description: 文件大小
+              format: int32
+            size:
+              type: array
+              items:
+                type: string
+                description: 文件长度和宽度
+            content_type:
+              type: string
+              description: 文件内容类型
+              enum:
+                - image/png
+                - text/pbstream
+                - text/yaml
+            url:
+              type: string
+              description: 文件网址路径
+    Route:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: 机器人子路径ID
+        name:
+          type: string
+          description: 机器人子路径名称
+        type:
+          type: string
+        meta_id:
+          type: string
+        way_points:
+          type: array
+          items:
+            $ref: '#/components/schemas/WayPoint'
+        robot_ids:
+          type: array
+          items:
+            type: string
+            description: 所属机器人ID
+    WayPoint:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: 巡检点位ID
+        name:
+          type: string
+          description: 巡检点位名称
+        actions:
+          type: array
+          items:
+            type: object
+            properties:
+              act:
+                type: string
+                description: 巡检点位需要做的行动
+                enum:
+                  - snapshot
+                  - video
+                  - stop
+                  - notify
+              arg:
+                type: object
+                properties:
+                  duration:
+                    type: integer
+                    format: int64
+                    description: 行动持续时间
+                  pitch:
+                    type: number
+                    description: 解析度
+                    format: float
+                  theta:
+                    type: number
+                    description: 解析度
+                    format: float
+                  target_id:
+                    type: string
+              name:
+                type: string
+                description: 巡检点位需要做的行动名
+        isInterpolated:
+          type: boolean
+          enum:
+            - true
+            - false
+        mapId:
+          type: string
+          description: 巡检点位所属地图ID
+        routeId:
+          type: integer
+          format: int32
+          description: 巡检点位ID
+        point:
+          type: object
+          properties:
+            x:
+              type: number
+              description: 坐标 x
+              format: float
+            y:
+              type: number
+              description: 坐标 y
+              format: float
+    MapCopy:
+      type: object
+      properties:
+        map_id:
+          type: string
+          description: Map id
+        to:
+          type: string
+          description: Map id
+        from:
+          type: string
+          description: Map id
+        copy_route:
+          type: boolean
+          description: Copy switch
+          enum:
+            - true
+            - false
+    DeleteMaps:
+      type: object
+      properties:
+        robot_ids:
+          type: array
+          items:
+            type: string
+            description: Robot ids
+  examples:
+    MapResult:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: ok
+        ret:
+          id: 'robot_dog_sr_20020.1589509647283'
+          meta_id: 'robot_dog_sr_20020::map::robot_dog_sr_20020.1589509647283'
+          name: '新建地图 2020-05-15 02:28:16'
+          comment: ''
+          upload: false
+          upload_status: finished
+          delete: false
+          files: null
+          signed_files:
+            - file:
+                file_size: 15595
+                size:
+                  - 303
+                  - 317
+                content_type: image/png
+                url: https://dev-data-fo
+              type: map_png
+            - file:
+                file_size: 606602
+                size: null
+                content_type: text/pbstream
+                url: https://dev-data-fo
+              type: map_pbstream
+            - file:
+                file_size: 208
+                size: null
+                content_type: text/yaml
+                url: https://dev-data-fo
+              type: map_yaml
+          map_config:
+            resolution: 0.04
+            origin:
+              - '-5.8'
+              - '-8.28'
+            virtual_wall: null
+          route: null
+          elevator_base: null
+          calibration: null
+          landmarks: []
+          floor: 0
+          robot_ids:
+            - robot_dog_sr_20020
+          transforms: null
+    MapsResult:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: ok
+        ret:
+          - id: 'robot_dog_sr_20020.1589509647283'
+            meta_id: 'robot_dog_sr_20020::map::robot_dog_sr_20020.1589509647283'
+            name: '新建地图 2020-05-15 02:28:16'
+            comment: ''
+            upload: false
+            upload_status: finished
+            delete: false
+            files: null
+            signed_files:
+              - file:
+                  file_size: 15595
+                  size:
+                    - 303
+                    - 317
+                  content_type: image/png
+                  url: https://dev-data-fo
+                type: map_png
+              - file:
+                  file_size: 606602
+                  size: null
+                  content_type: text/pbstream
+                  url: https://dev-data-fo
+                type: map_pbstream
+              - file:
+                  file_size: 208
+                  size: null
+                  content_type: text/yaml
+                  url: https://dev-data-fo
+                type: map_yaml
+            map_config:
+              resolution: 0.04
+              origin:
+                - '-5.8'
+                - '-8.28'
+              virtual_wall: null
+            route: null
+            elevator_base: null
+            calibration: null
+            landmarks: []
+            floor: 0
+            robot_ids:
+              - robot_dog_sr_20020
+            transforms: null

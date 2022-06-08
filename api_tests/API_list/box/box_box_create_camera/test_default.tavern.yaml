@@ -1,0 +1,144 @@
+# Name: test_default.tavern
+test_name: Box create camera
+#Configure the business parameters before execution
+stages:
+  - type: ref
+    id: login_customer
+  - &login_debug2
+    name: The test needs debug_login to make the browser simulate BOX
+    request:
+      url: "{url}/box/boxes/debug_login"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        id: box_test_10002
+        type: "{box_type}"
+        ip_address: "{box_ip_address}"
+        challenge: "challenge"
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: box_test_10002
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+  - name: Create camera
+    request:
+      url: "{url}/box/boxes/create_or_update_cameras"
+      method: POST
+      headers: &header_anchor
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        - name: camera_name
+          raw_address: b0:f2:4d:b0:21:17
+          type: ""
+          notifies: ""
+          username: admin
+          password: q123456
+          detect_params:
+            threshold: '0.800000011920929'
+          mode: 'on'
+          uri: rtsp://192.168.1.101/cam/realmonitor?channel=6&subtype=1
+          hd_uri: rtsp://192.168.1.101/cam/realmonitor?channel=6&subtype=0
+          rules:
+            - mode: "on"
+              schedule:
+                type: daily
+                time_slot:
+                  -
+                    - 34
+                      88
+                    - 234
+                      567
+              start_at: 0
+              end_at: 0
+              algo: person:0  # rule 2.0
+#              algos: person  # rule 1.0
+              region: ""
+              name: Default Rule
+              params:
+                {}
+          updated_at: "2019-09-16 11:25:17"
+          upload_video_enabled: true
+          location: null
+          note:
+            {}
+          should_push: true
+          state: offline
+          brand: ""
+    response:
+      status_code: 200
+      body:
+        ret:
+          created: true
+          updated: false
+        $ext:
+          function: api_tests.utils.validation_method:validate_camera_create
+#      save:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_camera_create_get_params
+#    delay_after: 1
+#
+---
+test_name: Create_camera interface exception test
+marks:
+  - parametrize:
+      key:
+        - err_name
+        - err_raw_address
+      vals:
+        - ["", ""]
+        - ["", "3c:ef:7c:4a:dd:79"]
+        - ["#@￥%我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@", "3c:ef:8c:43:dd:79"]
+        - [testcamera, ""]
+stages:
+  - type: ref
+    id: login_customer
+  - *login_debug2
+  - name: Exception scene creates camera
+    request:
+      url: "{url}/box/boxes/create_or_update_cameras"
+      method: POST
+      headers: *header_anchor
+      cookies:
+        - sessionid
+        - csrftoken
+      json:
+        - name: "{err_name}"
+          raw_address: "{err_raw_address}"
+          type: ""
+          notifies: ""
+          username: admin
+          password: qw1234556
+          detect_params:
+            threshold: '0.800000011920929'
+          mode: 'on'
+          uri: rtsp://192.168.1.101/cam/realmonitor?channel=6&subtype=1
+          hd_uri: rtsp://192.168.1.101/cam/realmonitor?channel=6&subtype=0
+          rules:
+            - mode: 'on'
+              start_at: 0
+              end_at: 0
+              algo: person:0
+              region: ""
+              name: Default Rule
+              params:
+                {}
+          updated_at: "2019-09-16 11:25:17"
+          upload_video_enabled: true
+          location: “”
+          note:
+            {}
+          should_push: true
+          state: offline
+          brand: ""
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+ #   delay_after: 1

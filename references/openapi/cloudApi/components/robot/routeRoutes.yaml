@@ -1,0 +1,93 @@
+openapi: 3.0.2
+components:
+  parameters:
+    RouteIDParam:
+      in: path
+      name: route_id
+      required: true
+      description: Route ID
+      schema:
+        type: integer
+        format: int64
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      required:
+        - name
+        - points
+        - checkpoints
+      properties:
+        name:
+          type: string
+          description: Route name
+        points:
+          type: string
+          description: Route points
+        checkpoints:
+          type: string
+          description: Route check points
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                version:
+                  type: integer
+                  format: int64
+                id:
+                  type: integer
+                  format: int64
+                  description: Route id
+                name:
+                  type: string
+                  description: Route name
+                points:
+                  type: string
+                  description: Route points
+                checkpoints:
+                  type: string
+                  description: Route check points
+  examples:
+    Request:
+      value:
+        name: route_test
+        points: point_test
+        checkpoints: checkpoint_test
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          version: 1.0.1
+          id: 6
+          name: route_test
+          points: point_test
+          checkpoints: checkpoint_test
+

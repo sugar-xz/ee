@@ -1,0 +1,86 @@
+<!-- HTML for static distribution bundle build -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Swagger UI</title>
+    <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >
+    <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
+    <style>
+      html
+      {
+        box-sizing: border-box;
+        overflow: -moz-scrollbars-vertical;
+        overflow-y: scroll;
+      }
+
+      *,
+      *:before,
+      *:after
+      {
+        box-sizing: inherit;
+      }
+
+      body
+      {
+        margin:0;
+        background: #fafafa;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="swagger-ui"></div>
+
+    <script src="./swagger-ui-bundle.js"> </script>
+    <script src="./swagger-ui-standalone-preset.js"> </script>
+    <script>
+    window.onload = function() {
+		var promise = new Promise(function(resolve, reject){
+			var url = "openapi/urls.json"
+			var request = new XMLHttpRequest();
+			request.open("get", url);
+			request.send(null);
+			request.onload = function(){
+				if (request.status ==200){
+					var json = JSON.parse(request.responseText);
+					console.log(json);
+					resolve(json);
+				}
+			}
+		});
+
+		promise.then(function(json){
+			// Begin Swagger UI call region
+		  const ui = SwaggerUIBundle({
+			//url: "http://localhost/openapi/cloud-api.yaml",
+			urls: json,
+			//urls: [{name:'box',url:"http://localhost/openapi/cloud-api.yaml"},{name:'rob0t',url:"http://localhost/api/cloud-api.yaml"}],
+			dom_id: '#swagger-ui',
+			deepLinking: true,
+			presets: [
+			  SwaggerUIBundle.presets.apis,
+			  SwaggerUIStandalonePreset
+			],
+			plugins: [
+			  SwaggerUIBundle.plugins.DownloadUrl
+			],
+			layout: "StandaloneLayout"
+		  })
+		  // End Swagger UI call region
+        window.ui = ui
+		})
+
+    }
+	function changeJsonSrc() {
+		var urlBox = document.getElementsByClassName('download-url-input')[0];
+		var btn = document.getElementsByClassName('download-url-button')[0];
+		urlBox.value = child.options[child.selectedIndex].value;
+		window.ui.specActions.updateUrl(urlBox.value); //添加这里可以
+		btn.click();
+	}
+
+  </script>
+  </body>
+</html>

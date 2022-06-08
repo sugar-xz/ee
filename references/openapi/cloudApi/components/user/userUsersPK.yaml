@@ -1,0 +1,88 @@
+openapi: 3.0.2
+
+components:
+  parameters:
+    UserIDParam:
+      in: path
+      name: pk
+      required: true
+      description: Id of the currently logged in user
+      schema:
+        type: integer
+        format: int32
+
+  schemas:
+    LoginResult:
+      description: Result of authentication (Old, return `sessionid`and `csrftoken`)
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: user id
+                username:
+                  type: string
+                  format: email
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                lang:
+                  type: string
+                  description: language
+                timezone:
+                  type: string
+                  description: The time zone
+                role:
+                  type: string
+                  description: user role
+                product_types:
+                  type: object
+                  properties:
+                    box:
+                      type: array
+                      items:
+                        type: string
+                        description: Box algo product type
+                    robot:
+                      type: array
+                      items:
+                        type: string
+                        description: Robot algo product type
+    PutRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        lang:
+          type: string
+          description: language
+        timezone:
+          type: string
+          description: The time zone
+  examples:
+    LoginResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          username: xincheng@turingvideo.net
+          first_name: Dev
+          last_name: Turing
+          lang: zh-hans
+          timezone: Asia/Shanghai
+          id: 2
+          role: customer
+          product_types:
+            box:
+              - pc_v1
+            robot:
+              - sr_v1

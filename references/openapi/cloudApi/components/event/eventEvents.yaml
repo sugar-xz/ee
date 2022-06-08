@@ -1,0 +1,684 @@
+openapi: 3.0.2
+components:
+  parameters:
+    BoxCameraIdParam:
+      in: query
+      name: camera_ids
+      description: Box camera id
+      schema:
+        type: string
+    RobotIdParam:
+      in: query
+      name: robot_ids
+      description: Robot id
+      schema:
+        type: string
+    StartTimeParam:
+      in: query
+      name: started_at__gt
+      description: Start time
+      schema:
+        type: string
+    EndTimeParam:
+      in: query
+      name: started_at__lte
+      description: End time
+      schema:
+        type: string
+    RobotCameraNameParam:
+      in: query
+      name: robot_camera
+      description: Robot camera name
+      schema:
+        type: string
+    TypeParam:
+      in: query
+      name: types
+      description: Algo type
+      schema:
+        type: string
+
+  requestBodies:
+    request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    EventListResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EventListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/EventListResult'
+  schemas:
+    EventListResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            extra:
+              $ref: '#/components/schemas/Extra'
+            ret:
+              type: object
+              properties:
+                next:
+                  type: string
+                  description: The next page
+                previous:
+                  type: string
+                  description: The previous page
+                results:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/EventInfo'
+
+
+    Extra:
+      type: object
+      properties:
+        monitor:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            user_id:
+              type: integer
+              format: int32
+              description: User id
+            version:
+              type: integer
+              format: int64
+            box_version:
+              type: integer
+              format: int64
+              description: Box version
+            camera_version:
+              type: integer
+              format: int64
+              description: Box camera version
+            robot_version:
+              type: integer
+              format: int64
+              description: Robot version
+            event_version:
+              type: integer
+              format: int64
+              description: Event version
+
+    EventInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Event id
+        camera_id:
+          type: integer
+          format: int64
+          description: Camera id
+        robot_id:
+          type: string
+          description: Robot id
+        robot_camera:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Robot camera name
+            lablel:
+              type: string
+              description: Robot camera name lablel
+        camera:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              description: Box camera id
+            name:
+              type: string
+              description: Camera name
+        robot:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Robot camera id
+            name:
+              type: string
+              description: Robot camera name
+            type:
+              type: string
+              description: Algorithm product type
+        types:
+          type: array
+          items:
+            type: object
+            description: Multiple object
+            properties:
+              name:
+                type: string
+                description: Algorithms and custom algorithms
+              label:
+                type: string
+                description: Algorithms and custom algorithms name
+        started_at:
+          type: string
+          format: date-time
+          description: Saved event create time
+        ended_at:
+          type: string
+          format: date-time
+          description: Saved event end time
+        mediums:
+          $ref: '#/components/schemas/Mediums'
+        robot_data:
+          type: object
+          properties:
+            detected_macs:
+              type: array
+              items:
+                type: object
+                properties:
+                  mac_address:
+                    type: string
+                    description: IP address of the camera
+                  event_type:
+                    type: string
+                    description: Algorithm product type
+            camera:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Camera name
+                label:
+                  type: string
+                  description: Camera name label
+            threshold:
+              type: number
+              format: float
+              description: Camera detection parameter
+        camera_data:
+          type: object
+          properties:
+            threshold:
+              type: number
+              format: float
+              description: Camera detection parameter
+        media:
+          $ref: '#/components/schemas/Media'
+        location:
+          type: object
+          properties:
+            lat:
+              type: number
+              format: double
+              description: Location of latitude
+            lng:
+              type: number
+              format: double
+              description: Location of longitude
+        source:
+          type: string
+          enum:
+            - robot
+            - box
+            - camera
+          description: Source robot/box_camera
+        tag:
+          type: string
+        marked:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Whether the event is marked
+        viewed:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Event view status
+        annotate:
+          type: string
+          enum:
+            - unknown
+            - true
+            - false
+          description: Event annotate
+        site:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              description: Site id
+            created_at:
+              type: string
+              format: date-time
+              description: Site created time
+            updated_at:
+              type: string
+              format: date-time
+              description: Site updated time
+            name:
+              type: string
+              description: Site name
+            location:
+              type: string
+              description: Site location
+            note:
+              type: string
+              description: Site note
+            label:
+              type: string
+              description: Site label
+            county:
+              type: string
+              description: County where the site is located
+            province:
+              type: string
+              description: Province where the site is located
+            city:
+              type: string
+              description: City where the site is located
+            polygons:
+              type: array
+              description: |
+                Array of polygons
+                * Required when target_type is point or auto.
+              items:
+                type: string
+
+    Mediums:
+      type: array
+      description: |
+        Mediums contains three 'objects' :
+        * {id，name,file{file_size,size,content_type,url},event_id}
+        * {id，name,file{file_size,content_type,url},event_id}
+        * {id，name,file{file_size,content_type,url},event_id}
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            format: int64
+            description: Medium id
+          name:
+            type: string
+            description: Medium name
+          file:
+            type: object
+            properties:
+              file_size:
+                type: integer
+                format: int32
+                description: Medium file size
+              size:
+                type: array
+                items:
+                  type: string
+                  description: Medium file length and width
+              content_type:
+                type: string
+                enum:
+                  - video/mp4
+                  - text/json
+                  - image/jpeg
+                description: File content type
+              url:
+                type: string
+                description: Medium url path
+          event_id:
+            type: integer
+            format: int64
+            description: Medium belongs to the event id
+
+    Media:
+      type: object
+      properties:
+        snapshot:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              description: Snapshot id
+            name:
+              type: string
+              description: Snapshot name
+            file:
+              type: object
+              properties:
+                file_size:
+                  type: integer
+                  format: int32
+                  description: Snapshot file size
+                size:
+                  type: array
+                  items:
+                    type: string
+                    description: Snapshot file length and width
+                content_type:
+                  type: string
+                  description: File content type
+                url:
+                  type: string
+                  description: Snapshot url path
+            event_id:
+              type: integer
+              format: int64
+              description: Snapshot belongs to the event id
+        bbox:
+          type: object
+          properties:
+            id:
+              type: integer
+              format: int64
+              description: bbox id
+            name:
+              type: string
+              description: bbox name
+            file:
+              type: object
+              properties:
+                file_size:
+                  type: integer
+                  format: int32
+                  description: bbox file size
+                content_type:
+                  type: string
+                  description: File content type
+                size:
+                  type: array
+                  items:
+                    type: string
+                    description: Snapshot file length and width
+                url:
+                  type: string
+                  description: bbox url path
+            event_id:
+              type: integer
+              format: int64
+              description: Belongs to the event id
+        videos:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+                description: Video id
+              name:
+                type: string
+                description: Video name
+              file:
+                type: object
+                properties:
+                  file_size:
+                    type: integer
+                    format: int32
+                    description: Video file size
+                  content_type:
+                    type: string
+                    description: File content type
+                  url:
+                    type: string
+                    description: Video url path
+              event_id:
+                type: string
+                format: int64
+                description: Medium belongs to the event id
+              started_at:
+                type: string
+                format: date-time
+                description: Save the create time of the video
+              ended_at:
+                type: string
+                format: date-time
+                description: Save the end time of the video
+
+  examples:
+    EventListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        extra:
+          monitor:
+            id: 1
+            user_id: 2
+            version: 3
+            box_version: 2
+            camera_version: 3
+            robot_version: 4
+            event_version: 3
+        ret:
+          next: https://test.turingvideo.cn/api/v1/event/events?limit=10&offset=10
+          previous: null
+          results:
+            - id: 6
+              camera_id: 104
+              robot_id: null
+              robot_camera:
+                name: front
+                lablel: Front camera
+              camera:
+                id: 104
+                name: 小镇
+              robot: null
+              types:
+                - name: person
+                  label: Person
+              started_at: '2017-10-18T06:00:57Z'
+              ended_at: '2017-10-19T06:01:57Z'
+              mediums:
+                - id: 19
+                  name: snapshot
+                  file:
+                    file_size: 8888
+                    size:
+                      - 640
+                      - 360
+                    content_type: image/jpeg
+                    url: https://develop-data-turingvideo-com.s3.cn-northwest-1.ams
+                  event_id: 6
+                - id: 20
+                  name: bbox
+                  file:
+                    file_size: 8888
+                    size:
+                      - 640
+                      - 360
+                    content_type: text/json
+                    url: https://develop-data-turingvideo-com.s3.cn-northwest-1.am
+                  event_id: 6
+                - id: 21
+                  name: video
+                  file:
+                    file_size: 8888
+                    content_type: video/mp4
+                    url: https://develop-data-turingvideo-com.s3.cn-northwest-1.a
+                  event_id: 6
+              robot_data: null
+              camera_data:
+                threshold: 0.5
+              media:
+                snapshot:
+                  id: 19
+                  name: snapshot
+                  file:
+                    file_size: 8888
+                    size:
+                      - 640
+                      - 360
+                    content_type: image/jpeg
+                    url: https://develop-data-turingvideo-com.s3.cn-northwest-1.a
+                  event_id: 6
+                bbox:
+                  id: 20
+                  name: bbox
+                  file:
+                    file_size: 8888
+                    size:
+                      - 640
+                      - 360
+                    content_type: text/json
+                    url: https://develop-data-turingvideo-com.s3.cn-northwest-1.a
+                  event_id: 6
+                videos:
+                  - id: 21
+                    name: video
+                    file:
+                      file_size: 8888
+                      content_type: video/mp4
+                      url: https://develop-data-turingvideo-com.s3.cn-northwest-1.a
+                    event_id: 6
+                    started_at: '2017-10-18T06:00:57Z'
+                    ended_at: '2017-10-19T06:00:57Z'
+              location:
+                lat: 0.0
+                lng: 0.0
+              source: camera
+              tag: ''
+              marked: false
+              viewed: false
+              annotate: unknown
+              site:
+                id: 2
+                created_at: '2019-08-16T09:06:45Z'
+                updated_at: '2019-08-16T09:15:22Z'
+                name: test-site
+                location: Nanjing/China
+                note: ''
+                label: Zidong
+                county: 栖霞区
+                province: 江苏省
+                city: 南京市
+                polygons: []
+            - id: 7
+              camera_id: null
+              robot_id: robot_dog_sr_20002
+              robot_camera:
+                name: front
+                lablel: Front camera
+              camera: null
+              robot:
+                id: robot_dog_sr_20002
+                name: 20002
+                type: test_li
+              types:
+                - name: person:513
+                  label: 人群聚集
+                - name: enter
+                  label: Enter
+              started_at: '2017-10-18T06:00:57Z'
+              ended_at: '2017-10-19T06:01:57Z'
+              mediums:
+                - id: 22
+                  name: snapshot
+                  file:
+                    file_size: 8888
+                    size:
+                      - 640
+                      - 360
+                    content_type: image/jpeg
+                    url: https://develop-data-turingvideo-com.s3.cn-northwest-1.a
+                  event_id: 7
+                - id: 23
+                  name: bbox
+                  file:
+                    file_size: 8888
+                    size:
+                      - 640
+                      - 360
+                    content_type: text/json
+                    url: https://develop-data-turingvideo-com.s3.cn-northwest-1.a
+                  event_id: 7
+                - id: 24
+                  name: video
+                  file:
+                    file_size: 8888
+                    content_type: video/mp4
+                    url: https://develop-data-turingvideo-com.s3.cn-northwest-1.am
+                  event_id: 7
+              robot_data:
+                detected_macs: []
+                camera:
+                  name: front
+                  label: Frant camera
+                threshold: 0.9
+              camera_data: null
+              media:
+                snapshot:
+                  id: 22
+                  name: snapshot
+                  file:
+                    file_size: 8888
+                    size:
+                      - 640
+                      - 360
+                    content_type: image/jpeg
+                    url: https://develop-data-turingvideo-com.s3.cn-northwest-1.am
+                  event_id: 7
+                bbox:
+                  id: 23
+                  name: bbox
+                  file:
+                    file_size: 8888
+                    size:
+                      - 640
+                      - 360
+                    content_type: text/json
+                    url: https://develop-data-turingvideo-com.s3.cn-northwest-1.am
+                  event_id: 7
+                videos:
+                  - id: 24
+                    name: video
+                    file:
+                      file_size: 8888
+                      content_type: video/mp4
+                      url: https://develop-data-turingvideo-com.s3.cn-northwest-1.am
+                    event_id: 6
+                    started_at: '2017-10-18T06:00:57Z'
+                    ended_at: '2017-10-19T06:00:57Z'
+              location:
+                lat: 0.0
+                lng: 0.0
+              source: robot
+              tag: ""
+              marked: false
+              viewed: false
+              annotate: unknown
+              site:
+                id: 2
+                created_at: '2019-08-16T09:06:45Z'
+                updated_at: '2019-08-16T09:15:22Z'
+                name: test-site
+                location: Nanjing/China
+                note: ''
+                label: Zidong
+                county: 栖霞区
+                province: 江苏省
+                city: 南京市
+                polygons: []
+              data:
+                detected_macs: []
+                camera:
+                  name: front
+                  label: Frant camera
+                threshold: 0.9
+
+

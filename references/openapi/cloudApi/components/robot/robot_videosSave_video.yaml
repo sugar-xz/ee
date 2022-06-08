@@ -1,0 +1,159 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description: Query videos created by robot
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      required:
+        - robot_id
+        - started_at
+        - ended_at
+      properties:
+        camera:
+          type: string
+          description: Robot camera name
+        robot_id:
+          type: string
+          description: Robot id
+        started_at:
+          format: date-time
+          type: string
+          description: The start time of save video
+        ended_at:
+          type: string
+          format: date-time
+          description: The end time of save video
+
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/SaveVideo'
+
+    SaveVideo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Robot video id
+        robot:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Robot id
+            name:
+              type: string
+              description: Robot id name
+        camera:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Robot camera name
+            lablel:
+              type: string
+              description: Robot camera name label
+        started_at:
+          type: string
+          format: date-time
+          description: Saved video create time
+        ended_at:
+          type: string
+          format: date-time
+          description: Saved video end time
+        snapshot:
+          type: object
+          properties:
+            size:
+              type: array
+              items:
+                type: string
+                description: Snapshot length and width
+            content_type:
+              type: string
+              description: File content type
+            file_size:
+              type: integer
+              format: int32
+              description: Snapshot file size
+            url:
+              type: string
+              description: Snapshot url path
+        video:
+          type: object
+          properties:
+            size:
+              type: array
+              items:
+                type: string
+                description: Video length and width
+            content_type:
+              type: string
+              description: File content type
+            file_size:
+              type: integer
+              format: int32
+              description: Video file size
+            url:
+              type: string
+              description: Video url path
+
+
+  examples:
+    Request:
+      value:
+        robot_id: robot_dog_sr_20002
+        camera: front
+        started_at: "2019-02-07T17:28:02Z"
+        ended_at: "2019-02-07T17:29:02Z"
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 33
+          robot:
+            id: robot_dog_sr_20002
+            name: 20002
+          camera:
+            name: front
+            lablel: Front camera
+          started_at: "2019-10-14T06:00:57.262076Z"
+          ended_at: "2019-10-14T06:01:57.262076Z"
+          snapshot:
+            file_size: 1888
+            size:
+              - 640
+              - 360
+            content_type: video/mp4
+            url: https://develop-data-turingvideo-com.s3.cn-nort
+          video:
+            file_size: 1888
+            content_type: video/mp4
+            url: https://develop-data-turingvideo-com.s3.cn-nort

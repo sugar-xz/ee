@@ -1,0 +1,68 @@
+# Name: test_default.tavern
+test_name: Create Robot Video
+stages:
+  - type: ref
+    id: robot_initiate
+#  - type: ref
+#    id: robot_authenticate
+#  - name: Create Robot Video
+#    request:
+#      url: "{url}/robot_video/robot_videos"
+#      method: POST
+#      headers:
+#        content-type: application/json
+#        X-APP: "Robot/{robot_level}/{robot_version}"
+#        Referer: "{Referer}"
+#      json:
+#        camera: "{robot_camera_name}"
+#        video:
+#          Key: users/1/cameras/1/events/logo.jpg
+#          Bucket: dev-turingvideo-com
+#          meta:
+#            file_size: 2288
+#            size:
+#              - 640
+#              - 360
+#            content_type: "image/jpeg"
+#        started_at: "2019-09-27 06:15:31+00"
+#        ended_at: "2019-09-27 06:15:32+00"
+#    response:
+#      status_code: 200
+#      body:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200
+# #   delay_after: 1
+#
+#---
+#test_name: No arguments to Create Robot Video
+#stages:
+#  - type: ref
+#    id: robot_initiate
+#  - type: ref
+#    id: robot_authenticate
+#  - name: No arguments to Create Robot Video
+#    request:
+#      url: "{url}/robot_video/robot_videos"
+#      method: POST
+#      headers:
+#        content-type: application/json
+#        X-APP: "Robot/{robot_level}/{robot_version}"
+#        Referer: "{Referer}"
+#      json:
+#        camera: ""
+#        video:
+#          Key: ""
+#          Bucket: ""
+#          meta:
+#            file_size: ""
+#            size:
+#              - ""
+#            content_type: ""
+#        started_at: ""
+#        ended_at: ""
+#    response:
+#      status_code: 400
+#      body:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_400
+# #   delay_after: 1

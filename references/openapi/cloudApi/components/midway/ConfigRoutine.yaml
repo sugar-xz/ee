@@ -1,0 +1,583 @@
+openapi: 3.0.2
+
+components:
+  parameters:
+    ExecutionId:
+      in: path
+      name: execution_id
+      required: true
+      description: Routine execution id
+      schema:
+        type: string
+    Index:
+      in: path
+      name: index
+      required: true
+      description: Routine execution stage index
+      schema:
+        type: integer
+        format: int32
+    RoutineId:
+      in: query
+      name: routine_id
+      description: Routine id
+      schema:
+        type: string
+    Date:
+      in: query
+      name: date
+      description: Date of inquiry, format:`20201012`
+      schema:
+        type: string
+    Limit:
+      in: query
+      name: limit
+      description: Max 100
+      schema:
+        type: integer
+        format: int32
+  requestBodies:
+    RoutineRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RoutineRequest'
+    StateRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              state:
+                type: string
+                enum:
+                  - initial
+                  - cancelled
+                  - doing
+                  - done
+                  - interrupted
+                  - succeeded
+                  - analyzed
+                description: Rutine status
+    ExecuteRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              robot_id:
+                type: string
+                description: Robot id
+              routine_id:
+                type: string
+              start_at:
+                type: string
+                format: date-time
+                description: Routine start time
+  responses:
+    RoutinesResult:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            description: View robot routine detections
+            allOf:
+              - $ref: '../common.yaml#/components/schemas/Result'
+              - type: object
+                properties:
+                  ret:
+                    type: array
+                    items:
+                      $ref: 'ConfigRobotPK.yaml#/components/schemas/Routine'
+          examples:
+            response:
+              $ref: '#/components/examples/RoutinesResult'
+    RoutineResult:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            description: View robot routine detections
+            allOf:
+              - $ref: '../common.yaml#/components/schemas/Result'
+              - type: object
+                properties:
+                  ret:
+                    $ref: '#/components/schemas/RoutineRequest'
+          examples:
+            response:
+              $ref: '#/components/examples/RoutineRequest'
+    ExecuteResult:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            description: Create robot routine detection
+            allOf:
+              - $ref: '../common.yaml#/components/schemas/Result'
+              - type: object
+                properties:
+                  ret:
+                    $ref: '#/components/schemas/ExecuteResult'
+    RoutineDayResult:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RoutineDayResult'
+          examples:
+            response:
+              $ref: '#/components/examples/RoutineDayResult'
+    RoutineExecutionsResult:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RoutineExecutionsResult'
+          examples:
+            response:
+              $ref: '#/components/examples/RoutineExecutionsResult'
+    RoutineExecutionResult:
+      description: Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RoutineExecutionResult'
+          examples:
+            response:
+              $ref: '#/components/examples/RoutineExecutionResult'
+  schemas:
+    RoutineDayResult:
+      description: View robot routine day execution
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: array
+              items:
+                $ref: '#/components/schemas/RoutineDay'
+    RoutineExecutionsResult:
+      description: View robot routine detections
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                cournt:
+                  type: integer
+                result:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/RoutineExecution'
+    RoutineExecutionResult:
+      description: View robot routine execution
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/RoutineExecution'
+    RoutineDay:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Routine id
+        created_at:
+          type: string
+          format: date-time
+          description: Routine created time
+        updated_at:
+          type: string
+          format: date-time
+          description: Routine updated time
+        start_at:
+          type: string
+          format: date-time
+          description: Routine start time
+        fail_reason:
+          type: string
+        state:
+          type: string
+          enum:
+            - initial
+            - cancelled
+            - doing
+            - done
+            - interrupted
+            - succeeded
+            - analyzed
+          description: Rutine status
+        timestamps:
+          $ref: '#/components/schemas/Timestamps'
+        targeted_list:
+          type: array
+          items:
+            type: object
+            properties:
+              floor_number:
+                type: integer
+                format: int32
+              target_list:
+                type: array
+                items:
+                  type: string
+    RoutineRequest:
+      type: object
+      properties:
+        robot_id:
+          type: string
+          description: Robot id
+        routine:
+          $ref: 'ConfigRobotPK.yaml#/components/schemas/Routine'
+    RoutineExecution:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Routine id
+        created_at:
+          type: string
+          format: date-time
+          description: Routine created time
+        updated_at:
+          type: string
+          format: date-time
+          description: Routine updated time
+        start_at:
+          type: string
+          format: date-time
+          description: Routine start time
+        fail_reason:
+          type: string
+        state:
+          type: string
+          enum:
+            - initial
+            - cancelled
+            - doing
+            - done
+            - interrupted
+            - succeeded
+            - analyzed
+          description: Rutine status
+        stages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Stages'
+        inspection_stats:
+          type: object
+          properties:
+            all_target_ids:
+              type: array
+              items:
+                type: string
+    ExecuteResult:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Routine id
+        snap_routine:
+          $ref: 'ConfigRobotPK.yaml#/components/schemas/Routine'
+        created_at:
+          type: string
+          format: date-time
+          description: Routine created time
+        updated_at:
+          type: string
+          format: date-time
+          description: Routine updated time
+        start_at:
+          type: string
+          format: date-time
+          description: Routine start time
+        fail_reason:
+          type: string
+        timestamps:
+          $ref: '#/components/schemas/Timestamps'
+        state:
+          type: string
+          enum:
+            - initial
+            - cancelled
+            - doing
+            - done
+            - interrupted
+            - succeeded
+            - analyzed
+          description: Rutine status
+        stage_index:
+          type: integer
+          format: int32
+        stages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Stages'
+        inspection_stats:
+          type: object
+          properties:
+            all_target_ids:
+              type: array
+              items:
+                type: string
+    Stages:
+      type: object
+      properties:
+        index:
+          type: integer
+          format: int32
+        action:
+          type: string
+        target_stats:
+          type: object
+          properties:
+            all_target_ids:
+              type: array
+              items:
+                type: string
+            all_target_uuids:
+              type: array
+              items:
+                type: string
+            left_target_ids:
+              type: array
+              items:
+                type: string
+            left_target_uuids:
+              type: array
+              items:
+                type: string
+        floor:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            floor:
+              type: integer
+              format: int32
+        state:
+          type: string
+          enum:
+            - initial
+            - cancelled
+            - doing
+            - done
+            - interrupted
+            - succeeded
+            - analyzed
+          description: Rutine status
+        timestamps:
+          $ref: '#/components/schemas/Timestamps'
+        fail_reason:
+          type: string
+        phases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phases'
+    Phases:
+      type: object
+      properties:
+        uuid:
+          type: string
+        try_count:
+          type: integer
+          format: int32
+        state:
+          type: string
+          enum:
+            - initial
+            - cancelled
+            - doing
+            - done
+            - interrupted
+            - succeeded
+            - analyzed
+          description: Rutine status
+        timestamps:
+          $ref: '#/components/schemas/Timestamps'
+        fail_reason:
+          type: string
+        periods:
+          type: array
+          items:
+            $ref: '#/components/schemas/Periods'
+    Periods:
+      type: object
+      properties:
+        uuid:
+          type: string
+        action:
+          type: string
+        target_id:
+          type: string
+        state:
+          type: string
+          enum:
+            - initial
+            - cancelled
+            - doing
+            - done
+            - interrupted
+            - succeeded
+            - analyzed
+          description: Rutine status
+        timestamps:
+          $ref: '#/components/schemas/Timestamps'
+        fail_reason:
+          type: string
+    Timestamps:
+      type: object
+      properties:
+        started_at:
+          type: string
+          format: date-time
+        interrupted_at:
+          type: string
+          format: date-time
+        ended_at:
+          type: string
+          format: date-time
+  examples:
+    RoutinesResult:
+      value:
+        value:
+          err:
+            ec: 0
+            em: ok
+            dm: ok
+          ret:
+            - id: 1602848321470
+              name: test_lmq
+              actions:
+                - act: load_map_route
+                  arg:
+                    delay_secs: 0
+                    map_id: robot_dog_sr_20014.1598602324476
+                    reset_slam: false
+                    route_id: 1598603800934
+                - act: target_loop
+                  arg:
+                    target_list:
+                      - 3186
+                      - 3188
+              type: ""
+              parent_routine_id: 1603248158077
+              schedule: null
+              robot_ids: null
+    RoutineRequest:
+      value:
+        value:
+          err:
+            ec: 0
+            em: ok
+            dm: ok
+          ret:
+            robot_id: robot_dog_sr_20041
+            routine:
+              id: 1602848321470
+              name: test_lmq
+              actions:
+                - act: load_map_route
+                  arg:
+                    delay_secs: 0
+                    map_id: robot_dog_sr_20014.1598602324476
+                    reset_slam: false
+                    route_id: 1598603800934
+                - act: target_loop
+                  arg:
+                    target_list:
+                      - 3186
+                      - 3188
+              type: ""
+              parent_routine_id: 1603248158077
+              schedule: null
+              robot_ids:
+                - robot_dog_sr_20041
+    RoutineDayResult:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: ok
+        ret:
+          - id: "1602497037632.1602501610"
+            created_at: "2020-10-12T11:20:10Z"
+            updated_at: "2020-10-12T11:20:10Z"
+            start_at: "2020-10-12T11:20:10Z"
+            state: initial
+            timestamps:
+              started_at: null
+              interrupted_at: null
+              ended_at: null
+            fail_reason: null
+            targeted_list: null
+    RoutineExecutionsResult:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: ok
+        ret:
+          count: 1
+          result:
+            - id: "1602497037632.1602501610"
+              created_at: "2020-10-12T11:20:10Z"
+              updated_at: "2020-10-12T11:20:10Z"
+              start_at: "2020-10-12T11:20:10Z"
+              fail_reason: null
+              state: initial
+              stages:
+                - index: 0
+                  action: load_map_route
+                  target_stats: null
+                  floor: null
+                  state: "succeeded"
+                  timestamps:
+                    started_at: "2020-11-11T09:09:51.599Z"
+                    interrupted_at: null
+                    ended_at: "2020-11-11T09:09:56.741Z"
+                  fail_reason: null
+                  phases: []
+              targeted_list:
+                all_target_ids:
+                  - 4622
+    RoutineExecutionResult:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: ok
+        ret:
+          id: "1602497037632.1602501610"
+          created_at: "2020-10-12T11:20:10Z"
+          updated_at: "2020-10-12T11:20:10Z"
+          start_at: "2020-10-12T11:20:10Z"
+          fail_reason: null
+          state: initial
+          stages:
+            - index: 0
+              action: load_map_route
+              target_stats: null
+              floor: null
+              state: "succeeded"
+              timestamps:
+                started_at: "2020-11-11T09:09:51.599Z"
+                interrupted_at: null
+                ended_at: "2020-11-11T09:09:56.741Z"
+              fail_reason: null
+              phases: []
+          targeted_list:
+            all_target_ids:
+              - 4622

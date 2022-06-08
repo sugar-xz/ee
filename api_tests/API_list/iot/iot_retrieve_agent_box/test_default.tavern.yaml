@@ -1,0 +1,43 @@
+# Name: test_default.tavern
+test_name: Retrieve agent box
+stages:
+  - type: ref
+    id: login_customer
+  - name: Retrieve agent box
+    request:
+      url: "{url}/agent/boxes/{test_box_id}"
+      method: GET
+      headers:
+        content-type: application/json
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !!str "{test_box_id}"
+          agents: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+
+#---
+#test_name: Retrieve agent box
+#stages:
+#  - type: ref
+#    id: login_customer
+#  - name: Retrieve agent box
+#    request:
+#      url: "{url}/agent/boxes/{test_box_id}"
+#      method: GET
+#      headers:
+#        content-type: application/json
+#        Referer: "{Referer}"
+#    response:
+#      status_code: 200
+#      body:
+#        ret:
+#          id: !!str "{test_box_id}"
+#          agents: !anything
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200
+# #   delay_after: 1

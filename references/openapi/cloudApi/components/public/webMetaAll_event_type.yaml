@@ -1,0 +1,41 @@
+openapi: 3.0.2
+
+components:
+  schemas:
+    AlgoTypeResult:
+      description: Get all algo event type information
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: array
+              items:
+                type: object
+                description: Multiple object contains all the algorithms
+                properties:
+                  name:
+                    type: string
+                  label:
+                    type: string
+
+  examples:
+    AlgoTypeResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          - name: person
+            label: Person
+          - name: apple
+            label: Apple
+          - name: tie
+            label: Tie
+          - name: zawu
+            label: zawu
+          - name: person:512
+            label: Person:512
+
+

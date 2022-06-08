@@ -1,0 +1,67 @@
+openapi: 3.0.2
+components:
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+
+  schemas:
+    Result:
+      allOf:
+        - $ref: 'common.yaml#/components/schemas/ListResult'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  device_sn:
+                    type: string
+                    description: Device serial number
+                  camera_id:
+                    type: integer
+                    format: int64
+                    description: Camera id
+                  status:
+                    type: string
+                    description: Camera status, 1 means online device, and 0 means offline device
+                    enum:
+                      - true
+                      - false
+                  ip:
+                    type: string
+                    description: IP address of the camera
+                  name:
+                    type: string
+                    description:  device name(support fuzzy match)
+                  time:
+                    type: string
+                    format: date-time
+                  version:
+                    type: integer
+                    format: int64
+                    description: Camera version
+
+  examples:
+    Result:
+      value:
+        code: 0
+        msg: ok
+        total: 1
+        page: 1
+        pagesize: 10
+        data:
+          - device_sn: VHGV-VJHV
+            camera_id: 34343
+            status: true
+            ip: 192.168.10.23
+            name: ''
+            time: '2020-05-27 14:59:05'
+            version: 0.29

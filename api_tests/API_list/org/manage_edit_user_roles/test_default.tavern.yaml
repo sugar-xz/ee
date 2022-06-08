@@ -1,0 +1,43 @@
+# Name: test_default.tavern
+test_name: Edit user roles (org)
+# org_organizationuser,org_usernode,auth_user
+stages:
+  - type: ref
+    id: login_customer
+  - name: Edit user roles
+    request: &request_anchor
+      url: "{url}/user_node/user_nodes/2/edit_user_roles"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        user:
+          role_ids:
+            - 2
+          domain_ids:
+            - 2
+        id: 2
+    response: &response_anchor
+      status_code: 200
+      body:
+        ret: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Edit user roles (org)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Edit user roles
+    request:
+      <<: *request_anchor
+      json:
+        user:
+          role_ids:
+            - 2
+            - 5
+          domain_ids:
+            - 2
+        id: 2
+    response: *response_anchor

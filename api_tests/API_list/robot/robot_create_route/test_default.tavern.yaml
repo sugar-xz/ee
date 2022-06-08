@@ -1,0 +1,55 @@
+# Name: test_default.tavern
+test_name: Create Route
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create Route
+    request:
+      url: "{url}/route/routes"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        name: route_test
+        points: point_test
+        checkpoints: checkpoint_test
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Create Route err
+marks:
+  - parametrize:
+      key:
+        - err_name
+        - err_points
+        - err_checkpoints
+      vals:
+        - ["", "", ""]
+        - [err_name, "", ""]
+        - ["", err_points, err_checkpoints]
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create Route err
+    request:
+      url: "{url}/route/routes"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        name: "{err_name}"
+        points: "{err_points}"
+        checkpoints: "{err_checkpoints}"
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400

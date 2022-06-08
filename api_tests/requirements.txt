@@ -1,0 +1,6 @@
+ipython
+tavern==0.30.3
+flake8==4.0.0
+flake8-commas==2.0.0
+cryptography==2.7
+pytest==4.5.0

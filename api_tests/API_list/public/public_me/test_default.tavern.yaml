@@ -1,0 +1,49 @@
+# Name: test_default.tavern
+test_name: View current users
+stages:
+
+  - type: ref
+    id: login_customer
+
+  - name: View current users
+    request:
+      url: "{url}/user/users/me"
+      method: GET
+    response:
+      status_code: 200
+      body:
+        ret:
+          username: "{customer}"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Request method error to view current users
+stages:
+  - type: ref
+    id: login_customer
+
+  - name: Request method error
+    request:
+      url: "{url}/user/users/me"
+      method: POST
+    response:
+      status_code: 403
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_403
+
+---
+test_name: no cookie to view current users
+stages:
+  - name: no cookie
+    request:
+      url: "{url}/user/users/me"
+      method: GET
+    response:
+      status_code: 401
+      body:
+        extra:
+          detail: "Authentication credentials were not provided."
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_401

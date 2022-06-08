@@ -1,0 +1,93 @@
+# Name: test_default.tavern
+test_name: User update camera
+stages:
+  - type: ref
+    id: login_customer
+  - name: User update camera
+    request:
+      url: "{url}/camera/cameras/1"
+      method: PUT
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        box_id: "{test_box_id}"
+        name: sugar_camera_test
+        serial_no: sugar_camera_test
+        mac_address: "3c:ef:cc:53:dd:85"
+        notifies: ""
+        username: admin
+        password: s123456
+        upload_video_enabled: true
+        uri: https://www.turingvideo.com
+        hd_uri: https://www.turingvideo.com/up
+        mode: 'on'
+        algo: human
+        location:
+          lng: 0.0
+          lat: 0.0
+        detect_params:
+          threshold: 0.5
+        rules:
+          - name: rule1
+            mode: 'on'
+            start_at: 0
+            end_at: 1
+            algo: person
+            region: 0.151,0.513,0.234,0.135
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+---
+test_name: User error update camera
+marks:
+  - parametrize:
+      key: err_camera_id
+      vals:
+        - 4567895465
+        - sakjdhsajk#^%$$@
+stages:
+  - type: ref
+    id: login_customer
+  - name: User add camera
+    request:
+      url: "{url}/camera/cameras/{err_camera_id}"
+      method: PUT
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        box_id: "{test_box_id}"
+        name: camera_name
+        mac_address: 3c:ef:cc:53:dd:71
+        notifies: ""
+        username: admin
+        password: ww123456
+        upload_video_enabled: true
+        uri: https://www.turingvideo.com
+        hd_uri: https://www.turingvideo.com
+        mode: 'on'
+        algo: human
+        location:
+          lng: 0.0
+          lat: 0.0
+        detect_params:
+          threshold: 0.5
+        rules:
+          - name: rule1
+            mode: 'on'
+            start_at: 0
+            end_at: 1
+            algo: person,car
+            region: 0.151,0.513,0.234,0.135
+    response:
+      status_code: 404
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_404
+ #   delay_after: 1

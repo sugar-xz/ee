@@ -1,0 +1,190 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    CreateVideoRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateVideoRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/CreateVideoRequest'
+  responses:
+    CreateVideoResult:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateVideoResult'
+          examples:
+            response:
+              $ref: '#/components/examples/CreateVideoResult'
+    VideoListResult:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VideoListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/VideoListResult'
+  schemas:
+    VideoListResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                next:
+                  type: string
+                  description: The next page
+                previous:
+                  type: string
+                  description: The previous page
+                results:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/VideoInfo'
+    VideoInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Video id
+          format: int32
+        camera_id:
+          type: integer
+          description: Camera id
+          format: int32
+        started_at:
+          type: string
+          description: Saved video create time
+          format: date-time
+        ended_at:
+          type: string
+          description: Saved video end time
+          format: date-time
+        video:
+          type: object
+          properties:
+            file_size:
+              type: integer
+              description: Video file size
+              format: int32
+            content_type:
+              type: string
+              description: Choose according to File content type
+              enum:
+                - video/mp4
+                - text/json
+                - image/jpeg
+            url:
+              type: string
+              description: Video url path
+        size:
+          type: integer
+          description: Video size
+          format: int32
+
+    CreateVideoRequest:
+      type: object
+      properties:
+        camera_id:
+          type: integer
+          tdescription: Camera id
+          format: int32
+        started_at:
+          type: string
+          description: Saved video create time
+          format: date-time
+        ended_at:
+          type: string
+          description: Saved video end time
+          format: date-time
+        video:
+          type: object
+          properties:
+            meta:
+              type: object
+              properties:
+                file_size:
+                  type: integer
+                  description: Video file size
+                  format: int32
+                content_type:
+                  type: string
+                  description: Choose according to File content type
+                  enum:
+                    - video/mp4
+                    - text/json
+                    - image/jpeg
+            Key:
+              type: string
+              description: Store file name
+            Bucket:
+              type: string
+              description: Store path
+
+    CreateVideoResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: '#/components/schemas/VideoInfo'
+
+  examples:
+    VideoListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          next: null
+          previous: null
+          results:
+            - id: 8833
+              camera_id: 1
+              started_at: "2017-10-19T06:00:57.262076Z"
+              ended_at: "2017-10-19T06:01:57.262076Z"
+              video:
+                file_size: 1000
+                content_type: "video/mp4"
+                erl: https://develop-data-turingvideo-com.s3.cn
+              size: 1000
+
+    CreateVideoRequest:
+      value:
+        camera_id: "1"
+        started_at: "2017-10-19T06:00:57.262076Z"
+        ended_at: "2017-10-19T06:01:57.262076Z"
+        video:
+          meta:
+            file_size: 1000
+            content_type: "video/mp4"
+          Key: "users/3/cameras/3/videos/8d40608c-9090-4e5a-98f4-26415058b487"
+          Bucket: "develop-data-turingvideo-com"
+
+    CreateVideoResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: 8833
+          camera_id: 1
+          started_at: "2017-10-19T06:00:57.262076Z"
+          ended_at: "2017-10-19T06:01:57.262076Z"
+          video:
+            file_size: 1000
+            content_type: "video/mp4"
+            erl: https://develop-data-turingvideo-com.s3.cn
+          size: 1000
+

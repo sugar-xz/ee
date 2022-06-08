@@ -1,0 +1,111 @@
+# Name: test_default.tavern
+
+test_name: User registration
+stages:
+  - type: ref
+    id: login_customer
+  - name: User registration
+    request: &registration_anchor
+      url: "{url}/user/auth/register"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        first_name: turing11
+        last_name: test11
+        username: turingtest11@turingvideo.net
+        password: "$Turin9Vide0"
+        lang: en
+        timezone: America/Los_Angeles
+#        referral: Referral
+    response:
+      status_code:
+        - 200
+        - 503
+#      body:
+#        ret: !anything
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Repeat registration
+stages:
+  - type: ref
+    id: login_customer
+  - name: Repeat registration
+    request: *registration_anchor
+    response:
+      status_code: 409
+      body:
+        err:
+          em: "Oops! This email has been already used. (duplicate)"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_409
+
+---
+test_name: User error registration & 用户异常注册
+marks:
+  - parametrize:
+      key:
+        - err_reg_username
+        - err_reg_password
+        - err_reg_lang
+      vals:
+        - ["", "",""]
+        - ["{customer}", "",""]
+        - ["", "{password}",""]
+        - ["#@￥%我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@#@￥%我是测试字段段我真的是测试字段段我真的是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段段我真的是测试字段段我真段我真的是测试字段段我真的是测试字段的是测试字段段我真的是测试字段", "{password}",""]
+        - ["{customer}", "@￥%我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@#@￥%我是测试字段段我真的是测试字段段我真的是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段我真的是测试字段@我是测试字段我只是测试字段段我真的是测试字段段我真段我真的是测试字段段我",""]
+        - ["", "{password}","zn"]
+        - ["turingtest@turingvideo.net", "{password}","测试"]
+        - ["turingtest@turingvideo.net", "{password}",""]
+        - ["turingtest@turingvideo.net", "","zh-hans"]
+
+stages:
+  - type: ref
+    id: login_customer
+  - name:  User error registration
+    request:
+      url: "{url}/user/auth/register"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        first_name: turing
+        last_name: test
+        username: "{err_reg_username}"
+        password: "{err_reg_password}"
+        lang: "{err_reg_lang}"
+        timezone: America/Los_Angeles
+#        referral: Referral
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+
+---
+test_name: Method error to register
+stages:
+  - type: ref
+    id: login_customer
+  - name: Repeat user
+    request:
+      url: "{url}/user/auth/register"
+      method: GET
+      headers:
+        content-type: application/json
+      json:
+        first_name: turing
+        last_name: test
+        username: turingtest@turing.com
+        password: 123qwe!@#QWE
+        lang: en
+        timezone: America/Los_Angeles
+#        referral: Referral
+    response:
+      status_code: 405
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_405

@@ -1,0 +1,68 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+  schemas:
+    Request:
+      type: object
+      required:
+        - map_id
+      properties:
+        site_id:
+          type: integer
+          format: int64
+          description: Site id
+        map_id:
+          type: integer
+          format: int32
+          description: Map id
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                site_id:
+                  type: integer
+                  format: int64
+                  description: Site id
+                map_id:
+                  type: integer
+                  format: int32
+                  description: Map id
+
+  examples:
+    Request:
+      value:
+        site_id: 1
+        map_id: 1
+
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          site_id: 1
+          map_id: 1

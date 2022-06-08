@@ -1,0 +1,39 @@
+## Name: test_default.tavern
+#test_name:  Update guard monitoring_operator
+#stages:
+#  - type: ref
+#    id: login_guard_monitor
+#  - name: update guard monitoring_operator
+#    request:
+#      url: "{url}/monitoring_operator/monitoring_operators/7"
+#      method: PUT
+#      headers:
+#        content-type: application/json
+#        X-CSRFTOKEN: "{get_csrftoken}"
+#      json:
+#        phone_number: 13111114445
+#    response:
+#      status_code: 200
+#      body:
+#        err: !anything
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_200
+#---
+test_name:  Update guard monitoring_operator error
+stages:
+  - type: ref
+    id: login_customer
+#  - name: update guard monitoring_operator
+#    request:
+#      url: "{url}/monitoring_operator/monitoring_operators/7"
+#      method: PUT
+#      headers:
+#        content-type: application/json
+#        X-CSRFTOKEN: "{get_csrftoken}"
+#      json:
+#        phone_number: 13111114445
+#    response:
+#      status_code: 401
+#      body:
+#        $ext:
+#          function: api_tests.utils.validation_method:validate_err_401

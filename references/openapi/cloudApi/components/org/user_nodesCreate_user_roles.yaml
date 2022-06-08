@@ -1,0 +1,63 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  schemas:
+    Request:
+      type: object
+      required:
+      - "user"
+      - "parent_id"
+      properties:
+        user:
+          type: object
+          required:
+          - "first_name"
+          - "last_name"
+          - "username"
+          - "role_ids"
+          properties:
+            first_name:
+              type: string
+            last_name:
+              type: string
+            username:
+              type: string
+              description: Email name
+            lang:
+              type: string
+              description: Language
+            timezone:
+              type: string
+              description: The time zone
+            role_ids:
+              type: array
+              items:
+                type: integer
+                description: Prem role id, allow multiple delimiters ","
+        parent_id:
+          type: integer
+          format: int32
+          description: Org user_node id
+
+  examples:
+    Request:
+      value:
+        user:
+          first_name: test
+          last_name: lee
+          username: test@163.com
+          lang: en
+          timezone: UTC
+          role_ids:
+            - 5
+        parent_id: 3
+

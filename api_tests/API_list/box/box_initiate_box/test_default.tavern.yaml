@@ -1,0 +1,69 @@
+# Name: test_default.tavern
+test_name: box initiate
+stages:
+  - name: Box initiate
+    request: &initiate_anchor
+      url: "{url}/box/boxes/initiate"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+      json:
+        id: "{test_box_id}"
+    response:
+      status_code: 200
+      save:
+        $ext:
+          function: api_tests.utils.validation_method:validate_box_initiate_get_challenge
+
+---
+test_name: Input error to start
+marks:
+  - parametrize:
+      key: err_start_id
+      vals:
+        - ""
+        - "jhasjkdhakl"
+        - "@WE@AS@"
+stages:
+  - name: Input error to start
+    request:
+      <<: *initiate_anchor
+      json:
+        id: "{err_start_id}"
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400
+
+---
+test_name: Header missing x-app started
+stages:
+  - name: Header missing x-app started
+    request:
+      <<: *initiate_anchor
+      headers:
+        content-type: application/json
+    response:
+      status_code: 406
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_406
+
+---
+test_name: box initiate err
+stages:
+  - name: box_name_err_initiate
+    request:
+      <<: *initiate_anchor
+      json:
+        id: box_342fds
+    response:
+      status_code: 409
+      body:
+        err:
+          em: "This instance doesn't exist any more. (none)"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_409
+ #   delay_after: 1

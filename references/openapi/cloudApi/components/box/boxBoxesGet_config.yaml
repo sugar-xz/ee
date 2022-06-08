@@ -1,0 +1,225 @@
+openapi: 3.0.2
+
+components:
+  schemas:
+    Result:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                sequence:
+                  type: integer
+                  description: Current box serial number
+                  format: int64
+                config:
+                  type: object
+                  properties:
+                    cameras:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            description: Camera id
+                            format: int32
+                          type:
+                            type: string
+                            description: Algorithm product type
+                          uri:
+                            type: string
+                            description: Camera uri video streaming
+                          hd_uri:
+                            type: string
+                            description: Camera hd_uri video streaming
+                          mode:
+                            type: string
+                            description: Camera state
+                          rules:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                  description: Detection rule name
+                                mode:
+                                  type: string
+                                  description: Camera detects the rule state
+                                id:
+                                  type: integer
+                                  description: Rule id
+                                start_at:
+                                  type: integer
+                                  description: Algorithm detects the start time
+                                  format: int32
+                                end_at:
+                                  type: integer
+                                  description: Algorithm detects the end time
+                                  format: int32
+                                algos:
+                                  type: string
+                                  description: Detection algorithm（rule1.0）
+                                algo:
+                                  type: string
+                                  description: Detection algorithm（rule2.0）
+                                region:
+                                  type: string
+                                  description: Detection range
+                                schedule:
+                                  type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                      description: Camera rule type
+                                    time_slots:
+                                      type: array
+                                      items:
+                                        type: string
+                                        description: Period of rule type time
+                                params_base:
+                                  type: string
+                                  description: Fill in the key value for default_params
+                                params:
+                                  type: object
+                                  properties:
+                                    param:
+                                      type: string
+                                      description: Custom parameter
+                                unique_id:
+                                  type: string
+                                  description: Rule unique id
+                          mac_address:
+                            type: string
+                            description: IP address of the camera
+                          default_params:
+                            type: object
+                            description: Custom parameter
+                          upload_video_enabled:
+                            type: boolean
+                            description: Upload video or not
+                            enum:
+                              - true
+                              - false
+                          detect_params:
+                            type: object
+                            properties:
+                              algos:
+                                type: string
+                                description: Detection algorithm
+                              threshold:
+                                type: number
+                                description: Camera detection parameter
+                                format: float
+                              auto_speak_enabled:
+                                type: boolean
+                                description: Automatic Speak enabled
+                                enum:
+                                  - true
+                                  - false
+                              detect_enabled:
+                                type: boolean
+                                description: Enable the detection
+                                enum:
+                                  - true
+                                  - false
+                          should_push:
+                            type: boolean
+                            description: Should push events to backend
+                            enum:
+                              - true
+                              - false
+                          name:
+                            type: string
+                            description: Camera name
+                          updated_at:
+                            type: string
+                            description: Data update time
+                            format: date-time
+                          serial_no:
+                            type: string
+                            description: Such as room number, asset number, etc.
+                    box:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                          description: Box id
+                        user_id:
+                          type: integer
+                          description: User id
+                          format: int32
+                        timezone:
+                          type: string
+                          description: Box location time zone
+                        billing:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              description: Box billing status
+                            label:
+                              type: string
+                              description: Box billing label
+
+
+  examples:
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          sequence: 7
+          config:
+            cameras:
+              - id: 12
+                type: ""
+                uri: rtsp://192.168.1.101/cam/realmonitor?channel=6&subtype=1
+                hd_uri: rtsp://192.168.1.101/cam/realmonitor?channel=6&subtype=0
+                mode: off
+                rules:
+                  - name: zawu
+                    mode: on
+                    start_at: 0
+                    end_at: 0
+                    region: ""
+                    algos: ""
+                    algo: zawu
+                    schedule:
+                      type: daily
+                      time_slots:
+                        -
+                          - 1070
+                          - 1220
+                    params_base: base
+                    params:
+                     a: b124
+                    unique_id: "46c29c48-f29e-411c-8cf3-b46d567a1bc0"
+                mac_address: 11:22:33:44:55:66
+                raw_address: 11:22:33:44:55:66
+                default_params:
+                  base:
+                   a: 1234a
+                upload_video_enabled: false
+                detect_params:
+                  algos: person
+                  threshold: 0.6
+                  auto_speak_enabled: true
+                  detect_enabled: true
+                should_push: true
+                name: 前台
+                updated_at: 2019-11-19T03:22:57Z
+                serial_no: ''
+            box:
+              key: box_dog_sr_50009
+              user_id: 1
+              timezone: UTC
+              billing:
+                name: paid
+                label: Paid
+

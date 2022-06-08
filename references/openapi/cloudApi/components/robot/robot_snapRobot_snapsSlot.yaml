@@ -1,0 +1,65 @@
+openapi: 3.0.2
+components:
+  parameters:
+    EndAtParam:
+      in: query
+      name: timestamp__lte
+      description: End time
+      schema:
+        type: string
+        format: date-time
+    StartAtParam:
+      in: query
+      name: timestamp__gt
+      description: Starting time
+      schema:
+        type: string
+        format: date-time
+    CameraNameParam:
+      in: query
+      name: camera
+      description: Robot camera name
+      schema:
+        type: string
+
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SnapResult'
+          examples:
+            response:
+              $ref: '#/components/examples/SnapResult'
+  schemas:
+    SnapResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: array
+              items:
+                $ref: 'robot_snapRobot_snaps.yaml#/components/schemas/SnapInfo'
+
+  examples:
+    SnapResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          - id: 88
+            robot_id: robot_dog_sr_20002
+            camera:
+              name: front
+              lablel: Front camera
+            timestamp: "2019-09-26T06:17:57Z"
+            file:
+              file_size: 8888
+              content_type: "image/jpeg"
+              url: "https://develop-data-turingvideo-com.s3.cn-norws4_reque6"
+            type: event

@@ -1,0 +1,50 @@
+# Name: test_default.tavern
+test_name: View the monitored version information
+stages:
+  - type: ref
+    id: login_customer
+  - name: View the monitored version information
+    request:
+      url: "{url}/user/users/monitor"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      body:
+        ret: !anything
+          user_id: "{get_login_id}"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Method error to view monitored info
+stages:
+  - type: ref
+    id: login_customer
+  - name: Request method error
+    request:
+      url: "{url}/user/users/monitor"
+      method: POST
+      headers:
+        content-type: application/json
+    response:
+      status_code: 403
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_403
+
+---
+test_name: No cookie to view the monitored info
+stages:
+  - name: No cookie to request
+    request:
+      url: "{url}/user/users/monitor"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 401
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_401

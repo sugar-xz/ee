@@ -1,0 +1,55 @@
+openapi: 3.0.2
+components:
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SlotResult'
+          examples:
+            response:
+              $ref: '#/components/examples/SlotResult'
+  schemas:
+    SlotResult:
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: array
+              items:
+                type: object
+                properties:
+                  camera_id:
+                    type: integer
+                    format: int64
+                    description: Camera id
+                  robot_id:
+                    type: string
+                    description: Robot id
+                  started_at:
+                    type: string
+                    format: date-time
+                    description: Save the create time of the event
+                  ended_at:
+                    type: string
+                    format: date-time
+                    description: Save the end time of the event
+
+  examples:
+    SlotResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          - camera_id: 104
+            robot_id: null
+            started_at: '2017-10-18T06:00:57Z'
+            ended_at: '2017-10-19T06:01:57Z'
+          - camera_id: null
+            robot_id: robot_dog_sr_20002
+            started_at: '2017-10-18T06:00:57Z'
+            ended_at: '2017-10-19T06:01:57Z'

@@ -1,0 +1,75 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+    PostResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/PostResult'
+
+  schemas:
+    Request:
+      type: object
+      properties:
+        event_saved_hours:
+          type: integer
+          format: int32
+          description: The number of hours the Event has been saved
+    Result:
+      allOf:
+        - $ref: 'common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                event_saved_hours:
+                  type: integer
+                  format: int32
+                  description: The number of hours the Event has been saved
+                max_event_saved_hours:
+                  type: integer
+                  format: int32
+                  enum:
+                    - 8760
+                  description: The max number of hours for event to save
+
+  examples:
+    Request:
+      value:
+        event_saved_hours: 720
+    Result:
+      value:
+        code: 0
+        msg: ok
+        data:
+          event_saved_hours: 4
+          max_event_saved_hours: 8760
+    PostResult:
+      value:
+        code: 0
+        msg: ok
+        data: null

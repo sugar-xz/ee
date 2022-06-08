@@ -1,0 +1,59 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  schemas:
+    Request:
+      type: array
+      items:
+        type: object
+        required:
+          - task_id
+          - algo_config_snapshot
+          - algo_cache
+          - analysis_results
+        properties:
+          task_id:
+            type: integer
+            format: int32
+            description: Task id
+          status:
+            type: string
+            description: DetectionTask status
+          algo_config_snapshot:
+            type: string
+            description: Algorithm config snapshot
+          algo_cache:
+            type: string
+          analysis_results:
+            type: string
+            description: Required iff status is REVIEW_STATUS_FINISHED
+          error_message:
+            type: string
+            description: required iff status is REVIEW_STATUS_FAILED
+          algo_reference_cache:
+            type: string
+            description: This is the algo cache in algo reference
+
+  examples:
+    Request:
+      value:
+        task_id: 222
+        target_id: 22
+        inspection: {}
+        status: ready
+        algo_config_snapshot: {}
+        algo_cache: {}
+        analysis_results:
+          open: 3.3
+          close: 3.4
+        error_message: test filed
+        algo_reference_cache: {}

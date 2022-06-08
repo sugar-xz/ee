@@ -1,0 +1,51 @@
+openapi: 3.0.2
+
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthRequest'
+
+  responses:
+    200:
+      description: >
+        Successfully authenticated.
+        You need to include this token in subsequent requests.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthResult'
+
+  schemas:
+    AuthRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    AuthResult:
+      description: Result of authentication
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              type: object
+              properties:
+                token:
+                  type: string
+                expire:
+                  type: string
+                  format: date-time
+                  description: Expiring time in ISO8601 format
+

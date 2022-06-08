@@ -1,0 +1,442 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Org
+    description: Org interface
+security:
+  - BasicAuth: []
+
+paths:
+  /organization/organizations:
+    get:
+      tags:
+        - Org
+      summary: Get information about all organizations
+      description: |
+        Perms：
+        * `logic.organization`: retrieve
+      responses:
+        200:
+          $ref: '../components/org/organizationOrganizations.yaml#/components/responses/OrgListResult'
+  /organization/organizations/{id}:
+    get:
+      tags:
+        - Org
+      summary: Get information about an organizations
+      description: |
+        Perms：
+        * `logic.organization`: retrieve
+      parameters:
+        - $ref: '../components/org/organizationOrganizations.yaml#/components/parameters/OrgIDParam'
+      responses:
+        200:
+          $ref: '../components/org/organizationOrganizations.yaml#/components/responses/OrgResult'
+    put:
+      tags:
+        - Org
+      summary: Update information about an organizations
+      description: |
+        Perms：
+        * `logic.organization`: update
+      parameters:
+        - $ref: '../components/org/organizationOrganizations.yaml#/components/parameters/OrgIDParam'
+      requestBody:
+        $ref: '../components/org/organizationOrganizations.yaml#/components/requestBodies/OrgRequest'
+      responses:
+        200:
+          $ref: '../components/org/organizationOrganizations.yaml#/components/responses/OrgResult'
+
+  /domain_type/domain_types:
+    get:
+      tags:
+        - Org
+      summary: Get org domain types list
+      description: |
+        Perms:
+        * `org.domaintype`: retrieve
+      responses:
+        200:
+          $ref: '../components/org/domain_types.yaml#/components/responses/DomainTypeListResult'
+    post:
+      tags:
+        - Org
+      summary: Create domain type
+      description: |
+        Perms:
+        * `org.domaintype`: create
+        * `org.domaintype`: [retrieve，update] `parent_id`
+      requestBody:
+        $ref: '../components/org/domain_types.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: '../components/org/domain_types.yaml#/components/responses/DomainTypeResult'
+  /domain_type/domain_types/{id}:
+    get:
+      tags:
+        - Org
+      summary: Retrieve org domain types
+      parameters:
+        - $ref: '../components/org/domain_typesPK.yaml#/components/parameters/DomainTypeIDParam'
+      description: |
+        Perms:
+        * `org.domaintype`: retrieve
+      responses:
+        200:
+          $ref: '../components/org/domain_types.yaml#/components/responses/DomainTypeResult'
+    put:
+      tags:
+        - Org
+      summary: Update org domain types
+      parameters:
+        - $ref: '../components/org/domain_typesPK.yaml#/components/parameters/DomainTypeIDParam'
+      description: |
+        Perms:
+        * `org.domaintype`: update
+      requestBody:
+        $ref: '../components/org/domain_typesPK.yaml#/components/requestBodies/UpdateRequest'
+      responses:
+        200:
+          $ref: '../components/org/domain_types.yaml#/components/responses/DomainTypeResult'
+    patch:
+      tags:
+        - Org
+      summary: Update org domain types
+      parameters:
+        - $ref: '../components/org/domain_typesPK.yaml#/components/parameters/DomainTypeIDParam'
+      description: |
+        Perms:
+        * `org.domaintype`: update
+      requestBody:
+        $ref: '../components/org/domain_typesPK.yaml#/components/requestBodies/UpdateRequest'
+      responses:
+        200:
+          $ref: '../components/org/domain_types.yaml#/components/responses/DomainTypeResult'
+    delete:
+      tags:
+        - Org
+      summary: Delete org domain types
+      parameters:
+        - $ref: '../components/org/domain_typesPK.yaml#/components/parameters/DomainTypeIDParam'
+      description: |
+        Perms:
+        * `org.domaintype`: destroy
+      responses:
+        200:
+          $ref: '../components/org/domain_typesPK.yaml#/components/responses/DeleteResult'
+
+  /domain/domains:
+    get:
+      tags:
+        - Org
+      summary: Get org domain list
+      description: |
+        Perms:
+        * `org.domain`: retrieve
+      responses:
+        200:
+          $ref: '../components/org/domains.yaml#/components/responses/DomainListResult'
+    post:
+      tags:
+        - Org
+      summary: Create domain types
+      description: |
+        Perms:
+        * `org.domain`: create
+        * `org.domain`: assign_child: domain_type
+      requestBody:
+        $ref: '../components/org/domains.yaml#/components/requestBodies/DomainRequest'
+      responses:
+        200:
+          $ref: '../components/org/domains.yaml#/components/responses/DomainResult'
+  /domain/domains/{id}:
+    get:
+      tags:
+        - Org
+      summary: Retrieve org domain
+      parameters:
+        - $ref: '../components/org/domainsPK.yaml#/components/parameters/DomainIDParam'
+      description: |
+        Perms:
+        * `org.domain`: retrieve
+      responses:
+        200:
+          $ref: '../components/org/domains.yaml#/components/responses/DomainResult'
+    put:
+      tags:
+        - Org
+      summary: Update org domain
+      parameters:
+        - $ref: '../components/org/domainsPK.yaml#/components/parameters/DomainIDParam'
+      description: |
+        Perms:
+        * `org.domain`: update
+      requestBody:
+        $ref: '../components/org/domainsPK.yaml#/components/requestBodies/UpdateRequest'
+      responses:
+        200:
+          $ref: '../components/org/domains.yaml#/components/responses/DomainResult'
+    patch:
+      tags:
+        - Org
+      summary: Update org domain
+      parameters:
+        - $ref: '../components/org/domainsPK.yaml#/components/parameters/DomainIDParam'
+      description: |
+        Perms:
+        * `org.domain`: update
+      requestBody:
+        $ref: '../components/org/domainsPK.yaml#/components/requestBodies/UpdateRequest'
+      responses:
+        200:
+          $ref: '../components/org/domains.yaml#/components/responses/DomainResult'
+    delete:
+      tags:
+        - Org
+      summary: Delete org domain
+      parameters:
+        - $ref: '../components/org/domainsPK.yaml#/components/parameters/DomainIDParam'
+      description: |
+        Perms:
+        * `org.domain`: destroy
+      responses:
+        200:
+          $ref: '../components/org/domainsPK.yaml#/components/responses/DeleteResult'
+  /domain/domains/{id}/attach_user:
+    post:
+      tags:
+        - Org
+      summary: Create org domain user
+      parameters:
+        - $ref: '../components/org/domainsPK.yaml#/components/parameters/DomainIDParam'
+      description: |
+        Perms:
+        * `org.domain`: attach_user `domain_id`
+        * `auth.user`: attach_domain `user_id`
+        * `org.domaintype`: attach `domain_type_id`
+
+        Condition:
+        * Domain and user must be in the same organization.
+      requestBody:
+        $ref: '../components/org/domainsPKAttach_user.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/org/domainsPKAttach_user.yaml#/components/responses/200'
+  /domain/domains/{id}/set_map:
+    post:
+      tags:
+        - Org
+      summary: Associate the Domain Map
+      parameters:
+        - $ref: '../components/org/domainsPK.yaml#/components/parameters/DomainIDParam'
+      description: |
+        Perms:
+        * `org.domain`: set_map
+      requestBody:
+        $ref: '../components/org/domainsPKSet_map.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/org/domainsPKSet_map.yaml#/components/responses/200'
+  /domain/domains/{id}/unset_map:
+    post:
+      tags:
+        - Org
+      summary: Unassociate the Domain Map
+      parameters:
+        - $ref: '../components/org/domainsPK.yaml#/components/parameters/DomainIDParam'
+      description: |
+        Perms:
+        * `org.domain`: unset_map
+      requestBody:
+        $ref: '../components/org/domainsPKSet_map.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/org/domainsPKSet_map.yaml#/components/responses/200'
+
+  /domain/domains/bind_site:
+    post:
+      tags:
+        - Org
+      summary: Create domain and user association
+      description: |
+        Perms:
+        * ...
+      requestBody:
+        $ref: '../components/org/domainsBind_site.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/org/domainsBind_site.yaml#/components/responses/200'
+
+  /domain/domains/set_user_in_charge:
+    post:
+      tags:
+        - Org
+      summary: Designated domain person in charge
+      description: |
+        Perms:
+        * ...
+      requestBody:
+        $ref: '../components/org/domainsSet_user_in_charge.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/org/domainsSet_user_in_charge.yaml#/components/responses/200'
+
+  /user_node/user_nodes:
+    get:
+      tags:
+        - Org
+      summary: Get user nodes list
+      description: |
+        Perms:
+        * `org.usernode`: retrieve
+      responses:
+        200:
+          $ref: '../components/org/user_nodes.yaml#/components/responses/200'
+
+  /user_node/user_nodes/{id}:
+    get:
+      tags:
+        - Org
+      summary: Retrieve user node
+      parameters:
+        - $ref: '../components/org/user_nodesPK.yaml#/components/parameters/UserNoteIDParam'
+      description: |
+        Perms:
+        * `org.usernode`: retrieve
+      responses:
+        200:
+          $ref: '../components/org/user_nodesPK.yaml#/components/responses/200'
+
+  /user_node/user_nodes/create_user_roles:
+    post:
+      tags:
+        - Org
+      summary: Org create user role and user node
+      description: |
+        Perms:
+        * `org.usernode`: create:
+        * `org.usernode`: assign_child
+
+        Condition:
+        * Only child user roles can be created
+      requestBody:
+        $ref: '../components/org/user_nodesCreate_user_roles.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/org/user_nodesPK.yaml#/components/responses/200'
+
+  /user_node/user_nodes/{id}/edit_user_roles:
+    post:
+      tags:
+        - Org
+      summary: Org update user node
+      parameters:
+        - $ref: '../components/org/user_nodesPK.yaml#/components/parameters/UserNoteIDParam'
+      description: |
+        Perms:
+        * `org.usernode`: update: pk
+      requestBody:
+        $ref: '../components/org/user_nodesPKEdit_user_roles.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/org/user_nodesPK.yaml#/components/responses/200'
+
+  /user_node/user_nodes/{id}/remove_user:
+    post:
+      tags:
+        - Org
+      summary: Org remove user node
+      parameters:
+        - $ref: '../components/org/user_nodesPK.yaml#/components/parameters/UserNoteIDParam'
+      description: |
+        Perms:
+        * `org.usernode`: destroy
+
+        Condition:
+        * Disable is true when user_node exists when calling the interface, and modify the auth_user table is_active field to false
+      requestBody:
+        $ref: '../components/org/user_nodesPKRemove_user.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/org/user_nodesPKRemove_user.yaml#/components/responses/200'
+
+  /user_node/user_nodes/{id}/change_parent:
+    post:
+      tags:
+        - Org
+      summary: Org change user_node parent id
+      parameters:
+        - $ref: '../components/org/user_nodesPK.yaml#/components/parameters/UserNoteIDParam'
+      description: |
+        Perms:
+        * `org.usernode`: update
+        * `org.usernode`: assign_child
+      requestBody:
+        $ref: '../components/org/user_nodesPKChange_parent.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/org/user_nodesPK.yaml#/components/responses/200'
+
+  /org/validate_get_organization:
+    post:
+      tags:
+        - Org
+      summary: Retrieve organization and validate view
+      description: |
+        Perms:
+        * `logic.organization`: retrieve
+        * `logic.organization`: update
+      requestBody:
+        $ref: '../components/org/orgValidate_get_organization.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/org/orgValidate_get_organization.yaml#/components/responses/200'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    X_APP:
+      type: apiKey
+      in: header
+      name: X-APP

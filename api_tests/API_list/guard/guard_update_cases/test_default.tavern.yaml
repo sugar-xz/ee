@@ -1,0 +1,47 @@
+# Name: test_default.tavern
+test_name: Update case
+marks:
+  - parametrize:
+      key: case_action
+      vals:
+        - dispatch_guard
+        - false_alarm
+stages:
+  - type: ref
+    id: login_customer
+  - name: Update case
+    request:
+      url: "{url}/new_case/cases/{guard_case_id}"
+      method: PUT
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        action: "{case_action}"
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Update case
+stages:
+  - type: ref
+    id: login_customer
+  - name: Update case
+    request:
+      url: "{url}/new_case/cases/{guard_case_id}"
+      method: PUT
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        action: add_note
+        note: "this is tavern test"
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

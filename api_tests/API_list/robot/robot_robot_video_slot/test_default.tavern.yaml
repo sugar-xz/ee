@@ -1,0 +1,115 @@
+# Name: test_default.tavern
+test_name: Robot Video Slot
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: robot_initiate
+  - type: ref
+    id: robot_authenticate
+  - name: Robot Video Slot
+    request:
+      url: "{url}/robot_video/robot_videos/slot?robot_id=robot_test_10001&started_at__gte=2019-09-27T06:15:31Z&camera=front"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+---
+test_name: Robot Video Slot
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: robot_initiate
+  - type: ref
+    id: robot_authenticate
+  - name: Robot Video Slot
+    request:
+      url: "{url}/robot_video/robot_videos/slot?robot_id=robot_test_10001&started_at__lt=2019-09-27T06:15:31Z&camera=front"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+---
+test_name: Robot Video Slot
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: robot_initiate
+  - type: ref
+    id: robot_authenticate
+  - name: Robot Video Slot
+    request:
+      url: "{url}/robot_video/robot_videos/slot?robot_id=robot_test_10001"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+---
+test_name: Robot Video Slot
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: robot_initiate
+  - type: ref
+    id: robot_authenticate
+  - name: Robot Video Slot
+    request:
+      url: "{url}/robot_video/robot_videos/slot?camera=front"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+---
+test_name: Robot Video Slot
+stages:
+  - type: ref
+    id: login_customer
+  - type: ref
+    id: robot_initiate
+  - type: ref
+    id: robot_authenticate
+  - name: Robot Video Slot
+    request:
+      url: "{url}/robot_video/robot_videos"
+      method: GET
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1

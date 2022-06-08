@@ -1,0 +1,264 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    PutRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PutRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PutRequest'
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RobotResult'
+          examples:
+            response:
+              $ref: '#/components/examples/RobotResult'
+  schemas:
+    PutRequest:
+      type: object
+      properties:
+        timezone:
+          type: string
+          description: Robot location time zone
+        name:
+          type: string
+          description: Robot name
+        notifies:
+          type: string
+          description: Notify the configuration
+        upload_video_enabled:
+          type: boolean
+          enum:
+            - true
+            - false
+          description: Upload video or not
+        detect_params:
+          type: object
+          properties:
+            algos:
+              type: string
+              description: Algorithm name
+            threshold:
+              type: number
+              description: Camera detection parameter
+            auto_speak_enabled:
+              type: boolean
+              enum:
+                - true
+                - false
+              description: Automatic Speak enabled
+            detect_enabled:
+              type: boolean
+              enum:
+                - true
+                - false
+              description: Enable the detection
+        detection_config:
+          type: object
+          properties:
+            detection_rules:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Algorithm name
+                  mode:
+                    type: string
+                    description: Algorithm status
+                  start_at:
+                    type: integer
+                    format: int32
+                  end_at:
+                    type: integer
+                    format: int32
+                  algos:
+                    type: string
+                    description: Algorithm product type
+            detection_threshold:
+              type: number
+              format: float
+              description: Camera detection parameter
+        patrol_params:
+          type: object
+          description: Patrol parameter configuration
+          properties:
+            radius:
+              type: number
+              format: float
+              description: Patrol the radius
+            speed:
+              type: number
+              format: float
+              description: Patrol speed
+        mac_params:
+          type: object
+          properties:
+            detect_macs:
+              type: array
+              items:
+                type: object
+                properties:
+                  mac_address:
+                    type: string
+                    description: Robot mac address
+                  name:
+                    type: string
+                    description: Robot mac address name
+                  vendor:
+                    type: string
+                    description: Robot mac vendor
+                  type:
+                    type: string
+                    description: Robot mac type
+            auto_speak_enabled:
+              type: boolean
+              enum:
+                - true
+                - false
+              description: Automatic Speak enabled
+            detect_macs_enabled:
+              type: boolean
+              enum:
+                - true
+                - false
+              description: Enable the detection
+
+    RobotResult:
+      description: View robot information
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              $ref: 'robotRobots.yaml#/components/schemas/RobotInfo'
+
+
+  examples:
+    PutRequest:
+      value:
+        timezone: UTC
+        name: sugar_robot
+        notifies: push
+        upload_video_enabled: true
+        detect_params:
+          algos: person
+          threshold: 0.6
+          auto_speak_enabled: true
+          detect_enabled: true
+        detection_config:
+          detection_rules:
+            - name: person
+              mode: on
+              start_at: 0
+              end_at: 1
+              algos: person
+          detection_threshold: 0.5
+        patrol_params:
+          radius: 4
+          speed: 0.35
+        mac_params:
+          detect_macs:
+            - mac_address: 11:22:33:44:55:66
+              name: Name
+              vendor: Apple
+              type: restricted
+          detect_macs_enabled: true
+          auto_speak_enabled: true
+
+    RobotResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          id: robot_dog_sr_20002
+          tasks:
+            -
+          detection_config: null
+          timezone: Asia/Shanghai
+          name: 20002
+          notifies: ""
+          upload_video_enabled: true
+          detect_params:
+            algos:
+              - name: person
+                label: Person
+              - name: person:513
+                label: 人群疏散
+            threshold: 0.5
+            auto_speak_enabled: false
+            detect_enabled: true
+          patrol_params:
+            radius: 4.0
+            speed: 0.38
+          mac_params:
+            detect_macs: []
+            detect_macs_enabled: true
+            auto_speak_enabled: true
+          auto_speak: default
+          site: 1
+          should_push: true
+          user_id: 1
+          created_at: '2019-05-24T03:25:27Z'
+          updated_at: '2019-10-30T06:44:43Z'
+          state:
+            status: online
+            power_percentage: 47.0
+            mode: mapping
+          status: offline
+          snapshot:
+            size:
+              - 1920
+              - 1080
+            file_size: 444969
+            content_type: image/jpeg
+            url: https://data-for-apise1030T06ef9a46db&version=9ca64c37-7da2-4fcd-8a2c-3fc0f3d0bcdc.jpeg
+          snapshots:
+            front:
+              size:
+                - 1920
+                - 1080
+              file_size: 444969
+              content_type: image/jpeg
+              url: https://data-for-apiserves/5CredeDatest&X-Amz-Signature=1875352-8a2c-3fc0f3d0bcdc.jpeg
+          scene: 1188
+          sequence: 7
+          version: 1603
+          cameras:
+            - name: front
+              label: Front camera
+            - name: rear
+              label: Rear camera
+          meta:
+            agent:
+              name:
+                name: Robot
+                label: Turing Robox
+              level: 1
+              version: 0.14.3
+              upgradable: null
+              outdated: null
+              upgrading: null
+            app_agent:
+              name:
+                name: Bot_Nimbo
+                label: Nimbo App
+              level: 1403
+              version: 0.14.3
+              upgradable: null
+              outdated: null
+              upgrading: null
+            mac_types: null
+          ip_address: 192.168.0.133
+          type: test_li

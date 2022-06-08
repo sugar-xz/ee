@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Phone Demo</title>
+</head>
+<body style="margin: auto 25%">
+<p>{% if success %}Command sent!{% endif %}</p>
+<form method="post" onsubmit="return false">
+    {% csrf_token %}
+    <input name="path" value="/channel/app"><input name="port" value="">
+    <select name="type">
+        <option value="">choose action</option>
+        <option value="box.camera.save_video">box.camera.save_video</option>
+        <option value="box.camera.start_stream">box.camera.start_stream</option>
+        <option value="box.camera.capture_case">box.camera.capture_case</option>
+        <option value="box.camera.update_sample">box.camera.update_sample</option>
+        <option value="box.camera.set_camera_config">box.camera.set_camera_config</option>
+        <option value="box.camera.get_camera_config">box.camera.get_camera_config</option>
+        <option value="box.camera.upload_file">box.camera.upload_file</option>
+        <option value="box.camera.reboot">box.camera.reboot</option>
+        <option value="box.search">box.search</option>
+        <option value="box.validate_camera">box.validate_camera</option>
+        <option value="box.validate_dvr">box.validate_dvr</option>
+        <option value="box.debug_echo">box.debug_echo</option>
+        <option value="box.get_upload_config">box.get_upload_config</option>
+        <option value="box.set_upload_config">box.set_upload_config</option>
+        <option value="box.systemctl_restart">box.systemctl_restart</option>
+        <option value="robot.setup">robot.setup</option>
+        <option value="robot.move">robot.move</option>
+        <option value="robot.start_stream">robot.start_stream</option>
+        <option value="robot.play_sound">robot.play_sound</option>
+        <option value="robot.switch_mode">robot.switch_mode</option>
+        <option value="robot.comm_play">robot.comm_play</option>
+        <option value="robot.search_macs">robot.search_macs</option>
+        <option value="robot.directive.react">robot.directive.react</option>
+        <option value="robot.directive.investigate">robot.directive.investigate</option>
+        <option value="robot.go_home">robot.go_home</option>
+        <option value="robot.leave_home">robot.leave_home</option>
+        <option value="robot.systemctl_restart">robot.systemctl_restart</option>
+        <option value="robot.systemctl_start">robot.systemctl_start</option>
+        <option value="robot.systemctl_stop">robot.systemctl_stop</option>
+        <option value="robot.map_upload">robot.map_upload</option>
+        <option value="robot.download_map">robot.download_map</option>
+        <option value="robot.reset_slam">robot.reset_slam</option>
+        <option value="robot.micro_move">robot.micro_move</option>
+        <option value="case.created">case.created</option>
+        <option value="case.dispatched">case.dispatched</option>
+        <option value="wisp.view_robot">wisp.view_robot</option>
+        <option value="wisp.present_to_robot">wisp.present_to_robot</option>
+        <option value="robot.start_routine">robot.start_routine</option>
+        <option value="robot.stop_routine">robot.stop_routine</option>
+        <option value="robot.pause_routine">robot.pause_routine</option>
+        <option value="robot.resume_routine">robot.resume_routine</option>
+        <option value="robot.complete_routine">robot.complete_routine</option>
+    </select>
+    <br>
+    <textarea name="content" rows="8" cols="128">
+
+    </textarea>
+    <br>
+    <input type="button" value="Connect" onclick="start()">
+    <input type="button" value="Send" onclick="send()">
+</form>
+<div style="display: none;">
+    <pre id="box.validate_camera">
+        {
+        "id": "abc",
+        "act": "box.validate_camera",
+        "arg": {"uri": "rtsp://qq.com", "hd_uri": "rtsp://qq.com", "box_id": "box_test_10001", "username": "user", "password": "password"}
+        }
+    </pre>
+    <pre id="box.validate_dvr">
+        {
+        "id": "abc",
+        "act": "box.validate_dvr",
+        "arg": {"host": "qq.com", "box_id": "box_test_10001", "username": "user", "password": "password", "mac_address": "3c:ef:8c:44:55:66:77:88", "channels": 4}
+        }
+    </pre>
+    <pre id="box.camera.start_stream">
+        {
+        "id": "abc",
+        "act": "box.camera.start_stream",
+        "arg": {"camera_id": 1}
+        }
+    </pre>
+    <pre id="box.camera.capture_case">
+        {
+        "id": "abc",
+        "act": "box.camera.capture_case",
+        "arg": {"case_id": 1}
+        }
+    </pre>
+    <pre id="box.camera.update_sample">
+        {
+        "id": "abc",
+        "act": "box.camera.update_sample",
+        "arg": {"sample_id": 2, "types":"person", "mark": "verified"}
+        }
+    </pre>
+    <pre id="box.camera.set_camera_config">
+        {
+        "id": "abc",
+        "act": "box.camera.set_camera_config",
+        "arg": {"camera_id": 2, "low": 34, "high": 50, "abnormal": 36.8, "outdoor": false, "isfahrenheit": false}
+        }
+    </pre>
+    <pre id="box.camera.get_camera_config">
+        {
+        "id": "abc",
+        "act": "box.camera.get_camera_config",
+        "arg": {"camera_id": 2}
+        }
+    </pre>
+    <pre id="box.camera.upload_file">
+        {
+        "id": "abc",
+        "act": "box.camera.upload_file",
+        "arg": {"camera_id": 2, "url":"test","path":"/home/FaceUI/icons/questionnaire/default.png"}
+        }
+    </pre>
+    <pre id="box.camera.reboot">
+        {
+        "id": "abc",
+        "act": "box.camera.reboot",
+        "arg": {"camera_id": 2}
+        }
+    </pre>
+    <pre id="stream.stop">
+        {
+        "id": "abc",
+        "act": "stream.stop",
+        "arg": {"uri": "rtsp://qq.com", "box_id": "box_test_10001", "username": "user", "password": "password"}
+        }
+    </pre>
+    <pre id="box.camera.save_video">
+        {
+        "id": "abc",
+        "act": "box.camera.save_video",
+        "arg": {"camera_id": 2, "started_at": "2017-01-16T06:17:57.262076Z", "ended_at": "2017-01-16T06:17:57.262076Z"}
+        }
+    </pre>
+    <pre id="box.search">
+        {
+        "id": "abc",
+        "act": "box.search",
+        "arg": {"box_id": "box_test_10001"}
+        }
+    </pre>
+    <pre id="box.debug_echo">
+        {
+        "id": "abc",
+        "act": "box.debug_echo",
+        "arg": {"box_id": "box_test_10001"}
+        }
+    </pre>
+    <pre id="box.get_upload_config">
+        {
+        "id": "abc",
+        "act": "box.get_upload_config",
+        "arg": {"box_id": "box_test_10001"}
+        }
+    </pre>
+    <pre id="box.set_upload_config">
+        {
+        "id": "abc",
+        "act": "box.set_upload_config",
+        "arg": {
+            "box_id": "box_test_10001", 
+            "disable_cloud": true, 
+            "disable_upload_temperature": true, 
+            "disable_upload_picture": true,
+            "camera_scanperiod_secs": 5
+        }
+        }
+    </pre>
+    <pre id="box.systemctl_restart">
+        {
+        "id": "abc",
+        "act": "box.systemctl_restart",
+        "arg": {"box_id": "box_pc_10052", "service": "zenod"}
+        }
+    </pre>
+    <pre id="robot.setup">
+        {
+        "id": "abc",
+        "act": "robot.setup",
+        "arg": {"robot_id": "robot_test_10001", "ip_address": "127.0.0.1"}
+        }
+    </pre>
+    <pre id="robot.move">
+        {
+        "id": "abc",
+        "act": "robot.move",
+        "arg": {"robot_id": "robot_test_10001", "x": 0.0, "y": 0.0}
+        }
+    </pre>
+    <pre id="robot.start_stream">
+        {
+        "id": "abc",
+        "act": "robot.start_stream",
+        "arg": {"robot_id": "robot_test_10001", "camera": "front"}
+        }
+    </pre>
+    <pre id="robot.play_sound">
+        {
+        "id": "abc",
+        "act": "robot.play_sound",
+        "arg": {"robot_id": "robot_test_10001"}
+        }
+    </pre>
+    <pre id="robot.switch_mode">
+        {
+        "id": "abc",
+        "act": "robot.switch_mode",
+        "arg": {"robot_id": "robot_test_10001", "mode": "patrol"}
+        }
+    </pre>
+    <pre id="robot.comm_play">
+        {
+        "id": "abc",
+        "act": "robot.comm_play",
+        "arg": {"robot_id": "robot_test_10001", "data": "dGVzdA=="}
+        }
+    </pre>
+    <pre id="robot.search_macs">
+        {
+        "id": "abc",
+        "act": "robot.search_macs",
+        "arg": {"robot_id": "robot_test_10001"}
+        }
+    </pre>
+    <pre id="robot.directive.react">
+        {
+        "id": "abc",
+        "act": "robot.directive.react",
+        "arg": {"robot_id": "robot_test_10001", "event_id": 1}
+        }
+    </pre>
+    <pre id="robot.directive.investigate">
+        {
+        "id": "abc",
+        "act": "robot.directive.investigate",
+        "arg": {"robot_id": "robot_test_10001", "location": {"lat": 0, "lng": 0}}
+        }
+    </pre>
+    <pre id="robot.go_home">
+        {
+        "id": "abc",
+        "act": "robot.go_home",
+        "arg": {"robot_id": "robot_test_10001"}
+        }
+    </pre>
+    <pre id="robot.leave_home">
+        {
+        "id": "abc",
+        "act": "robot.leave_home",
+        "arg": {"robot_id": "robot_test_10001"}
+        }
+    </pre>
+    <pre id="robot.systemctl_restart">
+        {
+        "id": "abc",
+        "act": "robot.systemctl_restart",
+        "arg": {"robot_id": "robot_test_10001", "service": "zenod"}
+        }
+    </pre>
+    <pre id="robot.systemctl_start">
+        {
+        "id": "abc",
+        "act": "robot.systemctl_start",
+        "arg": {"robot_id": "robot_test_10001", "service": "zenod"}
+        }
+    </pre>
+    <pre id="robot.systemctl_stop">
+        {
+        "id": "abc",
+        "act": "robot.systemctl_stop",
+        "arg": {"robot_id": "robot_test_10001", "service": "zenod"}
+        }
+    </pre>
+    <pre id="robot.map_upload">
+        {
+        "id": "abc",
+        "act": "robot.map_upload",
+        "arg": {"robot_id": "robot_test_10001"}
+        }
+    </pre>
+    <pre id="robot.download_map">
+        {
+        "id": "abc",
+        "act": "robot.download_map",
+        "arg": {"robot_id": "robot_test_10001"}
+        }
+    </pre>
+    <pre id="robot.reset_slam">
+        {
+        "id": "abc",
+        "act": "robot.reset_slam",
+        "arg": {"robot_id": "robot_test_10001", "pose": {"x": 0, "y": 0, "theta": 0}}
+        }
+    </pre>
+    <pre id="wisp.view_robot">
+        {
+        "id": "abc",
+        "act": "wisp.view_robot",
+        "arg": {"robot_id": "robot_test_10001", "camera": "front"}
+        }
+    </pre>
+    <pre id="wisp.present_to_robot">
+        {
+        "id": "abc",
+        "act": "wisp.present_to_robot",
+        "arg": {"robot_id": "robot_test_10001"}
+        }
+    </pre>
+    <pre id="robot.micro_move">
+        {
+        "id": "abc",
+        "act": "robot.micro_move",
+        "arg": {"robot_id": "robot_test_10001", "distance": 0, "angle": 0}
+        }
+    </pre>
+    <pre id="robot.start_routine">
+        {
+        "id": "abc",
+        "act": "robot.start_routine",
+        "arg": {"robot_id": "robot_test_10001", "routine_execution_id": "test", "next_action": "", "extra": null}
+        }
+    </pre>
+    <pre id="robot.stop_routine">
+        {
+        "id": "abc",
+        "act": "robot.stop_routine",
+        "arg": {"robot_id": "robot_test_10001", "routine_execution_id": "test", "extra": null}
+        }
+    </pre>
+    <pre id="robot.pause_routine">
+        {
+        "id": "abc",
+        "act": "robot.pause_routine",
+        "arg": {"robot_id": "robot_test_10001", "routine_execution_id": "test", "extra": null}
+        }
+    </pre>
+    <pre id="robot.resume_routine">
+        {
+        "id": "abc",
+        "act": "robot.resume_routine",
+        "arg": {"robot_id": "robot_test_10001", "routine_execution_id": "", "next_action": "", "extra": null}
+        }
+    </pre>
+    <pre id="robot.complete_routine">
+        {
+        "id": "abc",
+        "act": "robot.complete_routine",
+        "arg": {"robot_id": "robot_test_10001", "routine_execution_id": "test", "next_action": "", "extra": null}
+        }
+    </pre>
+</div>
+<hr>
+<p>Socket: <span id="info"></span></p>
+<p>Received: <span style="color: green; overflow-wrap: break-word;" id="message"></span></p>
+<input type="button" value="Clear" onclick="clearMessage('message')">
+<p><textarea style="width: 100%; height: 200px" id="log"></textarea></p>t
+<input type="button" value="Clear" onclick="clearMessage('log')">
+<script>
+    document.cookie = "jwt=eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTQyMjUzNjEsIm9yaWdfaWF0IjoxNjEzNjIwNTYxLCJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VyX2lkIjo1MCwidXNlcm5hbWUiOiJ3YW5kYUB0dXJpbmd2aWRlby5uZXQiLCJ1dWlkIjoiMjFiOTU3NjctM2NlYy00YTc1LWI0YjctZjQ3MzE2ODA5OGQwIn0.Ul4quxBIq2-mW_8vhIIVWr0NJ-kMCXiR-X7lhqwMJg2rgVy3EQ9tKWTQJFMh3gMYmfTM07LRnzsRoIAuCX8dZg;path=/;domain=.turing-ws.com;haha=123"
+    var form = document.forms[0]
+    var socket = null
+    var msg_element = document.getElementById('message')
+    var log_element = document.getElementById('log')
+    var path_element = form.elements['path']
+    var port_element = form.elements['port']
+    var type_element = form.elements['type']
+    var content_element = form.elements['content']
+    var info = document.getElementById('info')
+    var host = window.location.host.replace('api', 'ws')
+    var parts = host.split(':')
+
+    // var token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTQyMjUzNjEsIm9yaWdfaWF0IjoxNjEzNjIwNTYxLCJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VyX2lkIjo1MCwidXNlcm5hbWUiOiJ3YW5kYUB0dXJpbmd2aWRlby5uZXQiLCJ1dWlkIjoiMjFiOTU3NjctM2NlYy00YTc1LWI0YjctZjQ3MzE2ODA5OGQwIn0.Ul4quxBIq2-mW_8vhIIVWr0NJ-kMCXiR-X7lhqwMJg2rgVy3EQ9tKWTQJFMh3gMYmfTM07LRnzsRoIAuCX8dZg;path=/;domain=dev.turing-ws.com"
+
+    host = parts[0]
+
+    function initialize() {
+        var port = parts.length == 2 ? parts[1] : 8443
+        port_element.value = port
+        type_element.onchange = function () {
+            if (this.value) {
+                var ele = document.getElementById(this.value)
+                if (ele) {
+                    content_element.value = ele.innerHTML
+                }
+            }
+        }
+    }
+
+    initialize()
+
+    function send() {
+        if (!socket || socket.readyState != WebSocket.OPEN) {
+            info.innerHTML = 'The websocket is not connected.'
+            return
+        }
+        info.innerHTML = 'Sent.'
+        msg_element.innerHTML = ''
+        var content = content_element.value
+        socket.send(content)
+    }
+
+    function clearMessage(id) {
+        var ele = document.getElementById(id)
+        if (ele.value) {
+            ele.value = ''
+        } else {
+            ele.innerHTML = ''
+        }
+    }
+
+    function start() {
+        var path = path_element.value
+        var port = port_element.value
+        var scheme = window.location.protocol == 'http:' ? 'ws' : 'wss'
+        // host = '192.168.10.220'
+        host = 'dev.turing-ws.com'
+        // host = '192.168.10.234'
+        // host = 'turing-ws.com'
+        // port = 8080
+        port = 8081
+        socket = new WebSocket(scheme + "://" + host + ':' + port + path);
+
+
+        socket.onmessage = function (e) {
+            var json = JSON.parse(e.data)
+            var act = json.act || '!'
+            act = act.substring(0, act.length - 1)
+            if (!type_element.value || !act || act === type_element.value) {
+                msg_element.innerHTML = e.data
+                if (log_element.value) {
+                    log_element.value += '\n\n'
+                }
+                log_element.value += e.data
+            }
+        }
+        socket.onopen = function () {
+            info.innerHTML = 'Connected';
+        }
+        socket.onclose = function () {
+            info.innerHTML = 'Closed';
+            setTimeout(function () {
+                start()
+            }, 1000)
+        }
+        // Call onopen directly if socket is already open
+        if (socket.readyState == WebSocket.OPEN) socket.onopen();
+    }
+</script>
+</body>
+</html>

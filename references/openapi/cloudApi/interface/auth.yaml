@@ -1,0 +1,95 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Auth
+    description: Auth related interface
+security:
+  - token: []
+
+paths:
+  /auth/:
+    post:
+      tags:
+        - Auth
+        - User
+      summary: Authentication interface
+      requestBody:
+        $ref: '../components/auth/auth.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/auth/auth.yaml#/components/responses/200'
+
+  /device/apns:
+    post:
+      tags:
+        - Auth
+      summary: Register IOS Device
+      description: |
+        * Permission: authenticated
+      requestBody:
+        $ref: '../components/auth/deviceApns.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/auth/deviceApns.yaml#/components/responses/200'
+  /device/gcm:
+    post:
+      tags:
+        - Auth
+      summary: Register Android Device
+      description: |
+        * Permission: authenticated
+      requestBody:
+        $ref: '../components/auth/deviceGcm.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/auth/deviceGcm.yaml#/components/responses/200'
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    X_APP:
+      type: apiKey
+      in: header
+      name: X-APP

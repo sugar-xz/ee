@@ -1,0 +1,47 @@
+# Name: test_default.tavern
+test_name: Query the video stored in the specified camera
+stages:
+  - type: ref
+    id: login_customer
+  - name: Get camera information from box
+    request:
+      url: "{url}/camera/cameras?ids=1,2&box_id={test_box_id}"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      body:
+        ret: !anything
+          results:
+            - boxid: "{test_box_id}"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+---
+test_name: Get camera information from err box
+marks:
+  - parametrize:
+      key: other_box_id
+      vals:
+        - ""
+        - "box_no_exist"
+stages:
+  - type: ref
+    id: login_customer
+  - name: Get camera information from err box
+    request:
+      url: "{url}/camera/cameras?ids=1,2&box_id={other_box_id}"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      body:
+        ret:
+          count: !anyint
+          next: !anything
+          previous: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1

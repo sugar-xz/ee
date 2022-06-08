@@ -1,0 +1,105 @@
+openapi: 3.0.2
+components:
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+    DeleteResult:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DeleteResult'
+          examples:
+            response:
+              $ref: '#/components/examples/DeleteResult'
+  schemas:
+    Result:
+      allOf:
+        - $ref: 'common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                device_sn:
+                  type: string
+                  description: Device serial number
+                camera_id:
+                  type: integer
+                  format: int64
+                  description: Camera id, device id in cloud server
+                created_at:
+                  type: string
+                  format: date-time
+                  description: Event created time
+                data:
+                  type: object
+                  properties:
+                    abnormal:
+                      type: integer
+                      format: int32
+                      description: Abnormal temperature
+                    temperature:
+                      type: integer
+                      format: int32
+                      description: Person temperature
+                ended_at:
+                  type: string
+                  format: date-time
+                  description: Event audio ended time
+                id:
+                  type: integer
+                  format: int64
+                  description: Event id
+                pid:
+                  type: integer
+                  format: int64
+                  description: Picture id
+                started_at:
+                  type: string
+                  format: date-time
+                  description: Event audio started time
+                type:
+                  type: string
+                  description: Event type, not including digital
+                updated_at:
+                  type: string
+                  format: date-time
+                  description: Event update time
+    DeleteResult:
+      allOf:
+        - $ref: 'common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            data:
+              type: string
+  examples:
+    Result:
+      value:
+        code: 0
+        msg: ok
+        data:
+          camera_id: 322
+          camera_sn: 0123CB-EF4865-4D15EE
+          created_at: '2020-07-02 11:56:25'
+          data:
+            abnormal: 99.68
+            temperature: 97.37
+          ended_at: null
+          id: 289
+          pid: 289
+          started_at: '2020-07-02 11:56:25'
+          type: temperature_normal
+          updated_at: '2020-07-02 11:56:25'
+    DeleteResult:
+      value:
+        code: 0
+        msg: ok
+        data: null

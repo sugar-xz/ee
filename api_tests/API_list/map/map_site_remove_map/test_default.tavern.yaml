@@ -1,0 +1,22 @@
+# Name: test_default.tavern
+test_name: Delete site map
+stages:
+  - type: ref
+    id: login_customer
+  - name: Delete site map
+    request:
+      url: "{url}/site/sites/1/remove_map"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        map_id: 1
+    response:
+      status_code: 200
+      body:
+        ret:
+          site_id: !int 1
+          map_id: !int 1
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

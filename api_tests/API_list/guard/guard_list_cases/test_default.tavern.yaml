@@ -1,0 +1,34 @@
+# Name: test_default.tavern
+test_name: Get cases list
+stages:
+  - type: ref
+    id: login_customer
+  - name: Get cases list
+    request:
+      url: "{url}/new_case/cases"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      body:
+        ret:
+          count: !anyint
+          results: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+---
+test_name: Not logged in to get cases list
+stages:
+  - name: Not logged in to get cases list
+    request:
+      url: "{url}/new_case/cases"
+      method: GET
+      headers:
+        content-type: application/json
+    response:
+      status_code: 401
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_401

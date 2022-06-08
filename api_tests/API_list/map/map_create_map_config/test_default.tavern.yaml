@@ -1,0 +1,73 @@
+# Name: test_default.tavern
+test_name: Create map config (customer)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create map config
+    request: &request_anchor
+      url: "{url}/map_config/map_configs"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        map_type: baidu
+        config:
+          tavern: baidu
+        is_default: false
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !anyint
+      save:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Create map config (customer)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create map config
+    request:
+      <<: *request_anchor
+      json:
+        map_type: image
+        config:
+          tavern: image
+        is_default:  true
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !anyint
+      save:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Create map config error(customer)
+marks:
+  - parametrize:
+      key:
+        - map_type_e
+        - config_e
+        - is_default_e
+      vals:
+        - ["", "", "false"]
+        - ["image", "", ""]
+stages:
+  - type: ref
+    id: login_customer
+  - name: Create config error
+    request:
+      <<: *request_anchor
+      json:
+        map_type: "{map_type_e}"
+        config:
+          "{config_e}"
+        is_default:  "{is_default_e}"
+    response:
+      status_code: 400
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_400

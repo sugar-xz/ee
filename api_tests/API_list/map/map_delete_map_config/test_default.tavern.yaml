@@ -1,0 +1,19 @@
+# Name: test_default.tavern
+test_name: Delete map config (customer)
+stages:
+  - type: ref
+    id: login_customer
+  - name: Delete map config
+    request:
+      url: "{url}/map_config/map_configs/3"
+      method: DELETE
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !int 3
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

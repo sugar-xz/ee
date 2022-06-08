@@ -1,0 +1,282 @@
+openapi: 3.0.2
+
+servers:
+  - description: Development environment
+    url: '{agreement}://{environment}.turingvideo.{domain}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+  - description: Development environment（basePath）
+    url: '{agreement}://{environment}.turingvideo.{domain}/{basePath}'
+    variables:
+      agreement:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'https'
+      environment:
+        default: 'dev-gw'
+      domain:
+        enum:
+          - cn
+          - com
+        default: cn
+      basePath:
+        default: 'api/v1'
+info:
+  # description: This page introduces the API
+  version: "1.0.0"
+  title: Cloud API
+  license:
+    name: Turing Video
+    url: 'https://www.turingvideo.cn'
+tags:
+  - name: Patrol
+    description: Patrol related interface
+security:
+  - BasicAuth: []
+
+paths:
+  /target/targets:
+    get:
+      tags:
+        - Patrol
+        - Robot
+      summary: Robot target list
+      description: |
+        Perms:
+        * `logic.patrol`: retrieve
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/SiteIDParam'
+        - $ref: '../components/common.yaml#/components/parameters/SerialNoParam'
+        - $ref: '../components/common.yaml#/components/parameters/FloorParam'
+      responses:
+        200:
+          $ref: '../components/patrol/targetTargets.yaml#/components/responses/TargetListResult'
+    post:
+      tags:
+        - Robot
+        - Patrol
+      summary: Create target
+      description: |
+        Perms:
+        * `logic.patrol`: create
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/patrol/targetTargets.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: '../components/patrol/targetTargets.yaml#/components/responses/TargetResult'
+  /target/targets/{id}:
+    put:
+      tags:
+        - Robot
+      summary: Update target
+      description: |
+        Perms:
+        * `logic.patrol`: update
+      security:
+        - X_APP: []
+      parameters:
+        - $ref: '../components/patrol/targetTargetsPK.yaml#/components/parameters/TargetIDParam'
+      requestBody:
+        $ref: '../components/patrol/targetTargetsPK.yaml#/components/requestBodies/PutRequest'
+      responses:
+        200:
+          $ref: '../components/patrol/targetTargets.yaml#/components/responses/TargetResult'
+
+  /target/targets/list_categories:
+    get:
+      tags:
+        - Robot
+      summary: Get the classification of all targets on the site
+      description: |
+        Perms:
+        * `logic.patrol`: retrieve
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/SiteIDParam'
+      responses:
+        200:
+          $ref: '../components/patrol/targetTargetsList_categories.yaml#/components/responses/200'
+  /target/targets/list_floors:
+    get:
+      tags:
+        - Robot
+      summary: Get floor list
+      description: |
+        Perms:
+        * `logic.patrol`: retrieve
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/SiteIDParam'
+      responses:
+        200:
+          $ref: '../components/patrol/targetTargetsList_floors.yaml#/components/responses/200'
+  /target/targets/all:
+    get:
+      tags:
+        - Robot
+      summary: Get all categories and floors info
+      description: |
+        Perms:
+        * `logic.patrol`: retrieve
+      parameters:
+        - $ref: '../components/common.yaml#/components/parameters/SiteIDParam'
+      responses:
+        200:
+          $ref: '../components/patrol/targetTargetsList_all.yaml#/components/responses/200'
+
+  /algo_config/algo_configs:
+    get:
+      tags:
+        - Robot
+      summary: AlgorithmConfig list
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: '../components/patrol/algo_configs.yaml#/components/parameters/TargetIDParam'
+        - $ref: '../components/patrol/algo_configs.yaml#/components/parameters/ActionParam'
+        - $ref: '../components/patrol/algo_configs.yaml#/components/parameters/EnabledParam'
+      responses:
+        200:
+          $ref: '../components/patrol/algo_configs.yaml#/components/responses/ConfigListResult'
+    post:
+      tags:
+        - Robot
+      summary: Create algorithmConfig
+      description: |
+        Perms:
+        * ...
+      security:
+        - X_APP: []
+      requestBody:
+        $ref: '../components/patrol/algo_configs.yaml#/components/requestBodies/PostRequest'
+      responses:
+        200:
+          $ref: '../components/patrol/algo_configs.yaml#/components/responses/ConfigResult'
+  /algo_config/algo_configs/{pk}:
+    patch:
+      tags:
+        - Robot
+      summary: Update algorithmConfig
+      description: |
+        Perms:
+        * ...
+      security:
+        - X_APP: []
+      parameters:
+        - $ref: '../components/patrol/algo_configsPK.yaml#/components/parameters/ConfigIDParam'
+      requestBody:
+        $ref: '../components/patrol/algo_configsPK.yaml#/components/requestBodies/PatchRequest'
+      responses:
+        200:
+          $ref: '../components/patrol/algo_configs.yaml#/components/responses/ConfigResult'
+    delete:
+      tags:
+        - Robot
+      summary: Delete algorithmConfig
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: '../components/patrol/algo_configsPK.yaml#/components/parameters/ConfigIDParam'
+          name: pk
+          description: AlgorithmConfig id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200'
+  /algo_config/algo_configs/enable:
+    post:
+      tags:
+        - Robot
+      summary: Enable algorithmConfig
+      description: |
+        Perms:
+        * ...
+      requestBody:
+        $ref: '../components/patrol/algo_configsEnable.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/patrol/algo_configsEnable.yaml#/components/responses/200'
+  /algo_config/algo_configs/disable:
+    post:
+      tags:
+        - Robot
+      summary: Disable algorithmConfig
+      description: |
+        Perms:
+        * ...
+      requestBody:
+        $ref: '../components/patrol/algo_configsEnable.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/patrol/algo_configsEnable.yaml#/components/responses/200'
+
+  /detection_task/detection_tasks:
+    get:
+      tags:
+        - Robot
+      summary: DetectionTask list
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: '../components/patrol/detection_tasks.yaml#/components/parameters/TargetIDParam'
+        - $ref: '../components/patrol/detection_tasks.yaml#/components/parameters/StatusIDParam'
+        - $ref: '../components/patrol/detection_tasks.yaml#/components/parameters/InspectionIDParam'
+      responses:
+        200:
+          $ref: '../components/patrol/detection_tasks.yaml#/components/responses/200'
+  /detection_task/detection_tasks/batch_results:
+    post:
+      tags:
+        - Robot
+      summary: Update detectionTask
+      description: |
+        Perms:
+        * ...
+      requestBody:
+        $ref: '../components/patrol/detection_tasksBatch_results.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200'
+  /detection_task/detection_tasks/{id}/review:
+    post:
+      tags:
+        - Robot
+      summary: Update detectionTask config
+      description: |
+        Perms:
+        * ...
+      parameters:
+        - $ref: '../components/patrol/detection_tasksPKReview.yaml#/components/parameters/TaskIDParam'
+      requestBody:
+        $ref: '../components/patrol/detection_tasksPKReview.yaml#/components/requestBodies/Request'
+      responses:
+        200:
+          $ref: '../components/common.yaml#/components/responses/200'
+
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+    X_APP:
+      type: apiKey
+      in: header
+      name: X-APP

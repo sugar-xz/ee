@@ -1,0 +1,235 @@
+# Name: auth_stage
+
+name: Authentication stage
+description: Reusable test stage for authentication
+
+variables:
+# localhost
+  url: "http://local-test.turingvideo.cn:8000/api/v1"
+#  url: "http://local.turingvideo.cn:8000/api/v1"
+  customer: customer@turingvideo.net
+  password: 1234qwer
+#  password: $Turin9Vide0
+  Referer: "http://local.turingvideo.cn:8000"
+
+# perm header(username:password)
+  Authorization: 'Basic cGVybTpwZXJt'
+
+# Box
+  test_box_id: box_test_10001
+  claim_box_id: box_test_10002
+  box_type: pc_v1
+  box_ip_address: 192.168.1.85
+  box_level: 0
+  box_version: 1.0.0
+
+  camera_id: 1
+  camera_host: 192.168.0.125
+  delete_camera_id: 3
+  delete_camera_id2: 4
+  update_camera_id: 7
+
+# Robot
+  test_robot_id: robot_test_10001
+  robot_type: std_sr_v1
+  robot_ip_address: 192.168.0.133
+  robot_level: 1
+  robot_version: 0.14.3
+  robot_camera_name: front
+
+# Event
+  box_event_id: 1
+  guard_case_id: 1
+
+stages:
+  - id: login_jwt
+    name: User login
+    request:
+      url: "{tavern.env_vars.API_TEST_SERVER}/auth/"
+      method: POST
+      json:
+        username: "{customer}"
+        password: "{password}"
+      headers:
+        content-type: application/json
+    response:
+      status_code: 200
+      cookies:
+        - jwt
+
+  - id: login_customer
+    name: User login
+    request: &login_request
+      url: "{url}/user/auth/login"
+      method: POST
+      json:
+        username: "{customer}"
+        password: "{password}"
+      headers:
+        content-type: application/json
+    response: &login_response
+      status_code: 200
+      cookies:
+        - sessionid
+        - csrftoken
+      save:
+        $ext:
+          function: api_tests.utils.validation_method:get_token
+
+  - id: login_guard_admin
+    name: User login
+    request:
+      <<: *login_request
+      json:
+        username: "guardadmin@turingvideo.net"
+        password: "{password}"
+    response: *login_response
+
+  - id: login_guard_guard
+    name: User login
+    request:
+      <<: *login_request
+      json:
+        username: "guard_guard@turingvideo.net"
+        password: "{password}"
+    response: *login_response
+
+  - id: login_guard_monitor
+    name: User login
+    request:
+      <<: *login_request
+      json:
+        username: "monitor@turingvideo.net"
+        password: 1234qwer
+    response: *login_response
+
+  - id: login_site_manager
+    name: User login
+    request:
+      <<: *login_request
+      json:
+        username: site@turingvideo.net
+        password: "{password}"
+    response: *login_response
+
+  - id: login_admin
+    name: User login
+    request:
+      <<: *login_request
+      json:
+        username: "admin@turingvideo.net"
+        password: "{password}"
+    response: *login_response
+
+  - id: logout
+    name: User
+    request:
+      url: "{url}/user/auth/logout"
+      method: POST
+      json:
+        registration_id: "{get_login_id}"
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      cookies:
+        - sessionid
+        - csrftoken
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+  - id: box_debug_login
+    name: The test needs debug_login to make the browser simulate BOX
+    request:
+      url: "{url}/box/boxes/debug_login"
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        id: "{test_box_id}"
+        type: "{box_type}"
+        ip_address: "{box_ip_address}"
+        challenge: "challenge"
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: "{test_box_id}"
+        err: !anything
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+  - id: box_initiate
+    name: box initiate
+    request:
+      url: "{url}/box/boxes/initiate"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+      json:
+        id: "{test_box_id}"
+    response:
+      status_code: 200
+      save:
+        $ext:
+          function: api_tests.utils.validation_method:validate_box_initiate_get_challenge
+ #   delay_after: 1
+
+  - id: box_authenticate
+    name: Box Authenticate
+    request:
+      url: "{url}/box/boxes/authenticate"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Box/{box_level}/{box_version}"
+      json:
+        type: "{box_type}"
+        challenge: "{get_box_challenge}"
+        ip_address: "{box_ip_address}"
+    response:
+      status_code: 200
+      body:
+        err: !anything
+        ret:
+          id: "{test_box_id}"
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+
+  - id: robot_initiate
+    name: Robot Initiate
+    request:
+      url: "{url}/robot/robots/initiate"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Robot/{robot_level}/{robot_version}"
+      json:
+        id: "{test_robot_id}"
+    response:
+      status_code: 200
+      save:
+        $ext:
+          function: api_tests.utils.validation_method:validate_robot_initiate_get_challenge
+
+  - id: robot_authenticate
+    name: Robot Authenticate
+    request:
+      url: "{url}/robot/robots/authenticate"
+      method: POST
+      headers:
+        content-type: application/json
+        X-APP: "Robot/{robot_level}/{robot_version}"
+      json:
+        type: "{robot_type}"
+        challenge: "{get_robot_challenge}"
+        ip_address: "{robot_ip_address}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

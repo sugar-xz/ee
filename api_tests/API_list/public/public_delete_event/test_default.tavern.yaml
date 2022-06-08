@@ -1,0 +1,19 @@
+# Name: test_default.tavern
+test_name: Delete event & 删除事件
+stages:
+  - type: ref
+    id: login_customer
+  - name: Delete event
+    request:
+      url: "{url}/event/events/11"
+      method: DELETE
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1

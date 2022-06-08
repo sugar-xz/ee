@@ -1,0 +1,95 @@
+# Name: test_default.tavern
+test_name: Retrieve organization and validate view
+marks:
+  - parametrize:
+      key: user_id
+      vals:
+        - 2
+        - 3
+stages:
+  - type: ref
+    id: login_admin
+  - name: Retrieve organization and validate view
+    request:
+      url: "{url}/org/validate_get_organization"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        user_id: "{user_id}"
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !anyint
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Retrieve organization and validate view
+stages:
+  - type: ref
+    id: login_admin
+  - name: Retrieve organization and validate view
+    request:
+      url: "{url}/org/validate_get_organization"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        user_id: 6
+        organization_id: null
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !int 1
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Retrieve organization and validate view
+stages:
+  - type: ref
+    id: login_admin
+  - name: Retrieve organization and validate view
+    request:
+      url: "{url}/org/validate_get_organization"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        user_id: 7
+        organization_id: 1
+        actions:
+          - retrieve
+    response:
+      status_code: 200
+      body:
+        ret:
+          id: !int 1
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+---
+test_name: Retrieve organization and validate view
+stages:
+  - type: ref
+    id: login_admin
+  - name: Retrieve organization and validate view
+    request:
+      url: "{url}/org/validate_get_organization"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        user_id: 1
+        organization_id: 1
+        actions:
+          - retrieve
+    response:
+      status_code: 409
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_409

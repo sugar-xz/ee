@@ -1,0 +1,86 @@
+# Name: test_default.tavern
+test_name: Batch Update robot Event
+stages:
+  - type: ref
+    id: login_customer
+  - name: Batch Update Event
+    request: &create_robot_event_anchor
+      url: "{url}/event/events/updates?ids=1,2&robot_ids={test_robot_id}"
+      method: PATCH
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+        Referer: "{Referer}"
+      json:
+        tag: "false"
+        marked: "false"
+        viewed: "false"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+
+---
+test_name: Batch Update robot Event
+stages:
+  - type: ref
+    id: login_customer
+  - name: Batch Update Event
+    request:
+      <<: *create_robot_event_anchor
+      url: "{url}/event/events/updates?robot_ids={test_robot_id}"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+
+---
+test_name: Batch Update Event
+stages:
+  - type: ref
+    id: login_customer
+  - name: Batch Update Event
+    request:
+      <<: *create_robot_event_anchor
+      url: "{url}/event/events/updates?ids=1,2"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+
+---
+test_name: Batch Update camera Event
+stages:
+  - type: ref
+    id: login_customer
+  - name: Batch Update Event
+    request:
+      <<: *create_robot_event_anchor
+      url: "{url}/event/events/updates?ids=1,2&camera_ids=1"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1
+---
+test_name: Batch Update camera Event
+stages:
+  - type: ref
+    id: login_customer
+  - name: Batch Update Event
+    request:
+      <<: *create_robot_event_anchor
+      url: "{url}/event/events/updates?camera_ids=1"
+    response:
+      status_code: 200
+      body:
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+ #   delay_after: 1

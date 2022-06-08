@@ -1,0 +1,193 @@
+openapi: 3.0.2
+
+components:
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+    200_ok:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result_ok'
+  schemas:
+    ResponseError:
+      type: object
+      properties:
+        ec:
+          type: integer
+          description: Error code
+        em:
+          type: string
+          description: Error message
+        dm:
+          type: string
+          description: Develop message
+      description: |
+        The user requests the returned information
+          * 200(0)：This operation is successful.
+          * 405(102): Please use a valid method. (method)
+          * 400(103): Please submit a valid input. (input)
+          * 401(104): Please sign in. (not_in)
+          * 403(105)：This operation is forbidden. (forbidden)
+          * 409(106)：Invalid email or password. (none)
+          * 409(107)：You have no permission. (permission)
+
+    Result:
+      type: object
+      description: Result
+      properties:
+        err:
+          $ref: '#/components/schemas/ResponseError'
+    Page:
+      type: object
+      description: Paged result
+      properties:
+        count:
+          type: integer
+          description: Total count
+        next:
+          type: string
+          description: Url of next page
+        previous:
+          type: string
+          description: Url of previous page
+
+  examples:
+    Result:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+    Result_ok:
+      value:
+        err:
+          ec: 0
+          em: ok
+          dm: ok
+
+  parameters:
+    EventIDParam:
+      in: path
+      name: event_id
+      required: true
+      description: Event id
+      schema:
+        type: integer
+        format: int64
+    IdsParam:
+      in: query
+      name: ids
+      description: |
+        Pages id
+        * example: '1, 2'
+      schema:
+        type: string
+    ProductTypeParam:
+      in: query
+      name: name
+      required: true
+      description: Algorithm product type
+      schema:
+        type: string
+        format: data
+    RobotIDParam:
+      in: path
+      name: id
+      required: true
+      description: Robot id
+      schema:
+        type: string
+    RobotIdsParam:
+      in: query
+      name: robot_id
+      description: Robot id
+      schema:
+        type: string
+    RobotCameraParam:
+      in: query
+      name: camera
+      description: Robot camera name
+      schema:
+        type: strin
+    CameraIdsParam:
+      in: query
+      name: camera_id
+      description: Camera id
+      schema:
+        type: integer
+        format: int64
+    CameraIDParam:
+      in: query
+      name: camera_id
+      required: true
+      description: Camera id
+      schema:
+        type: integer
+        format: int64
+    SiteIDParam:
+      in: query
+      name: site_id
+      description: Site id
+      schema:
+        type: integer
+        format: int64
+    LocationNameParam:
+      in: query
+      name: name
+      description: Name of the location
+      schema:
+        type: string
+    SerialNoParam:
+      in: query
+      name: serial_no
+      description: Such as room number, asset number, etc.
+      schema:
+        type: string
+    FloorParam:
+      in: query
+      name: floor
+      description: Positive and negative numbers indicate floors
+      schema:
+        type: integer
+        format: int32
+    limitParam:
+      in: query
+      name: limit
+      description: Max count per page
+      schema:
+        type: integer
+        format: int32
+    offsetParam:
+      in: query
+      name: offset
+      description: Query offset
+      schema:
+        type: integer
+        format: int32
+    StartAtParam:
+      in: query
+      name: started_at__gte
+      description: Starting time
+      schema:
+        type: string
+        format: date-time
+    EndAtParam:
+      in: query
+      name: started_at__lt
+      description: End time
+      schema:
+        type: string
+        format: date-time
+

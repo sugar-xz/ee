@@ -1,0 +1,55 @@
+openapi: 3.0.2
+components:
+  responses:
+    200:
+      description:  Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Result'
+          examples:
+            response:
+              $ref: '#/components/examples/Result'
+
+  schemas:
+    Result:
+      type: object
+      properties:
+        temperature:
+          type: integer
+          format: int32
+        abnormal:
+          type: integer
+          format: int32
+        pic:
+          data:
+            type: string
+            description: string encoded by base64
+          face_height:
+            type: integer
+            format: int32
+          face_width:
+            type: integer
+            format: int32
+          face_x:
+            type: integer
+            format: int32
+          face_y:
+            type: integer
+            format: int32
+          format:
+            type: string
+            description: jpg
+
+  examples:
+    Result:
+      value:
+        temperature: 36.3
+        abnormal: 36.1
+        pic:
+          data: string encoded by base64
+          face_height: 67
+          face_width: 67
+          face_x: 67
+          face_y: 67
+          format: jpg

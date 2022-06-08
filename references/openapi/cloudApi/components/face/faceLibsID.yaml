@@ -1,0 +1,47 @@
+openapi: 3.0.2
+components:
+  parameters:
+    LibIDParam:
+      in: path
+      name: id
+      required: true
+      description: Face lib id
+      schema:
+        type: string
+        format: uuid
+
+  requestBodies:
+    PutRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PutRequest'
+          examples:
+            request:
+              $ref: '#/components/examples/PutRequest'
+
+  schemas:
+    PutRequest:
+      type: object
+      required:
+        - name
+        - comment
+        - business_type
+      properties:
+        name:
+          type: string
+          description: Face lib name
+        comment:
+          type: string
+          description: The face lib notes
+        similarity_threshold:
+          type: number
+          description: The face lib similarity threshold
+
+  examples:
+    PutRequest:
+      value:
+        name: face tracking
+        comment: test from face tracking
+        similarity_threshold: 0.9

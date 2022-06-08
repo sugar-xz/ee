@@ -1,0 +1,39 @@
+# Name: test_default.tavern
+test_name: Unset domain map
+stages:
+  - type: ref
+    id: login_customer
+  - name: Unset domain map
+    request:
+      url: "{url}/domain/domains/2/unset_map"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        map_id: 2
+    response:
+      status_code: 200
+      body:
+        ret:
+          domain_id: !int 2
+          map_id: !int 2
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200
+  - name: Set domain map
+    request:
+      url: "{url}/domain/domains/2/set_map"
+      method: POST
+      headers:
+        content-type: application/json
+        X-CSRFTOKEN: "{get_csrftoken}"
+      json:
+        map_id: 2
+    response:
+      status_code: 200
+      body:
+        ret:
+          domain_id: !int 2
+          map_id: !int 2
+        $ext:
+          function: api_tests.utils.validation_method:validate_err_200

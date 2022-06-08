@@ -1,0 +1,179 @@
+openapi: 3.0.2
+components:
+  requestBodies:
+    Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Request'
+          examples:
+            request:
+              $ref: '#/components/examples/Request'
+  schemas:
+    Request:
+      type: object
+      properties:
+        camera_id:
+          type: string
+          description: Camera id
+          format: int32
+        started_at:
+          type: string
+          format: date-time
+          description: Save the create time of the event
+        ended_at:
+          type: string
+          format: date-time
+          description: Save the end time of the event
+        media:
+          type: object
+          properties:
+            snapshot:
+              type: object
+              properties:
+                flie:
+                  type: object
+                  properties:
+                    meta:
+                      type: object
+                      properties:
+                        file_size:
+                          type: integer
+                          format: int32
+                          description: Snapshot file size
+                        size:
+                          type: array
+                          items:
+                            type: string
+                            description: Snapshot file length and width
+                        content_type:
+                          type: string
+                          description: File content type
+                    Key:
+                      type: string
+                      description: Store file name
+                    Bucket:
+                      type: string
+                      description: Store path
+            bbox:
+              type: object
+              properties:
+                flie:
+                  type: object
+                  properties:
+                    meta:
+                      type: object
+                      properties:
+                        file_size:
+                          type: integer
+                          format: int32
+                          description: File size
+                        content_type:
+                          type: string
+                          description: File content type
+                    Key:
+                      type: string
+                      description: Store file name
+                    Bucket:
+                      type: string
+                      description: Store path
+            videos:
+              type: array
+              items:
+                type: object
+                properties:
+                  flie:
+                    type: object
+                    properties:
+                      meta:
+                        type: object
+                        properties:
+                          file_size:
+                            type: integer
+                            format: int32
+                            description: Video file size
+                          content_type:
+                            type: string
+                            description: File content type
+                      Key:
+                        type: string
+                        description: Store file name
+                      Bucket:
+                        type: string
+                        description: Store path
+                  started_at:
+                    type: string
+                    format: date-time
+                    description: Save the create time of the videos
+                  ended_at:
+                    type: string
+                    format: date-time
+                    description: Save the end time of the videos
+        location:
+          type: object
+          properties:
+            lng:
+              type: number
+              format: double
+              description: Location of latitude
+            lat:
+              type: number
+              format: double
+              description: Location of longitude
+        algos:
+          type: string
+          description: Algorithm of robot detection
+        detection:
+          type: object
+          properties:
+            camera:
+              type: string
+              description: Robot camera name
+            algos:
+              type: string
+              description: Algorithm of robot detection
+            threshold:
+              type: number
+              format: float
+              description: Threshold of robot detection
+        uuid:
+          type: string
+          description: Event unique identifier
+
+
+  examples:
+    Request:
+      value:
+        camera_id: 1
+        started_at: "2019-10-14T06:00:57.262076Z"
+        ended_at: "2019-10-14T06:01:57.262076Z"
+        media:
+          snapshot:
+            file:
+              Key: users/1/cameras/1/events/logo.jpg
+              Bucket: develop-data-turingvideo-com
+              meta:
+                file_size: 1888
+                size:
+                  - 640
+                  - 360
+                content_type: image/jpeg
+          bbox:
+            file:
+              Key: users/3/cameras/3/events/0dc87e3
+              Bucket: develop-data-turingvideo-com
+              meta:
+                file_size: 188
+                content_type: text/json
+          videos:
+            - file:
+                Key: users/3/cameras/3/events/0dc87e3
+                Bucket: develop-data-turingvideo-com
+                meta:
+                  file_size: 18888
+                  content_type: video/mp4
+              started_at: "2019-10-14T06:00:57.262076Z"
+              ended_at: "2019-10-14T06:02:57.262076Z"
+        algos: person:514
+        uuid: 77edf1e7-6273-4ad4-a212-fe24022130fa

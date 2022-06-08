@@ -1,0 +1,128 @@
+openapi: 3.0.2
+components:
+  responses:
+    200:
+      description: |
+        Content returned after successful request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RawEventListResult'
+          examples:
+            response:
+              $ref: '#/components/examples/RawEventListResult'
+  schemas:
+    RawEventListResult:
+      description: Paged list of raw_event
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/Result'
+        - type: object
+          properties:
+            ret:
+              allOf:
+                - $ref: '../common.yaml#/components/schemas/Page'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/RawEvent'
+    RawEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Raw_event id
+        uuid:
+          type: string
+          description: Zeno id
+        camera:
+          type: integer
+          format: int32
+          description: Camera id
+        site:
+          type: integer
+          format: int64
+          description: Site id
+        types:
+          type: string
+          description: Algo code
+        mediums:
+          type: array
+          items:
+            type: object
+            properties:
+              content_type:
+                type: string
+                description: File content type
+              size:
+                type: array
+                items:
+                  type: string
+                  description: Medium file length and width
+              file_size:
+                type: integer
+                format: int32
+                description: Medium file size
+              url:
+                type: string
+                description: Medium url path
+        started_at:
+          type: string
+          format: date-time
+          description: Raw event start time
+        ended_at:
+          type: string
+          format: date-time
+          description: Raw event end time
+        mark:
+          type: string
+          description: |
+            * misreport
+            * verified
+            * unknown
+        created_at:
+          type: string
+          format: date-time
+          description: Raw event create time
+        updated_at:
+          type: string
+          format: date-time
+          description: Raw event update time
+
+  examples:
+    RawEventListResult:
+      value:
+        err:
+          ec: 0
+          em: This operation is successful.
+          dm: ok
+        ret:
+          count: 1
+          next: null
+          previous: null
+          results:
+            - id: 1
+              uuid: b1a49720-6c71-4a18-9af4-c63754ec1938
+              camera: 1
+              site: 1
+              types: intrude:513
+              mediums:
+                - content_type: image/jpeg
+                  size:
+                    = 1280
+                    - 720
+                  file_size: 274343
+                  url: https://dev-data-for-apiserver
+                - content_type: text/json
+                  file_size: 27
+                  url: https://dev-data-for-apiserver
+                - content_type: video/mp4
+                  file_size: 2743431
+                  url: https://dev-data-for-apiserver
+              started_at: '2020-04-15T07:15:04Z'
+              ended_at: '2020-04-15T07:16:04Z'
+              mark: unknown
+              created_at: '2020-04-15T07:16:04Z'
+              updated_at: '2020-04-15T07:16:04Z'
